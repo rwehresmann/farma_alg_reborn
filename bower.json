@@ -1,0 +1,6 @@
+{
+  "name": "integration_rails_adminlte2",
+  "dependencies": {
+    "AdminLTE": "adminlte#^2.3.8"
+  }
+}
