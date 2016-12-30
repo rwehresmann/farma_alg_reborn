@@ -24,12 +24,12 @@ ActiveRecord::Schema.define(version: 20161230212223) do
   end
 
   create_table "exercises", force: :cascade do |t|
-    t.string   "title",                 null: false
-    t.string   "description",           null: false
-    t.integer  "learning_object_id_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.index ["learning_object_id_id"], name: "index_exercises_on_learning_object_id_id"
+    t.string   "title",              null: false
+    t.string   "description",        null: false
+    t.integer  "learning_object_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["learning_object_id"], name: "index_exercises_on_learning_object_id"
   end
 
   create_table "learning_objects", force: :cascade do |t|
