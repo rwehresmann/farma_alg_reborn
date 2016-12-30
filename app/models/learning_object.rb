@@ -1,0 +1,2 @@
+class LearningObject < ApplicationRecord
+end
