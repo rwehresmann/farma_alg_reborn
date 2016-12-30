@@ -12,27 +12,31 @@
   </head>
 
   <body class="hold-transition skin-green sidebar-mini">
-    <%= render "shared/header" %>
-    <% if user_signed_in? %>
-      <%= render "shared/sidebar" %>
-    <% end %>
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h1>
-          <%= yield(:header) %>
-          <small> <%= yield(:description) %> </small>
-        </h1>
-      </section>
+    <div class="wrapper">
+      <%= render "shared/header" %>
+      <% if user_signed_in? %>
+        <%= render "shared/sidebar" %>
+      <% end %>
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <%= yield(:header) %>
+            <small> <%= yield(:description) %> </small>
+          </h1>
+        </section>
 
-      <!-- Main content -->
-      <section class="content">
-        <%= yield %>
-      </section>
-      <!-- /.content -->
+        <!-- Main content -->
+        <section class="content">
+          <%= yield %>
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      <%= render "shared/footer" %>
     </div>
-    <!-- /.content-wrapper -->
-
+    <!-- /wrapper -->
   </body>
 </html>
