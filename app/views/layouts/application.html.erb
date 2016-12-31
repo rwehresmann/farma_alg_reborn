@@ -11,14 +11,18 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body class="hold-transition skin-green sidebar-mini">
+  <body class=" skin-green sidebar-mini">
     <div class="wrapper">
       <%= render "shared/header" %>
+
       <% if user_signed_in? %>
         <%= render "shared/sidebar" %>
       <% end %>
+
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">
+        <%= render "shared/flash_messages", object: flash %>
+
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
