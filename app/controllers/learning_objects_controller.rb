@@ -1,12 +1,12 @@
 class LearningObjectsController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_learning_object, only: [:show, :edit, :update]
 
   def index
     @learning_objects = LearningObject.where(user: current_user)
   end
 
   def show
-    @learning_object = LearningObject.find(params[:id])
   end
 
   def new
@@ -19,7 +19,7 @@ class LearningObjectsController < ApplicationController
       flash[:success] = "Objeto de Aprendizagem criado!"
       redirect_to @learning_object
     else
-      render "new"
+      render 'new'
     end
   end
 
@@ -27,6 +27,12 @@ class LearningObjectsController < ApplicationController
   end
 
   def update
+    if @learning_object.update_attributes(learning_object_params)
+      flash[:success] = "Objeto de Aprendizagem atualizado!"
+      redirect_to @learning_object
+    else
+      render 'edit'
+    end
   end
 
   def destroy
@@ -36,5 +42,9 @@ class LearningObjectsController < ApplicationController
 
     def learning_object_params
       params.require(:learning_object).permit(:title, :description, :available)
+    end
+
+    def find_learning_object
+      @learning_object = LearningObject.find(params[:id])
     end
 end
