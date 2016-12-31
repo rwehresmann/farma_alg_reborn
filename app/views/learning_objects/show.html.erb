@@ -1,2 +1,26 @@
-<h1>LearningObjects#show</h1>
-<p>Find me in app/views/learning_objects/show.html.erb</p>
+<%= link_to "Deletar", @learning_object, method: :delete,
+                       class: "btn btn-primary pull-right",
+                       style: "margin-left: 10px",
+                       data: { confirm: "Tem certeza que deseja excluir?" } %>
+
+<%= link_to "Editar", edit_learning_object_path(@learning_object),
+                      class: "btn btn-primary pull-right " %>
+<br></br>
+
+<div class="box box-solid box-default">
+  <div class="box-header">
+    <h3 class="box-title"><%= @learning_object.title %></h></h3>
+  </div><!-- /.box-header -->
+  <div class="box-body">
+    <%= @learning_object.description %>
+  </div><!-- /.box-body -->
+  <div class="box-footer">
+    <button class="btn btn-primary pull-right">
+      <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+      Adicionar novo exercício
+    </button>
+
+    <b style="display: block"><%= available_text(@learning_object.available) %></b>
+    <b>Possui <a href="#"><%= pluralize_exercises(@learning_object.exercises.count) %></a></b>
+  </div>
+</div>

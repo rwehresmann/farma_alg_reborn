@@ -5,6 +5,10 @@ class LearningObjectsController < ApplicationController
     @learning_objects = LearningObject.where(user: current_user)
   end
 
+  def show
+    @learning_object = LearningObject.find(params[:id])
+  end
+
   def new
     @learning_object = LearningObject.new
   end
@@ -26,9 +30,6 @@ class LearningObjectsController < ApplicationController
   end
 
   def destroy
-  end
-
-  def show
   end
 
     private
