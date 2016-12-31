@@ -1,6 +1,6 @@
 class LearningObjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_learning_object, only: [:show, :edit, :update]
+  before_action :find_learning_object, only: [:show, :edit, :update, :destroy]
 
   def index
     @learning_objects = LearningObject.where(user: current_user)
@@ -36,6 +36,9 @@ class LearningObjectsController < ApplicationController
   end
 
   def destroy
+    @learning_object.destroy
+    flash[:success] = "Objeto de Aprendizagem deletado!"
+    redirect_to learning_objects_url
   end
 
     private
