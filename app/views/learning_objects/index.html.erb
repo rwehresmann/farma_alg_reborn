@@ -3,13 +3,22 @@
 <%= link_to "Criar novo O.A.", new_learning_object_path, class: "btn btn-primary pull-right" %>
 <br></br>
 <br></br>
-<% 10.times do |lo| %>
+
+<% @learning_objects.each do |lo| %>
   <div class="box box-solid box-default">
     <div class="box-header">
-      <h3 class="box-title">Default Solid Box Example</h3>
+      <h3 class="box-title"><%= lo.title %></h></h3>
     </div><!-- /.box-header -->
     <div class="box-body">
-      The body of the box
+      <%= truncate(lo.description, length: 400, separator: ' ') %>
     </div><!-- /.box-body -->
+    <div class="box-footer">
+      <b><%= available_text(lo.available) %></b>
+      <div class="pull-right">
+        <%= link_to "Ver", lo %> |
+        <%= link_to "Deletar", lo, method: :delete,
+                    data: { confirm: "Tem certeza que deseja excluir?" } %>
+      </div>
+    </div>
   </div>
 <% end %>
