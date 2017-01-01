@@ -62,4 +62,5 @@ RSpec.configure do |config|
 
   # Helpers
   config.include Helpers::Relationships, type: :model
+  config.include Devise::Test::ControllerHelpers, :type => :controller
 end
