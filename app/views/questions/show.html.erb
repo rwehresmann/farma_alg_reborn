@@ -1,0 +1,17 @@
+<%= provide(:header, "Questão") %>
+<%= provide(:description, "Vizualize e edite") %>
+
+<%= link_to "Deletar", [@exercise, @question], method: :delete,
+                       class: "btn btn-primary pull-right",
+                       style: "margin-left: 10px",
+                       data: { confirm: "Tem certeza que deseja excluir?" } %>
+
+<%= link_to "Editar", edit_exercise_question_path(@exercise, @question),
+                      class: "btn btn-primary pull-right " %>
+<br></br>
+
+<div class="box box-solid box-default">
+  <div class="box-body">
+    <%= markdown(@question.description) %>
+  </div><!-- /.box-body -->
+</div>

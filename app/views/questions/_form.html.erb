@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <div class="box box-primary">
+
+      <div class="box-header with-border">
+        <h3 class="box-title">Questão</h3>
+      </div>
+
+      <div class="box-body">
+        <%= form_for [exercise, question] do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+
+          <div class="form-group">
+            <%= f.label "Descrição" %>
+            <%= f.text_area :description, class: "form-control" %>
+          </div>
+
+          <%= f.submit yield(:button_text), class: "btn btn-primary pull-right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+console.log($('textarea')[0])
+var simplemde = new SimpleMDE( { element: $('textarea')[0],
+                                 toolbar: ["preview",
+                                           "|",
+                                           "bold",
+                                           "italic",
+                                           "heading-1",
+                                           "heading-2",
+                                           "heading-3",
+                                           "link",
+                                           "image",
+                                           "table",
+                                           "code",
+                                           "quote",
+                                           "unordered-list",
+                                           "ordered-list",
+                                           "|",
+                                           "guide"]});
+</script>
