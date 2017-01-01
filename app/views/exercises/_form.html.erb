@@ -26,3 +26,24 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+console.log($('textarea')[0])
+var simplemde = new SimpleMDE( { element: $('textarea')[0],
+                                 toolbar: ["preview",
+                                           "|",
+                                           "bold",
+                                           "italic",
+                                           "heading-1",
+                                           "heading-2",
+                                           "heading-3",
+                                           "link",
+                                           "image",
+                                           "table",
+                                           "code",
+                                           "quote",
+                                           "unordered-list",
+                                           "ordered-list",
+                                           "|",
+                                           "guide"]});
+</script>
