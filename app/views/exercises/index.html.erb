@@ -14,7 +14,7 @@
       <%= markdown(truncate(exercise.description, length: 200, separator: ' ')) %>
     </div><!-- /.box-body -->
     <div class="box-footer">
-      <b>Possui <a href="#"><%= pluralize_questions(exercise.questions.count) %></a></b>
+      <b>Possui <a href="<%= exercise_questions_path(exercise) %>"><%= pluralize_questions(exercise.questions.count) %></a></b>
       <div class="pull-right">
         <%= link_to "Ver", exercise %> |
         <%= link_to "Editar", edit_exercise_path(exercise) %> |

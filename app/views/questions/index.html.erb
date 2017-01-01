@@ -1,0 +1,26 @@
+<%= provide(:header, "#{@exercise.title}") %>
+<%= provide(:description, "Questões do exercício") %>
+
+<%= link_to "Criar nova questão", new_exercise_question_path(@exercise),
+                                  class: "btn btn-primary pull-right" %>
+<br></br>
+<br></br>
+
+<% @questions.each do |question| %>
+  <div class="box box-solid box-default">
+    <div class="box-header">
+      <h3 class="box-title"></h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+      <%= markdown(truncate(question.description, length: 200, separator: ' ')) %>
+    </div><!-- /.box-body -->
+    <div class="box-footer">
+      <div class="pull-right">
+        <%= link_to "Ver", [exercise, question] %> |
+        <%= link_to "Editar", edit_exercise_question_path(@exercise, question) %> |
+        <%= link_to "Excluir", [exercise, question], method: :delete,
+                    data: { confirm: "Tem certeza que deseja excluir?" } %>
+      </div>
+    </div>
+  </div>
+<% end %>
