@@ -15,4 +15,5 @@
 // require turbolinks
 //= require AdminLTE/bootstrap/js/bootstrap
 //= require AdminLTE/dist/js/app
+//= require simplemde/dist/simplemde.min
 //= require_tree .
