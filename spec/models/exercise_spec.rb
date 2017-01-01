@@ -21,7 +21,7 @@ RSpec.describe Exercise, type: :model do
 
   describe "Relationships -->" do
     it "belongs to learning object" do
-      expect(relationship_type(Exercise, :learning_object)).to eq(:belongs_to)
+      expect(relationship_type(Exercise, :learning_object)).to eq(:has_and_belongs_to_many)
     end
   end
 end

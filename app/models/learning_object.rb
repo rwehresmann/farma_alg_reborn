@@ -5,5 +5,5 @@ class LearningObject < ApplicationRecord
   validates_inclusion_of :available, in: [true, false]
 
   belongs_to :user
-  has_many :exercises
+  has_and_belongs_to_many :exercises
 end

@@ -30,7 +30,7 @@ RSpec.describe LearningObject, type: :model do
     end
 
     it "has many exercises" do
-      expect(relationship_type(LearningObject, :exercises)).to eq(:has_many)
+      expect(relationship_type(LearningObject, :exercises)).to eq(:has_and_belongs_to_many)
     end
   end
 end
