@@ -60,8 +60,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "Relationships -->" do
-    it "has many learning objects" do
-      expect(relationship_type(User, :learning_objects)).to eq(:has_many)
+    it "has many exercises" do
+      expect(relationship_type(User, :exercises)).to eq(:has_many)
     end
   end
 end

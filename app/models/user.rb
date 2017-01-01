@@ -11,6 +11,6 @@ class User < ApplicationRecord
   validates_inclusion_of :teacher, in: [true, false]
   validates_inclusion_of :admin, in: [true, false]
 
-  has_many :learning_objects
+  has_many :exercises
   has_many :answers
 end

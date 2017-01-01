@@ -1,0 +1,24 @@
+<%= provide(:header, "Seus exercícios") %>
+
+<%= link_to "Criar novo exercício", new_exercise_path, class: "btn btn-primary pull-right" %>
+<br></br>
+<br></br>
+
+<% @exercises.each do |exercise| %>
+  <div class="box box-solid box-default">
+    <div class="box-header">
+      <h3 class="box-title"><%= exercise.title %></h></h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+      <%= truncate(exercise.description, length: 400, separator: ' ') %>
+    </div><!-- /.box-body -->
+    <div class="box-footer">
+      <b>Possui <a href="#"><%= pluralize_questions(exercise.questions.count) %></a></b>
+      <div class="pull-right">
+        <%= link_to "Ver", exercise %> |
+        <%= link_to "Excluir", exercise, method: :delete,
+                    data: { confirm: "Tem certeza que deseja excluir?" } %>
+      </div>
+    </div>
+  </div>
+<% end %>
