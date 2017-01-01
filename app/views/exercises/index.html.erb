@@ -1,4 +1,5 @@
 <%= provide(:header, "Seus exercícios") %>
+<%= provide(:description, "Preview") %>
 
 <%= link_to "Criar novo exercício", new_exercise_path, class: "btn btn-primary pull-right" %>
 <br></br>
@@ -10,12 +11,13 @@
       <h3 class="box-title"><%= exercise.title %></h></h3>
     </div><!-- /.box-header -->
     <div class="box-body">
-      <%= truncate(exercise.description, length: 400, separator: ' ') %>
+      <%= markdown(truncate(exercise.description, length: 200, separator: ' ')) %>
     </div><!-- /.box-body -->
     <div class="box-footer">
       <b>Possui <a href="#"><%= pluralize_questions(exercise.questions.count) %></a></b>
       <div class="pull-right">
         <%= link_to "Ver", exercise %> |
+        <%= link_to "Editar", edit_exercise_path(exercise) %> |
         <%= link_to "Excluir", exercise, method: :delete,
                     data: { confirm: "Tem certeza que deseja excluir?" } %>
       </div>
