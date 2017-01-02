@@ -12,6 +12,11 @@
       <%= markdown(truncate(question.description, length: 200, separator: ' ')) %>
     </div><!-- /.box-body -->
     <div class="box-footer">
+      <b>Possui
+        <a href="<%= question_test_cases_path(question) %>">
+          <%= pluralize_test_cases(question.test_cases.count) %>
+        </a>
+      </b>
       <div class="pull-right">
         <%= link_to "Ver", question %> |
         <%= link_to "Editar", edit_question_path(question) %> |
