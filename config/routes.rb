@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :exercises do
+  resources :exercises, shallow: true do
     resources :questions do
       resources :test_cases
     end
