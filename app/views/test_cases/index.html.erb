@@ -8,13 +8,16 @@
 
 <% @test_cases.each do |test_case| %>
   <div class="box box-solid box-default">
-    <div>
-      <%= truncate(test_case.description, length: 100, separator: ' ') %>
+    <div class="box-header">
+      <div class="box-title">
+        <%= truncate(test_case.description, length: 100, separator: ' ') %>
+      </div>
     </div>
     <div class="box-body">
       <b style="display: block">Input:</b>
       <div style="display: block"><%= test_case.input %></div>
-      <b>Output:</b>
+      <p></p>
+      <b>Output esperado:</b>
       <div style="display: block"><%= test_case.output %></div>
     </div><!-- /.box-body -->
     <div class="box-footer">
