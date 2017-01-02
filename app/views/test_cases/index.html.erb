@@ -1,0 +1,29 @@
+<%= provide(:header, "Casos de teste") %>
+<%= provide(:description, "Visualize, adicione ou simule o comportamento de um código com os casos de teste atribuídos à sua questão") %>
+
+<%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),
+                                  class: "btn btn-primary pull-right" %>
+<br></br>
+<br></br>
+
+<% @test_cases.each do |test_case| %>
+  <div class="box box-solid box-default">
+    <div>
+      <%= truncate(test_case.description, length: 100, separator: ' ') %>
+    </div>
+    <div class="box-body">
+      <b style="display: block">Input:</b>
+      <div style="display: block"><%= test_case.input %></div>
+      <b>Output:</b>
+      <div style="display: block"><%= test_case.output %></div>
+    </div><!-- /.box-body -->
+    <div class="box-footer">
+      <div class="pull-right">
+        <%= link_to "Ver", test_case %> |
+        <%= link_to "Editar", edit_test_case_path(test_case) %> |
+        <%= link_to "Excluir", test_case, method: :delete,
+                    data: { confirm: "Tem certeza que deseja excluir?" } %>
+      </div>
+    </div>
+  </div>
+<% end %>
