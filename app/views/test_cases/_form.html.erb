@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <div class="box box-primary">
+
+      <div class="box-header with-border">
+        <h3 class="box-title">Caso de teste</h3>
+      </div>
+
+      <div class="box-body">
+        <%= form_for [@question, @test_case] do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+
+          <div class="form-group">
+            <%= f.label "Descrição" %>
+            <%= f.text_area :description, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label "Input" %>
+            <%= f.text_area :input, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label "Output esperado" %>
+            <%= f.text_area :output, class: "form-control" %>
+          </div>
+
+          <%= f.submit yield(:button_text), class: "btn btn-primary pull-right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

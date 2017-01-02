@@ -8,9 +8,17 @@ class TestCasesController < ApplicationController
   end
 
   def new
+    @test_case = TestCase.new
   end
 
   def create
+    @test_case = @question.test_cases.build(test_case_params)
+    if @test_case.save
+      flash[:success] = "Caso de teste criado!"
+      redirect_to @test_case
+    else
+      render 'new'
+    end
   end
 
   def show
