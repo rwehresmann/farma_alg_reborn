@@ -18,10 +18,10 @@
     <%= markdown(@exercise.description) %>
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <button class="btn btn-primary pull-right">
+    <a href="<%= new_exercise_question_path(@exercise) %>" class="btn btn-primary pull-right">
       <i class="fa fa-plus-square-o" aria-hidden="true"></i>
       Adicionar questão
-    </button>
+    </a>
 
     <b>Possui <a href="#"><%= pluralize_questions(@exercise.questions.count) %></a></b>
   </div>
