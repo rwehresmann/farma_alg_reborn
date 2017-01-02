@@ -28,6 +28,12 @@ class TestCasesController < ApplicationController
   end
 
   def update
+    if @test_case.update_attributes(test_case_params)
+      flash[:success] = "Caso de teste atualizado!"
+      redirect_to @test_case
+    else
+      render 'edit'
+    end
   end
 
   def destroy
