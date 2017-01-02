@@ -37,6 +37,10 @@ class TestCasesController < ApplicationController
   end
 
   def destroy
+    question = @test_case.question
+    @test_case.destroy
+    flash[:success] = "Caso de teste deletado!"
+    redirect_to question_test_cases_url(question)
   end
 
     private
