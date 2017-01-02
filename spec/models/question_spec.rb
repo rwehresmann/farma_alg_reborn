@@ -11,7 +11,11 @@ RSpec.describe Question, type: :model do
 
   describe "Relationships -->" do
     it "belongs to exercise" do
-      expect(relationship_type(Question, :exercise))
+      expect(relationship_type(Question, :exercise)).to eq(:belongs_to)
+    end
+
+    it "has many test cases" do
+      expect(relationship_type(Question, :test_cases)).to eq(:has_many)
     end
   end
 end
