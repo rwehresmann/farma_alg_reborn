@@ -7,7 +7,7 @@
       </div>
 
       <div class="box-body">
-        <%= form_for [exercise, question] do |f| %>
+        <%= form_for [@exercise, @question] do |f| %>
           <%= render 'shared/error_messages', object: f.object %>
 
           <div class="form-group">

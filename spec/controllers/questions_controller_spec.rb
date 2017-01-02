@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:exercise) { create(:exercise) }
 
   describe "GET #index" do
+    let(:exercise) { create(:exercise) }
     subject { get :index, params: { exercise_id: exercise } }
 
     context "when logged-in" do
@@ -27,6 +27,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "GET #new" do
+    let(:exercise) { create(:exercise) }
     subject { get :new, params: { exercise_id: exercise } }
 
     context "when logged-in" do
@@ -50,7 +51,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "POST #create" do
-    #let(:exercise) { create(:exercise) }
+    let(:exercise) { create(:exercise) }
     subject(:post_with_valid_attributes) { post :create,
              params: { question: attributes_for(:question),
                        exercise_id: exercise } }
@@ -88,7 +89,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe "GET #show" do
     let(:question) { create(:question) }
-    subject { get :show, params: { id: question, exercise_id: exercise } }
+    subject { get :show, params: { id: question } }
 
     context "when logged-in" do
       before do
@@ -115,7 +116,6 @@ RSpec.describe QuestionsController, type: :controller do
     subject { get :edit,
               params: {
               id: question,
-              exercise_id: exercise,
               question: question } }
 
     context "when logged-in" do
@@ -147,7 +147,6 @@ RSpec.describe QuestionsController, type: :controller do
       context "whit valid attributes" do
         subject { put :update, params: {
                   id: question,
-                  exercise_id: exercise,
                   question: attributes_for(:question, description: "New description") } }
 
         it "updates object attributes" do
@@ -159,11 +158,10 @@ RSpec.describe QuestionsController, type: :controller do
       context "whit invalid attributes" do
         before { put :update, params: {
                  id: question,
-                 exercise_id: exercise,
                  question: attributes_for(:question, description: nil) } }
 
         it "does not update object attributes" do
-          expect(exercise.reload.title).to_not be_nil
+          expect(question.reload.description).to_not be_nil
         end
       end
     end
@@ -171,7 +169,6 @@ RSpec.describe QuestionsController, type: :controller do
     context "when not logged-in" do
       before { put :update, params: {
                id: question,
-               exercise_id: exercise,
                question: attributes_for(:question, description: "New description") } }
 
       it "redirects to sign-in page" do
@@ -182,7 +179,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe "DELETE #destroy" do
     let!(:question) { create(:question) }
-    subject { delete :destroy, params: { id: question, exercise_id: exercise } }
+    subject { delete :destroy, params: { id: question } }
 
     context "when logged-in" do
       before { sign_in create(:user) }
