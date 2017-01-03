@@ -1,5 +1,5 @@
-<%= provide(:header, "#{@exercise.title}") %>
-<%= provide(:description, "Questões do exercício") %>
+<%= provide(:header, "Exercício") %>
+<%= provide(:description, "Preview das questões") %>
 
 <%= link_to "Criar nova questão", new_exercise_question_path(@exercise),
                                   class: "btn btn-primary pull-right" %>
