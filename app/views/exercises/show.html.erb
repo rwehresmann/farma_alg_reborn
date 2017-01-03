@@ -23,6 +23,6 @@
       Adicionar questão
     </a>
 
-    <b>Possui <a href="#"><%= pluralize_questions(@exercise.questions.count) %></a></b>
+    <b>Possui <a href="<%= exercise_questions_path(@exercise) %>"><%= pluralize_questions(@exercise.questions.count) %></a></b>
   </div>
 </div>
