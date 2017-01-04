@@ -8,6 +8,11 @@ RSpec.describe TestCase, type: :model do
       expect(test_case).to be_valid
     end
 
+    it "is invalid with empty title" do
+      test_case.title = ""
+      expect(test_case).to_not be_valid
+    end
+
     it "is invalid with empty output" do
       test_case.output = ""
       expect(test_case).to_not be_valid

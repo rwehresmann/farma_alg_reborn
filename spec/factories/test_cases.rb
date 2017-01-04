@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :test_case do
-    description "test case description"
-    input "input"
+    title
     output "output"
     question
   end

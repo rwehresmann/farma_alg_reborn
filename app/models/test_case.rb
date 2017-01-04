@@ -2,7 +2,7 @@ require 'utils/compilers'
 
 class TestCase < ApplicationRecord
   include Compilers
-  validates_presence_of :output
+  validates_presence_of :output, :title
 
   belongs_to :question
 
