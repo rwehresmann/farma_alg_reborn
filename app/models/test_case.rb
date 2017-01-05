@@ -13,7 +13,23 @@ class TestCase < ApplicationRecord
     if has_error? || result != output
       { status: :error, output: result }
     else
-      { success: result }
+      { status: :success, output: result }
     end
   end
+
+=begin
+  def self.test_all(question_id, file_name, file_ext, source_code)
+    result = run(file_name, file_ext, source_code, input)
+
+    test_cases = TestCase.where(question: question_id)
+    test_cases.each do |test_case|
+      if has_error? || result != output
+        { status: :error, output: result }
+      else
+        { success: result }
+      end
+    end
+  end
+=end
+
 end

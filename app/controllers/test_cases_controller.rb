@@ -47,7 +47,8 @@ class TestCasesController < ApplicationController
 
   def run
     result = @test_case.test(plain_current_datetime, "pas", params[:source_code])
-    @results = [ { title: @test_case.title, result: result } ]
+    @output = result[:output]
+    @results = [ { title: @test_case.title, status: result[:status] } ]
     respond_to { |format| format.js }
   end
 
