@@ -1,21 +1,18 @@
-// When closed, remove modals from the page
-$('#test-container').on('hidden.bs.modal', function () {
+$('#test-info-container').on('hidden.bs.modal', function () {
+  alert("oii")
   $(this).remove();
 });
 
-$('#test-info-container').on('hidden.bs.modal', function () {
-  $(this).remove();
-});
+$('#test-results').append('<b><a href="#" id="show-log">Ver o resultado</i></b>')
 
 // Display each result in the screen.
-<% @results.each_with_index do |result, index| %>
+<% @results.each do |result| %>
   // Div to put the result.
   var div = $(document.createElement('div'));
 
-  <% if result[:result][:status] == :error %>
+  <% if result[:status] == :error %>
     div.attr('class', 'alert alert-danger text-left');
     div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
-    div.append("<b><a id='result_<%= index %>' href='#' class='pull-right log' data-custom-value='<%= escape_javascript(result[:result][:output]) %>'>Checar log</a></b>")
   <% else %>
     div.attr('class', 'alert alert-success text-left');
     div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
@@ -25,11 +22,18 @@ $('#test-info-container').on('hidden.bs.modal', function () {
 <% end %>
 
 // Open modal displaying the log content.
-$('.log').click(function(event) {
-  var test_output = $('#' + event.target.id).data('customValue');
-  var div = $(document.createElement('div')).attr('id', 'test-info-container');
+$('#show-log').click(function(event) {
+  // It seems odd remove test-info-container and create it again in sequence,
+  // but that is necessary because currently, bootstrap modal has an error
+  // (at least in AdminLTE2): 'hidden.bs.modal' event is called only after
+  // I do something in my modal (click in a button, for instance) and then
+  // close it (otherwise it doesn't work). Without this event, remove and
+  // create it is an option.
+  $('#test-info-container').remove();
+  var div = $(document.createElement('div'))
+  div.attr('id', 'test-info-container');
   $('body').append(div);
   $(div).html("<%= escape_javascript(render 'test_log_modal') %>");
-  $('#test-log-content').text(test_output);
+  $('#test-log-content').text('<%= raw j(@output) %>');
   $('#test-info-modal').modal('show');
 });
