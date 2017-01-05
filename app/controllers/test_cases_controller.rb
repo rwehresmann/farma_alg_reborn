@@ -1,6 +1,8 @@
 class TestCasesController < ApplicationController
+  include ApplicationHelper
+
   before_action :authenticate_user!
-  before_action :find_test_case, only: [:show, :edit, :update, :destroy]
+  before_action :find_test_case, only: [:show, :edit, :update, :destroy, :run]
   before_action :find_question, only: [:index, :new, :create]
 
   def index
@@ -41,6 +43,12 @@ class TestCasesController < ApplicationController
     @test_case.destroy
     flash[:success] = "Caso de teste deletado!"
     redirect_to question_test_cases_url(question)
+  end
+
+  def run
+    result = @test_case.test(plain_current_datetime, "pas", params[:source_code])
+    @results = [ { title: @test_case.title, result: result } ]
+    respond_to { |format| format.js }
   end
 
     private

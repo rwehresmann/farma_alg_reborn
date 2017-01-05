@@ -1,0 +1,35 @@
+// When closed, remove modals from the page
+$('#test-container').on('hidden.bs.modal', function () {
+  $(this).remove();
+});
+
+$('#test-info-container').on('hidden.bs.modal', function () {
+  $(this).remove();
+});
+
+// Display each result in the screen.
+<% @results.each_with_index do |result, index| %>
+  // Div to put the result.
+  var div = $(document.createElement('div'));
+
+  <% if result[:result][:status] == :error %>
+    div.attr('class', 'alert alert-danger text-left');
+    div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
+    div.append("<b><a id='result_<%= index %>' href='#' class='pull-right log' data-custom-value='<%= escape_javascript(result[:result][:output]) %>'>Checar log</a></b>")
+  <% else %>
+    div.attr('class', 'alert alert-success text-left');
+    div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
+  <% end %>
+
+  $('#test-results').append(div)
+<% end %>
+
+// Open modal displaying the log content.
+$('.log').click(function(event) {
+  var test_output = $('#' + event.target.id).data('customValue');
+  var div = $(document.createElement('div')).attr('id', 'test-info-container');
+  $('body').append(div);
+  $(div).html("<%= escape_javascript(render 'test_log_modal') %>");
+  $('#test-log-content').text(test_output);
+  $('#test-info-modal').modal('show');
+});

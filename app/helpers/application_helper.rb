@@ -6,4 +6,9 @@ module ApplicationHelper
     gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{options[:size]}"
     image_tag(gravatar_url, alt: user.name, class: options[:class])
   end
+
+  # Returns only the current datetime without separators (e.g., '/', '-').
+  def plain_current_datetime(datetime = Time.now)
+    datetime.strftime("%Y%m%d%H%M%S")
+  end
 end

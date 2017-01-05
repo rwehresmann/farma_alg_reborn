@@ -10,12 +10,10 @@ class TestCase < ApplicationRecord
     result = run(file_name, file_ext, source_code, input)
     output = self.output.gsub("\r", "")
 
-    if has_error?
-      { error: result }
-    elsif result == output
-      { success: result }
+    if has_error? || result != output
+      { status: :error, output: result }
     else
-      { failure: result }
+      { success: result }
     end
   end
 end
