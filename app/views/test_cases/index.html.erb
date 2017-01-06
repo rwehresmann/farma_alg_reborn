@@ -2,7 +2,9 @@
 <%= provide(:description, "Preview") %>
 
 <%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),
-                                  class: "btn btn-primary pull-right" %>
+                                  class: "btn btn-primary pull-right",
+                                  style: "margin-left: 10px" %>
+<%= link_to "Testar solução", '#', class: "btn btn-primary pull-right test-open" %>
 <br></br>
 <br></br>
 
@@ -30,3 +32,23 @@
     </div>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Open test modal.
+    $('.test-open').click(function() {
+     // It seems odd remove test-container and create it again in sequence,
+     // but that is necessary because currently, bootstrap modal has an error
+     // (at least in AdminLTE2): 'hidden.bs.modal' event is called only after
+     // I do something in my modal (click in a button, for instance) and then
+     // close it (otherwise it doesn't work). Without this event, remove and
+     // create it is an option.
+     $('#test-container').remove();
+     var div = $(document.createElement('div'))
+     div.attr('id', 'test-container');
+     $('body').append(div);
+     $(div).html("<%= escape_javascript(render partial: 'test_modal', locals: { test_url: run_all_question_test_cases_url(@question) }) %>");
+     $('#test-modal').modal('show');
+    });
+  });
+</script>
