@@ -5,6 +5,10 @@ Rails.application.routes.draw do
         member do
           post :run
         end
+
+        collection do
+          post :run_all
+        end
       end
     end
   end
