@@ -32,11 +32,33 @@ crumb :question do |question|
 end
 
 crumb :new_question do |exercise|
-  link "Novo", new_exercise_question_path
+  link "Novo", new_exercise_question_path(exercise)
   parent :questions, exercise
 end
 
 crumb :edit_question do |question|
   link "Editar", edit_question_path(question)
   parent :question, question
+end
+
+## Test case crumbs ##
+
+crumb :test_cases do |question|
+  link "Casos de teste", question_test_cases_path(question)
+  parent :question, question
+end
+
+crumb :test_case do |test_case|
+  link "Caso de teste", test_case
+  parent :test_cases, test_case.question
+end
+
+crumb :new_test_case do |question|
+  link "Novo", new_question_test_case_path(question)
+  parent :test_cases, question
+end
+
+crumb :edit_test_case do |test_case|
+  link "Editar", edit_test_case_path(test_case)
+  parent :test_case, test_case
 end

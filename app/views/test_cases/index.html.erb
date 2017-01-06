@@ -1,6 +1,8 @@
 <%= provide(:header, "Casos de teste da questão") %>
 <%= provide(:description, "Preview") %>
 
+<% breadcrumb :test_cases, @question %>
+
 <%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),
                                   class: "btn btn-primary pull-right",
                                   style: "margin-left: 10px" %>
