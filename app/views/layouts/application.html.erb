@@ -23,12 +23,17 @@
       <div class="content-wrapper">
         <%= render "shared/flash_messages", object: flash %>
 
+
+
+
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
             <%= yield(:header) %>
             <small> <%= yield(:description) %> </small>
           </h1>
+
+          <%= breadcrumbs style: :bootstrap %>
         </section>
 
         <!-- Main content -->
