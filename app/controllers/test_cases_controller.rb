@@ -60,7 +60,7 @@ class TestCasesController < ApplicationController
     private
 
     def test_case_params
-      params.require(:test_case).permit(:description, :input, :output, :question_id)
+      params.require(:test_case).permit(:title, :description, :input, :output, :question_id)
     end
 
     def find_test_case
