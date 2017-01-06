@@ -36,18 +36,7 @@
   $(document).ready(function() {
     // Open test modal.
     $('#test-open').click(function() {
-     // It seems odd remove test-container and create it again in sequence,
-     // but that is necessary because currently, bootstrap modal has an error
-     // (at least in AdminLTE2): 'hidden.bs.modal' event is called only after
-     // I do something in my modal (click in a button, for instance) and then
-     // close it (otherwise it doesn't work). Without this event, remove and
-     // create it is an option.
-     $('#test-container').remove();
-     var div = $(document.createElement('div'))
-     div.attr('id', 'test-container');
-     $('body').append(div);
-     $(div).html("<%= escape_javascript(render partial: 'test_modal', locals: { test_url: run_test_case_url(@test_case) }) %>");
-     $('#test-modal').modal('show');
+     <%= render partial: 'show_test_modal.js', locals: { test_url: run_test_case_url(@test_case) } %>
     });
   });
 </script>
