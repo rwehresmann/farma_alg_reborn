@@ -2,8 +2,8 @@ class TestCasesController < ApplicationController
   include ApplicationHelper
 
   before_action :authenticate_user!
-  before_action :find_test_case, only: [:show, :edit, :update, :destroy, :run]
-  before_action :find_question, only: [:index, :new, :create, :run_all]
+  before_action :find_test_case, only: [:show, :edit, :update, :destroy, :test]
+  before_action :find_question, only: [:index, :new, :create, :test_all]
 
   def index
     @test_cases = TestCase.where(question: @question)
@@ -45,14 +45,14 @@ class TestCasesController < ApplicationController
     redirect_to question_test_cases_url(question)
   end
 
-  def run
+  def test
     result = @test_case.test(plain_current_datetime, "pas", params[:source_code])
     @output = result[:output]
     @results = [ { title: @test_case.title, status: result[:status] } ]
     respond_to { |format| format.js }
   end
 
-  def run_all
+  def test_all
     @results = @question.test_all(plain_current_datetime, "pas", params[:source_code])
     respond_to { |format| format.js }
   end

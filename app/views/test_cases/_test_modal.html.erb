@@ -19,7 +19,7 @@
 
 <script type="text/javascript">
   $('#execute-test').click(function() {
-    // Change to "running layout".
+    // Change to "testing layout".
     var text = $(this).text();
     $(this).append(' <i class="fa fa-refresh fa-spin"></i>')
     $(this).attr('disabled', 'true');
@@ -32,7 +32,7 @@
      dataType: 'script',
      data: { source_code: source_code },
      success: function() {
-       // Change to "run layout".
+       // Change to "test layout".
        $('#execute-test').attr('disabled', false);
        $('#execute-test').empty();
        $('#execute-test').text(text);

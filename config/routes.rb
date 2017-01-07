@@ -3,17 +3,15 @@ Rails.application.routes.draw do
     resources :questions do
       resources :test_cases do
         member do
-          post :run
+          post :test
         end
 
         collection do
-          post :run_all
+          post :test_all
         end
       end
     end
   end
-
-  # post 'run_all/:question_id', to: 'test_cases#run_all', as: 'run_all'
 
   devise_for :users
   get 'dashboard/home'

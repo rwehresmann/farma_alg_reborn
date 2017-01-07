@@ -39,7 +39,7 @@
   $(document).ready(function() {
     // Open test modal.
     $('.test-open').click(function() {
-     <%= render partial: 'show_test_modal.js', locals: { test_url: run_all_question_test_cases_url(@question) } %>
+     <%= render partial: 'show_test_modal.js', locals: { test_url: test_all_question_test_cases_url(@question) } %>
     });
   });
 </script>
