@@ -197,4 +197,50 @@ RSpec.describe TestCasesController, type: :controller do
       end
     end
   end
+
+  describe 'POST #run' do
+    let(:test_case) { create(:test_case) }
+    let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
+    subject { post :run, xhr: true,
+              params: { id: test_case.id, source_code: source_code } }
+
+    context "when logged-in" do
+      before { sign_in create(:user) }
+
+      it "resturns OK status" do
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when not logged-in" do
+      before { subject }
+
+      it "resturns UNAUTHORIZED status" do
+        expect(response.status).to eq(401)
+      end
+    end
+  end
+
+  describe 'POST #run_all' do
+    let(:question) { create(:question) }
+    let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
+    subject { post :run_all, xhr: true,
+              params: { question_id: question.id, source_code: source_code } }
+
+    context "when logged-in" do
+      before { sign_in create(:user) }
+
+      it "resturns OK status" do
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when not logged-in" do
+      before { subject }
+
+      it "resturns UNAUTHORIZED status" do
+        expect(response.status).to eq(401)
+      end
+    end
+  end
 end
