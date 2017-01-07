@@ -24,4 +24,17 @@ RSpec.describe TestCase, type: :model do
       expect(relationship_type(TestCase, :question)).to eq(:belongs_to)
     end
   end
+
+  describe '#test' do
+    let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
+    let(:result) do
+      test_case = create(:test_case)
+      test_case.test("test_file", "pas", source_code)
+    end
+
+    it "return an status and output" do
+      expect(result[:status]).to_not be_nil
+      expect(result[:output]).to_not be_nil
+    end
+  end
 end
