@@ -31,8 +31,10 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'devise', '~> 4.2'
 gem 'redcarpet', '~> 3.4'
+# To pretiffy markdown code blocks.
 gem 'coderay', '~> 1.1'
-gem "gretel", '~> 3.0'
+# To deal with breadcrumbs.
+gem 'gretel', '~> 3.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -42,6 +44,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'database_cleaner', '~> 1.0'
   gem 'capybara', '~> 2.0'
+  # To generate diagrams based in the current controller and models structure.
   gem 'railroady'
 end
 
