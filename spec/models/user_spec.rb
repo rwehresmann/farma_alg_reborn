@@ -63,5 +63,13 @@ RSpec.describe User, type: :model do
     it "has many exercises" do
       expect(relationship_type(User, :exercises)).to eq(:has_many)
     end
+
+    it "has many teams created" do
+      expect(relationship_type(User, :teams_created)).to eq(:has_many)
+    end
+
+    it "has and belongs to many teams" do
+      expect(relationship_type(User, :teams)).to eq(:has_and_belongs_to_many)
+    end
   end
 end
