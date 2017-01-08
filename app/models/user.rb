@@ -13,4 +13,6 @@ class User < ApplicationRecord
 
   has_many :exercises
   has_many :answers
+  has_many :teams_created, class_name: 'Team', foreign_key: "owner_id"
+  has_and_belongs_to_many :teams
 end
