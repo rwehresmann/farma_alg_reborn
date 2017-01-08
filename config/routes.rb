@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # resources :users, only: [:index, :show]
+  resources :teams
+
   devise_for :users
   get 'dashboard/home'
   root to: 'dashboard#home'
