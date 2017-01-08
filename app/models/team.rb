@@ -1,4 +1,6 @@
 class Team < ApplicationRecord
+  has_secure_password
+
   validates_presence_of :name, :password
   validates_inclusion_of :active, in: [true, false]
 

@@ -14,8 +14,10 @@ RSpec.describe Team, type: :model do
       expect(team).to_not be_valid
     end
 
-    it "is invalid with empty password" do
-      team.password = ""
+    # 'nil', not empty, because BCrypt is been used and even a empty string
+    # generates a hash.
+    it "is invalid with nil password" do
+      team.password = nil
       expect(team).to_not be_valid
     end
 
