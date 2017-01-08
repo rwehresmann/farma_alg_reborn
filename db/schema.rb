@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170104120325) do
+ActiveRecord::Schema.define(version: 20170108132939) do
 
   create_table "answers", force: :cascade do |t|
     t.string   "content",                     null: false
@@ -47,6 +47,18 @@ ActiveRecord::Schema.define(version: 20170104120325) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["exercise_id"], name: "index_questions_on_exercise_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string   "password",                  null: false
+    t.string   "name",                      null: false
+    t.boolean  "active",     default: true, null: false
+    t.integer  "user_id"
+    t.integer  "owner_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["owner_id"], name: "index_teams_on_owner_id"
+    t.index ["user_id"], name: "index_teams_on_user_id"
   end
 
   create_table "test_cases", force: :cascade do |t|
