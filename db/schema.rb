@@ -53,12 +53,10 @@ ActiveRecord::Schema.define(version: 20170108132939) do
     t.string   "password",                  null: false
     t.string   "name",                      null: false
     t.boolean  "active",     default: true, null: false
-    t.integer  "user_id"
     t.integer  "owner_id"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.index ["owner_id"], name: "index_teams_on_owner_id"
-    t.index ["user_id"], name: "index_teams_on_user_id"
   end
 
   create_table "test_cases", force: :cascade do |t|
