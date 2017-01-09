@@ -1,24 +1,28 @@
-# README
+# Description
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+FARMA-ALG it is an app for teaching algorithms, focused in error mediaton between teachers and students. 
+We belive that the error is part of the learning process and should not be ignored. However, it is not unusual to see classes with a lot of students and only one teacher to handle with that. Think in the quantity of output errors generated in a class, specially when it envolves programming: it is impracticable to a teacher analise all this output.
 
-Things you may want to cover:
+So FARMA-ALG it is a tool to automatically save and analise this output, calculating the error similarity, exposing to the teacher the error cases pedagogically more relevant to the class. 
 
-* Ruby version
+## More about
 
-* System dependencies
+Originally, [FARMA-ALG](https://github.com/alexkutzke/farma_alg) was developed by [Alex Kutzke](https://github.com/alexkutzke) in the Federal University of Paraná. FARMA-ALG-REBORN is a new implementation of the tool. This implementation intend to bring back the original features of the tool with upgrades, plus a module of gamification. 
 
-* Configuration
+The implementation is in course and constanttly updated in this repository.
 
-* Database creation
+## Dependencies
 
-* Database initialization
+* [Free Pascal Compiler](http://www.freepascal.org/) (`sudo apt-get install fpc`)
 
-* How to run the test suite
+## Usage
 
-* Services (job queues, cache servers, search engines, etc.)
+* Clone the repository;
+* Run `bundle install`;
+* Run `rake db:create` and `rake db:migrate`;
+* If you want populate the database with sample data, run `rake db:seed`;
+* Run `rspec`. If none test fails, you are ready to start!
 
-* Deployment instructions
+## Whant to contribute?
 
-* ...
+Fork the project, create a branch and send a pull request!
