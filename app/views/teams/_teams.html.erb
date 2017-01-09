@@ -7,7 +7,6 @@
 
     <div class="box-footer">
       <% if team.enrolled?(current_user) %>
-
         <div class="pull-right">
           <%= link_to "Ver", '#' %>
 
@@ -20,12 +19,10 @@
 
       <% else %>
 
-        <div class="input-group margin", style="width: 40%">
-          <input type="text" class="form-control" placeholder="Senha para matrícula">
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-info btn-flat">Matricular-se</button>
-          </span>
-        </div>
+        <%= form_tag enroll_team_url(team), remote: true, class: "form-inline", id: "enroll-form" do %>
+          <%= text_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
+          <%= submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
+        <% end %>
 
       <% end %>
 
