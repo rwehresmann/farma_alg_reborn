@@ -15,4 +15,11 @@ class User < ApplicationRecord
   has_many :answers
   has_many :teams_created, class_name: 'Team', foreign_key: "owner_id"
   has_and_belongs_to_many :teams
+
+  # If the user is a teacher, return the teams created by him, else return
+  # the teams where he is enrolled.
+  def my_teams
+    return self.teams_created if teacher?
+    teams
+  end
 end

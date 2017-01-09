@@ -6,4 +6,16 @@ class Team < ApplicationRecord
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
   has_and_belongs_to_many :users
+
+  # Return only the active teams.
+  def self.active_teams
+    Team.where(active: true)
+  end
+
+  # Check if the user is enrolled in the team (if is the owner, it's considered
+  # automatically enrolled).
+  def enrolled?(user)
+    return true if user == owner
+    users.include?(user)
+  end
 end
