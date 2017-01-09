@@ -1,0 +1,5 @@
+<% if @enrolled %>
+  window.location.replace('<%= team_path(@team) %>');
+<% else %>
+  $('#enroll-form').append('<small style="color: red">Senha incorreta!</small>')
+<% end %>

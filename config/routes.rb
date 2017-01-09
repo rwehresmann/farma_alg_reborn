@@ -14,7 +14,11 @@ Rails.application.routes.draw do
   end
 
   # resources :users, only: [:index, :show]
-  resources :teams
+  resources :teams do
+    member do
+      post :enroll
+    end
+  end
 
   devise_for :users
   get 'dashboard/home'

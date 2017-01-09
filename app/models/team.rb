@@ -18,4 +18,9 @@ class Team < ApplicationRecord
     return true if user == owner
     users.include?(user)
   end
+
+  # Add a user to the class.
+  def enroll(user)
+    self.users << user
+  end
 end
