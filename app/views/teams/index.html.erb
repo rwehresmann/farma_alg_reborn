@@ -1,0 +1,26 @@
+<div class="btn-group">
+  <%= link_to "Todas turmas", teams_path, remote: true,
+                              id: "all-teams", class: "btn btn-default active" %>
+  <%= link_to "Minhas turmas", teams_path(my_teams: true), remote: true,
+                              id: "my-teams", class: "btn btn-default" %>
+</div>
+
+<br></br>
+
+<div id="teams">
+  <%= render 'teams' %>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#all-teams').click(function() {
+      $('#my-teams').removeClass('active');
+      $(this).addClass('active');
+    });
+
+    $('#my-teams').click(function() {
+      $('#all-teams').removeClass('active');
+      $(this).addClass('active');
+    });
+  });
+</script>

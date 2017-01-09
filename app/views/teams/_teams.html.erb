@@ -1,0 +1,35 @@
+<% @teams.each do |team| %>
+  <div class="box box-solid box-default">
+    <div class="box-header">
+      <h3 class="box-title"><%= team.name %></h3>
+      <h3 class="box-title pull-right">Prof(a). <%= team.owner.name %></h3>
+    </div><!-- /.box-header -->
+
+    <div class="box-footer">
+      <% if team.enrolled?(current_user) %>
+
+        <div class="pull-right">
+          <%= link_to "Ver", '#' %>
+
+            <% if current_user == team.owner %>
+              | <%= link_to "Editar", '#' %> |
+              <%= link_to "Excluir", '#', method: :delete,
+                          data: { confirm: "Tem certeza que deseja excluir?" } %>
+            <% end %>
+        </div>
+
+      <% else %>
+
+        <div class="input-group margin", style="width: 40%">
+          <input type="text" class="form-control" placeholder="Senha para matrícula">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-info btn-flat">Matricular-se</button>
+          </span>
+        </div>
+
+      <% end %>
+
+    </div><!-- /.box-footer -->
+
+  </div><!-- /.box -->
+<% end %>
