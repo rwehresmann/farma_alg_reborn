@@ -62,3 +62,24 @@ crumb :edit_test_case do |test_case|
   link "Editar", edit_test_case_path(test_case)
   parent :test_case, test_case
 end
+
+## TEAM crumbs ##
+
+crumb :teams do
+  link "Turmas", teams_path
+end
+
+crumb :team do |team|
+  link "Turma", team
+  parent :teams
+end
+
+crumb :new_team do
+  link "Novo", new_team_path
+  parent :teams
+end
+
+crumb :edit_team do |team|
+  link "Editar", edit_team_path(team)
+  parent :team, team
+end
