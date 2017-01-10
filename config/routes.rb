@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :teams do
     member do
       post :enroll
+      post :unenroll
     end
   end
 

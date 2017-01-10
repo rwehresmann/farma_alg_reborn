@@ -23,4 +23,8 @@ class Team < ApplicationRecord
   def enroll(user)
     self.users << user
   end
+
+  def unenroll(user)
+    self.users.delete(user)
+  end
 end

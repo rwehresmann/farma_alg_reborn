@@ -7,6 +7,10 @@
 
     <div class="box-footer">
       <% if team.enrolled?(current_user) %>
+        <% if current_user != team.owner %>
+          <%= link_to "Cancelar matrícula", unenroll_team_path(team), method: :post %>
+        <% end %>
+
         <div class="pull-right">
           <%= link_to "Ver", team %>
 

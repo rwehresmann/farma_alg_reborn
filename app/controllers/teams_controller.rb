@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :show, :edit, :update, :destroy]
+  before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update, :destroy]
 
   def index
     @teams = find_teams
@@ -57,6 +57,12 @@ class TeamsController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def unenroll
+    @team.unenroll(current_user)
+    flash[:success] = "Matrícula cancelada!"
+    redirect_to teams_url
   end
 
     private
