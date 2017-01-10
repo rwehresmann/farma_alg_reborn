@@ -223,4 +223,25 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #unenroll' do
+    let(:user) { create(:user) }
+    let(:team) { create(:team) }
+    subject { post :unenroll, params: { id: team } }
+
+    context "when logged-in -->" do
+      it "unenroll the user with the team" do
+        expect(team.enrolled?(user)).to be_falsey
+      end
+    end
+
+    context "when not logged-in" do
+      before { put :update, params: { id: create(:team),
+               team: attributes_for(:team, name: "New name") } }
+
+      it "redirects to sign-in page" do
+        expect(response).to redirect_to(new_user_session_url)
+      end
+    end
+  end
 end
