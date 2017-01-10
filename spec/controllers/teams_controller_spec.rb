@@ -184,4 +184,43 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #enroll' do
+    let(:user) { create(:user) }
+    let(:team) { create(:team) }
+    subject(:post_with_right_password) { post :enroll, xhr: true,
+             params: { id: team, password: team.password } }
+
+    context "when logged-in -->" do
+      context "when the password is right" do
+        before do
+          sign_in user
+          post_with_right_password
+        end
+
+        it "enroll the user with the team" do
+          expect(team.enrolled?(user)).to be_truthy
+        end
+      end
+
+      context "when the password is wrong" do
+        before do
+          sign_in user
+          post :enroll, xhr: true, params: { id: team }
+        end
+
+        it "doesn't enroll the user with the team" do
+          expect(team.enrolled?(user)).to be_falsey
+        end
+      end
+    end
+
+    context "when not logged-in" do
+      before { post_with_right_password }
+
+      it "resturns UNAUTHORIZED status" do
+        expect(response.status).to eq(401)
+      end
+    end
+  end
 end
