@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :show]
+  before_action :find_team, only: [:enroll, :show, :edit, :update]
 
   def index
     @teams = find_teams
@@ -26,6 +26,18 @@ class TeamsController < ApplicationController
   end
 
   def show
+  end
+
+  def edit
+  end
+
+  def update
+    if @team.update_attributes(team_params)
+      flash[:success] = "Turma atualizada!"
+      redirect_to @team
+    else
+      render 'edit'
+    end
   end
 
   def enroll
