@@ -11,6 +11,20 @@ class TeamsController < ApplicationController
     end
   end
 
+  def new
+    @team = Team.new
+  end
+
+  def create
+    @team = current_user.teams_created.build(team_params)
+    if @team.save
+      flash[:success] =  "Turma criada!"
+      redirect_to @team
+    else
+      render 'new'
+    end
+  end
+
   def enroll
     if @team.authenticate(params[:password])
       @team.enroll(current_user)
@@ -25,6 +39,10 @@ class TeamsController < ApplicationController
   end
 
     private
+
+    def team_params
+      params.require(:team).permit(:name, :active, :password, :password_confirmation)
+    end
 
     # Return all teams or only the user teams.
     def find_teams
