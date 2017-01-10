@@ -1,7 +1,7 @@
 class Team < ApplicationRecord
   has_secure_password
 
-  validates_presence_of :name, :password
+  validates_presence_of :name, :password, if: :password_digest_changed?
   validates_inclusion_of :active, in: [true, false]
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
