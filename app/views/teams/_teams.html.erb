@@ -12,7 +12,7 @@
 
             <% if current_user == team.owner %>
               | <%= link_to "Editar", edit_team_path(team) %> |
-              <%= link_to "Excluir", '#', method: :delete,
+              <%= link_to "Excluir", team, method: :delete,
                           data: { confirm: "Tem certeza que deseja excluir?" } %>
             <% end %>
         </div>

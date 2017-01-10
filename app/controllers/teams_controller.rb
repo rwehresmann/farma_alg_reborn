@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :show, :edit, :update]
+  before_action :find_team, only: [:enroll, :show, :edit, :update, :destroy]
 
   def index
     @teams = find_teams
@@ -38,6 +38,12 @@ class TeamsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def destroy
+    @team.destroy
+    flash[:success] = "Turma deletada!"
+    redirect_to teams_url
   end
 
   def enroll
