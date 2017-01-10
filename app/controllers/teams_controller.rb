@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll]
+  before_action :find_team, only: [:enroll, :show]
 
   def index
     @teams = find_teams
@@ -23,6 +23,9 @@ class TeamsController < ApplicationController
     else
       render 'new'
     end
+  end
+
+  def show
   end
 
   def enroll
