@@ -8,7 +8,7 @@
     <div class="box-footer">
       <% if team.enrolled?(current_user) %>
         <div class="pull-right">
-          <%= link_to "Ver", '#' %>
+          <%= link_to "Ver", team %>
 
             <% if current_user == team.owner %>
               | <%= link_to "Editar", edit_team_path(team) %> |
