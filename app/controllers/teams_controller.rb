@@ -26,6 +26,7 @@ class TeamsController < ApplicationController
   end
 
   def show
+    @exercises = @team.exercises
   end
 
   def edit
