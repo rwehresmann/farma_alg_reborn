@@ -1,0 +1,2 @@
+$('#flash-messages').remove();
+$('.content-wrapper').prepend('<%= escape_javascript(render "shared/flash_messages", object: flash) %>');

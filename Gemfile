@@ -36,6 +36,7 @@ gem 'coderay', '~> 1.1'
 # To deal with breadcrumbs.
 gem 'gretel', '~> 3.0'
 gem 'bcrypt', '~> 3.1'
+gem 'cancancan', '~> 1.15'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

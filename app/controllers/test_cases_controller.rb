@@ -1,6 +1,8 @@
 class TestCasesController < ApplicationController
   include ApplicationHelper
 
+  #load_and_authorize_resource
+
   before_action :authenticate_user!
   before_action :find_test_case, only: [:show, :edit, :update, :destroy, :test]
   before_action :find_question, only: [:index, :new, :create, :test_all]
