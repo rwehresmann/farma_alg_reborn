@@ -1,6 +1,6 @@
 class ExercisesController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_exercise, only: [:show, :edit, :update, :destroy]
+  before_action :find_exercise, only: [:show, :edit, :update, :destroy, :list]
 
   def index
     @exercises = Exercise.where(user: current_user)
@@ -39,6 +39,10 @@ class ExercisesController < ApplicationController
     @exercise.destroy
     flash[:success] = "Exercício deletado!"
     redirect_to exercises_url
+  end
+
+  def list
+    @questions = @exercise.questions
   end
 
     private

@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   resources :exercises, shallow: true do
+    member do
+      get :list
+    end
+
     resources :questions do
       resources :test_cases do
         member do
