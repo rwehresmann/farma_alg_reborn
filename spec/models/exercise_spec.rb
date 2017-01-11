@@ -27,5 +27,9 @@ RSpec.describe Exercise, type: :model do
     it "has many questions" do
       expect(relationship_type(Exercise, :questions)).to eq(:has_many)
     end
+
+    it "has and belongs to many teams" do
+      expect(relationship_type(Exercise, :teams)).to eq(:has_and_belongs_to_many)
+    end
   end
 end
