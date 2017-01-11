@@ -36,4 +36,48 @@ RSpec.describe Team, type: :model do
       expect(relationship_type(Team, :users)).to eq(:has_and_belongs_to_many)
     end
   end
+
+  describe '#enrolled?' do
+    let(:team) { create(:team) }
+    let(:user) { create(:user) }
+
+    context "when user is enrolled" do
+      before { team.enroll(user) }
+
+      it "is true" do
+        expect(team.enrolled?(user)).to be_truthy
+      end
+    end
+
+    context "when user isn't enrolled" do
+      it "is false" do
+        expect(team.enrolled?(user)).to be_falsey
+      end
+    end
+  end
+
+  describe '#unenroll' do
+    let(:team) { create(:team) }
+    let(:user) { create(:user) }
+
+    before do
+      team.enroll(user)
+      team.unenroll(user)
+    end
+
+    it "unenroll the user" do
+      expect(team.enrolled?(user)).to be_falsey
+    end
+  end
+
+  describe '#enroll' do
+    let(:team) { create(:team) }
+    let(:user) { create(:user) }
+
+    before { team.enroll(user) }
+
+    it "enroll the user" do
+      expect(team.enrolled?(user)).to be_truthy
+    end
+  end
 end
