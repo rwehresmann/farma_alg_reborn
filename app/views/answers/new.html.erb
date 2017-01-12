@@ -1,0 +1,20 @@
+<div class="box box-solid">
+  <div class="box-header with-border">
+    <h3 class="box-title"><b>Enunciado:</b></h3>
+  </div>
+
+  <div class="box-body">
+    <%= markdown(@question.description) %>
+  </div>
+</div>
+
+<%= form_for @answer do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <div class="form-group">
+    <%= f.label "Resposta" %>
+    <%= f.text_area :content, class: "form-control", rows: 15 %>
+  </div>
+
+  <%= f.submit "Enviar", class: "btn btn-primary pull-right" %>
+<% end %>

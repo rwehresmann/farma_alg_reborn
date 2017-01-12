@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
     resources :questions do
       member do
-        get :answer
+        resources :answers, only: [:new, :create]
       end
 
       resources :test_cases do
