@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     end
 
     resources :questions do
+      member do
+        get :answer
+      end
+
       resources :test_cases do
         member do
           post :test
