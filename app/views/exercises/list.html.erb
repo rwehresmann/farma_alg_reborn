@@ -11,7 +11,7 @@
           <% @questions.each_with_index do |question, index| %>
             <tr>
               <td><%= index %>.</td>
-              <td><%= link_to truncate(question.description, length: 50, separator: " "), '#' %></td>
+              <td><%= link_to truncate(question.description, length: 50, separator: " "), answer_question_url(question) %></td>
               <td>
                 <span class="badge bg-green">Correto</span>
               </td>
