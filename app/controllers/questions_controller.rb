@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: [:show, :edit, :update, :destroy, :answer]
+  before_action :find_question, only: [:show, :edit, :update, :destroy]
   before_action :find_exercise, only: [:index, :new, :create]
 
   def index
@@ -41,9 +41,6 @@ class QuestionsController < ApplicationController
     @question.destroy
     flash[:success] = "Questão excluída!"
     redirect_to exercise_questions_url(exercise)
-  end
-
-  def answer
   end
 
     private
