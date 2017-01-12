@@ -1,1 +1,45 @@
-<% breadcrumb :team, @team %>
+<div class="nav-tabs-custom">
+  <ul class="nav nav-tabs">
+    <li class="active">
+      <a href="#exercise-lists" data-toggle="tab" aria-expanded="true">Listas de exercício</a>
+    </li>
+    <li>
+      <a href="#enroled-students" data-toggle="tab" aria-expanded="true">Alunos matriculados</a>
+    </li>
+    <li>
+      <a href="#statistics" data-toggle="tab" aria-expanded="true">Estatísticas</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="exercise-lists">
+
+      <div class="box-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th style="width: 10px">#</th>
+              <th>Exercício</th>
+              <th>Progresso</th>
+            </tr>
+            <% @exercises.each_with_index do |exercise, index| %>
+              <tr>
+                <td><%= index %>.</td>
+                <td><%= link_to_if(current_user.teacher?, exercise.title, list_exercise_url(exercise)) %></td>
+                <td>
+                  <div class="progress progress-xs">
+                    <div class="progress-bar progress-bar-alert" style="width: 55%"></div>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="tab-pane" id="enroled-students">
+      lala
+    </div>
+  </div>
+</div>
