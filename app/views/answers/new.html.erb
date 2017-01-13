@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<%= form_for @answer do |f| %>
+<%= form_for @answer, remote: true do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
 
   <div class="form-group">
@@ -18,3 +18,5 @@
 
   <%= f.submit "Enviar", class: "btn btn-primary pull-right" %>
 <% end %>
+
+<div id="test-results"></div>

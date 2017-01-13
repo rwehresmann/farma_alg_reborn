@@ -1,0 +1,7 @@
+<% if @answer.errors.any? %>
+  $('#error_explanation').remove();
+  $('#new_answer').prepend('<%= j(render "shared/error_messages", object: @answer) %>');
+<% else %>
+  $('#flash-messages').remove();
+  $('.content-header').append('<%= j(render "shared/flash_messages", object: flash) %>');
+<% end %>
