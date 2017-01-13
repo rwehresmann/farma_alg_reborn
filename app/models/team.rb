@@ -20,11 +20,12 @@ class Team < ApplicationRecord
     users.include?(user)
   end
 
-  # Add a user to the class.
+  # Add a user to the team.
   def enroll(user)
     self.users << user
   end
 
+  # Remove the user from the team.
   def unenroll(user)
     self.users.delete(user)
   end
