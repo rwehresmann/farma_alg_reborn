@@ -23,10 +23,12 @@ class User < ApplicationRecord
     teams
   end
 
+  # Check if the question is unanswered.
   def unanswered?(question)
     answers.where(question: question).empty?
   end
 
+  # Check if the question is already correctly answered.
   def answered_correctly?(question)
     !answers.where(question: question, correct: true).empty?
   end

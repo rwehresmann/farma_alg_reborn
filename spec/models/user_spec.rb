@@ -72,4 +72,70 @@ RSpec.describe User, type: :model do
       expect(relationship_type(User, :teams)).to eq(:has_and_belongs_to_many)
     end
   end
+
+  describe '#my_teams' do
+    context "when is a student" do
+      let(:user) { create(:user) }
+      before do
+        create_pair(:team).each { |team| team.enroll(user) }
+        create_pair(:team)
+      end
+
+      it "returns only the teams where he is enrolled" do
+        expect(user.my_teams).to eq(user.teams)
+      end
+    end
+
+    context "when is a teacher" do
+      let(:user) { create(:user, :teacher) }
+      before do
+        create_pair(:team, owner: user)
+        create_pair(:team)
+      end
+
+      it "returns only the teams he created" do
+        expect(user.my_teams).to eq(user.teams_created)
+      end
+    end
+  end
+
+  describe '#answered_correctly?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    before { create_pair(:answer, user: user, question: question) }
+
+    context "when is answered right" do
+      before { create(:answer, :correct, user: user, question: question) }
+
+      it "returns true" do
+        expect(user.answered_correctly?(question)).to be_truthy
+      end
+    end
+
+    context "when isn't answered right" do
+      it "returns false" do
+        expect(user.answered_correctly?(question)).to be_falsey
+      end
+    end
+  end
+
+  describe '#unanswered?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context "when answered" do
+      before { create(:answer, user: user, question: question) }
+
+      it "returns false" do
+        expect(user.unanswered?(question)).to be_falsey
+      end
+    end
+
+    context "when unanswered" do
+      it "returns true" do
+        expect(user.unanswered?(question)).to be_truthy
+      end
+    end
+  end
 end
