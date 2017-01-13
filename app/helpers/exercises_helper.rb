@@ -25,6 +25,7 @@ module ExercisesHelper
     "#{count} questão cadastrada"
   end
 
+  # Returns a span tag with the right label.
   def question_status(question)
     if current_user.answered_correctly?(question)
       '<span class="badge bg-green">Correta</span>'
@@ -33,5 +34,12 @@ module ExercisesHelper
     else
       '<span class="badge bg-red text-center" style="width=70px">Errada</span>'
     end
+  end
+
+  # Returns a width property filled according user progress
+  # (in the current template, progressbar is filled according the
+  # width property, so it must be created dynamically).
+  def progress(exercise)
+    "width: #{exercise.user_progress(current_user)}%"
   end
 end
