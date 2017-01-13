@@ -7,6 +7,7 @@ class Question < ApplicationRecord
 
   belongs_to :exercise
   has_many :test_cases
+  has_many :answers
 
   # Run the source code with the specified input of each test case and check
   # its output.

@@ -17,6 +17,10 @@ RSpec.describe Question, type: :model do
     it "has many test cases" do
       expect(relationship_type(Question, :test_cases)).to eq(:has_many)
     end
+
+    it "has many answers" do
+      expect(relationship_type(Question, :answers)).to eq(:has_many)
+    end
   end
 
   describe '#test_all' do
