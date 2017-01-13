@@ -24,4 +24,14 @@ module ExercisesHelper
     return "#{count} questões cadastradas" if count >= 0
     "#{count} questão cadastrada"
   end
+
+  def question_status(question)
+    if current_user.answered_correctly?(question)
+      '<span class="badge bg-green">Correta</span>'
+    elsif current_user.unanswered?(question)
+      '<span class="badge bg-gray">Sem resposta</span>'
+    else
+      '<span class="badge bg-red text-center" style="width=70px">Errada</span>'
+    end
+  end
 end

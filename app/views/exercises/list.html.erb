@@ -6,14 +6,14 @@
           <tr>
             <th style="width: 10px">#</th>
             <th>Questão</th>
-            <th style="width: 70px">Status</th>
+            <th style="width: 70px">Resposta</th>
           </tr>
           <% @questions.each_with_index do |question, index| %>
             <tr>
               <td><%= index %>.</td>
               <td><%= link_to truncate(question.description, length: 50, separator: " "), new_answer_url(question) %></td>
               <td>
-                <span class="badge bg-green">Correto</span>
+                <%= raw question_status(question) %>
               </td>
             </tr>
           <% end %>

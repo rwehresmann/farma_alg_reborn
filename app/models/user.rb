@@ -22,4 +22,12 @@ class User < ApplicationRecord
     return self.teams_created if teacher?
     teams
   end
+
+  def unanswered?(question)
+    answers.where(question: question).empty?
+  end
+
+  def answered_correctly?(question)
+    !answers.where(question: question, correct: true).empty?
+  end
 end
