@@ -18,9 +18,9 @@ class Question < ApplicationRecord
       # doesn't write the compiler output in the same file.
       output = run("#{file_name}_#{index}", file_ext, source_code, test_case.input)
       if has_error? || output != test_case.output
-        results << { title: test_case.title, status: :error, output: output }
+        results << { test_case: test_case, status: :error, output: output }
       else
-        results << { title: test_case.title, status: :success, output: output }
+        results << { test_case: test_case, status: :success, output: output }
       end
     end
     results

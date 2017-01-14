@@ -5,10 +5,10 @@
 
   <% if result[:status] == :error %>
     div.attr('class', 'alert alert-danger text-left');
-    div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
+    div.append("<i class='icon fa fa-close'> <%= result[:test_case][:title] %></i>");
   <% else %>
     div.attr('class', 'alert alert-success text-left');
-    div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
+    div.append("<i class='icon fa fa-check'> <%= result[:test_case][:title] %></i>");
   <% end %>
   div.append("<b><a href='#' id='test_<%= index %>' class='pull-right show-log' data-custom-value='<%= j result[:output] %>'>Ver o resultado</a></b>")
 
