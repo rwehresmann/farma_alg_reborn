@@ -28,4 +28,44 @@ RSpec.describe Answer, type: :model do
       expect(relationship_type(Answer, :question)).to eq(:belongs_to)
     end
   end
+
+  describe "Callbacks -->" do
+    describe '#set_correct (before_create)' do
+      let(:question) { create(:question) }
+      before { create(:test_case, output: "Helo, world.\n", question: question) }
+
+      context "when is correct answered" do
+        before do
+          # This source code return the desired output setted in test case.
+          source_code = File.open("spec/support/files/hello_world.pas").read
+          @answer = create(:answer, content: source_code)
+        end
+
+        it "is setted as true" do
+          expect(@answer.correct).to be_truthy
+        end
+      end
+
+      context "when answer isn't correct answered" do
+        let(:answer) { create(:answer, question: question) }
+
+        it "is setted as false" do
+          expect(answer.correct).to be_falsey
+        end
+      end
+    end
+
+    describe '#save_test_cases_result (after_create)' do
+      let(:question) { create(:question, test_cases_count: 2) }
+      before { create(:answer, question: question) }
+
+      it "saves the test cases result" do
+        expect(AnswerTestCaseResult.all.count).to eq(question.test_cases.count)
+      end
+
+      it "sets the output" do
+        expect(AnswerTestCaseResult.first.output).to_not be_nil
+      end
+    end
+  end
 end
