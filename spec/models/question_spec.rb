@@ -26,7 +26,7 @@ RSpec.describe Question, type: :model do
   describe '#test_all' do
     let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
     let(:results) do
-      question = create(:question_with_test_cases, test_cases_count: 2 )
+      question = create(:question, test_cases_count: 2 )
       question.test_all("test_file", "pas", source_code)
     end
 
