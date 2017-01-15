@@ -100,13 +100,14 @@ RSpec.describe User, type: :model do
   end
 
   describe '#answered_correctly?' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question) }
-
-    before { create_pair(:answer, user: user, question: question) }
+    let!(:user) { create(:user) }
+    let!(:exercise) { create_an_exercise_to_user(user) }
+    let!(:question) { create_a_question_to_exercise(exercise) }
 
     context "when is answered right" do
-      before { create(:answer, :correct, user: user, question: question) }
+      before do
+        create_right_answer_to_question(question)
+      end
 
       it "returns true" do
         expect(user.answered_correctly?(question)).to be_truthy
@@ -114,6 +115,8 @@ RSpec.describe User, type: :model do
     end
 
     context "when isn't answered right" do
+      before { create_wrong_answer_to_question(question) }
+
       it "returns false" do
         expect(user.answered_correctly?(question)).to be_falsey
       end
