@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20170114181104) do
   create_table "answer_test_case_results", force: :cascade do |t|
     t.integer  "answer_id"
     t.integer  "test_case_id"
-    t.string   "output"
+    t.string   "output",       null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.index ["answer_id"], name: "index_answer_test_case_results_on_answer_id"
