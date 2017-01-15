@@ -8,6 +8,7 @@ require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'support/helpers/relationships'
+require 'support/helpers/answer_process_helper'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -62,6 +63,7 @@ RSpec.configure do |config|
 
   # Helpers
   config.include Helpers::Relationships, type: :model
+  config.include Helpers::AnswerProcessHelper, type: :model
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include Warden::Test::Helpers
 end
