@@ -1,6 +1,8 @@
 class Answer < ApplicationRecord
   include ApplicationHelper
 
+  attr_reader :results
+
   before_create :set_correct
   after_create :save_test_cases_result
 
@@ -9,7 +11,7 @@ class Answer < ApplicationRecord
 
   belongs_to :user
   belongs_to :question
-  has_many :answer_test_case_results
+  has_many :test_cases_result, class_name: "AnswerTestCaseResult"
 
     private
 
