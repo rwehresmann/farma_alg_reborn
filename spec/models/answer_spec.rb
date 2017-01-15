@@ -31,23 +31,26 @@ RSpec.describe Answer, type: :model do
 
   describe "Callbacks -->" do
     describe '#set_correct (before_create)' do
-      let(:question) { create(:question) }
-      before { create(:test_case, output: "Helo, world.\n", question: question) }
+      let!(:question) { create(:question) }
 
       context "when is correct answered" do
-        before do
-          # This source code return the desired output setted in test case.
-          source_code = File.open("spec/support/files/hello_world.pas").read
-          @answer = create(:answer, content: source_code)
-        end
+        let!(:answer) { create_right_answer_to_question(question) }
 
         it "is setted as true" do
-          expect(@answer.correct).to be_truthy
+          expect(answer.correct).to be_truthy
         end
       end
 
       context "when answer isn't correct answered" do
-        let(:answer) { create(:answer, question: question) }
+        let(:answer) { create_wrong_answer_to_question(question) }
+
+        it "is setted as false" do
+          expect(answer.correct).to be_falsey
+        end
+      end
+
+      context "when answer doesn't compile successfully" do
+        let(:answer) { create_wrong_answer_to_question(question) }
 
         it "is setted as false" do
           expect(answer.correct).to be_falsey
