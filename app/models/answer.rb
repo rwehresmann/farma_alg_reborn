@@ -11,7 +11,7 @@ class Answer < ApplicationRecord
 
   belongs_to :user
   belongs_to :question
-  has_many :test_cases_result, class_name: "AnswerTestCaseResult"
+  has_many :test_cases_results, class_name: "AnswerTestCaseResult"
 
     private
 

@@ -27,6 +27,10 @@ RSpec.describe Answer, type: :model do
     it "belongs to question" do
       expect(relationship_type(Answer, :question)).to eq(:belongs_to)
     end
+
+    it "has many test cases results" do
+      expect(relationship_type(Answer, :test_cases_results)).to eq(:has_many)
+    end
   end
 
   describe "Callbacks -->" do
