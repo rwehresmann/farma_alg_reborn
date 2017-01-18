@@ -40,38 +40,63 @@ RSpec.describe Answer, type: :model do
       context "when is correct answered" do
         let!(:answer) { create_right_answer_to_question(question) }
 
-        it "is setted as true" do
+        it "correct is setted as true and compilation_error as false" do
           expect(answer.correct).to be_truthy
+          expect(answer.compilation_error).to be_falsey
+          expect(answer.compiler_output).to_not be_nil
         end
       end
 
-      context "when answer isn't correct answered" do
+      context "when answer isn't correct answered, but compiled successfully" do
         let(:answer) { create_wrong_answer_to_question(question) }
 
-        it "is setted as false" do
+        it "correct is setted as false and compilation_error as false too" do
           expect(answer.correct).to be_falsey
+          expect(answer.compilation_error).to be_falsey
+          expect(answer.compiler_output).to_not be_nil
         end
       end
 
       context "when answer doesn't compile successfully" do
-        let(:answer) { create_wrong_answer_to_question(question) }
+        let(:answer) { create_answer_who_not_compile_to_question(question) }
 
-        it "is setted as false" do
+        it "answer is setted as false and compilation_error too" do
           expect(answer.correct).to be_falsey
+          expect(answer.compilation_error).to be_truthy
+          expect(answer.compiler_output).to_not be_nil
         end
       end
     end
 
     describe '#save_test_cases_result (after_create)' do
-      let(:question) { create(:question, test_cases_count: 2) }
-      before { create(:answer, question: question) }
+      let(:question) { create(:question) }
+      let(:results_count) { Proc.new { |answer| AnswerTestCaseResult.where(answer: answer).count } }
 
-      it "saves the test cases result" do
-        expect(AnswerTestCaseResult.all.count).to eq(question.test_cases.count)
+      context "when is correct answered" do
+        let!(:answer) { create_right_answer_to_question(question) }
+
+        it "saves the test cases result" do
+          expect(question.test_cases.count > 0).to be_truthy
+          expect(results_count.call(answer)).to eq(question.test_cases.count)
+        end
       end
 
-      it "sets the output" do
-        expect(AnswerTestCaseResult.first.output).to_not be_nil
+      context "when answer isn't correct answered, but compiled successfully" do
+        let!(:answer) { create_wrong_answer_to_question(question) }
+
+        it "saves the test cases result" do
+          expect(question.test_cases.count > 0).to be_truthy
+          expect(results_count.call(answer)).to eq(question.test_cases.count)
+        end
+      end
+
+      context "when answer doesn't compile successfully" do
+        let!(:answer) { create_answer_who_not_compile_to_question(question) }
+
+        it "saves the test cases result" do
+          expect(question.test_cases.count > 0).to be_truthy
+          expect(results_count.call(answer)).to eq(0)
+        end
       end
     end
   end
