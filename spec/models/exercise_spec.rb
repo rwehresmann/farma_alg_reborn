@@ -34,8 +34,8 @@ RSpec.describe Exercise, type: :model do
   end
 
   describe '#user_progress' do
-    let(:user) { create(:user) }
-    let(:exercise) { create_an_exercise_to_user(user) }
+    let!(:user) { create(:user) }
+    let!(:exercise) { create_an_exercise_to_user(user) }
 
     context "when none question is right answered" do
       before { create_a_question_to_exercise(exercise) }
@@ -45,10 +45,12 @@ RSpec.describe Exercise, type: :model do
       end
     end
 
-    context "when is incomplete, but has a question answered correctly" do
+    context "when is incomplete but has a question answered correctly" do
       before do
-        create_a_question_to_exercise(exercise)
-        create_right_answer_to_user_exercise(user, exercise)
+        question = create_a_question_to_exercise(exercise)
+        create_right_answer_to_question(question, user)
+        question = create_a_question_to_exercise(exercise)
+        create_wrong_answer_to_question(question, user)
       end
 
       it "returns a value between 0 and 100" do
@@ -58,7 +60,10 @@ RSpec.describe Exercise, type: :model do
 
     context "when all questions are right answered" do
       before do
-        2.times { create_right_answer_to_user_exercise(user, exercise) }
+        2.times do
+          question = create_a_question_to_exercise(exercise)
+          create_right_answer_to_question(question, user)
+        end
       end
 
       it "returns 100" do
