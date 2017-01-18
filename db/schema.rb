@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170114181104) do
+ActiveRecord::Schema.define(version: 20170118152419) do
 
   create_table "answer_test_case_results", force: :cascade do |t|
     t.integer  "answer_id"
@@ -23,12 +23,14 @@ ActiveRecord::Schema.define(version: 20170114181104) do
   end
 
   create_table "answers", force: :cascade do |t|
-    t.string   "content",                     null: false
-    t.boolean  "correct",     default: false, null: false
+    t.string   "content",                           null: false
+    t.boolean  "correct",           default: false, null: false
     t.integer  "user_id"
     t.integer  "question_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.boolean  "compilation_error", default: false
+    t.string   "compiler_output"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
