@@ -1,10 +1,14 @@
+require 'utils/compilers'
+
 class Answer < ApplicationRecord
   include ApplicationHelper
-
+  include Compilers
   attr_reader :results
 
   before_create :set_correct
-  after_create :save_test_cases_result
+  # If compilator points error in source code, there is no need to
+  # test with the question test cases.
+  after_create :save_test_cases_result, unless: :compilation_error?
 
   validates_presence_of :content
   validates_inclusion_of :correct, in: [true, false]
@@ -12,15 +16,27 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
+  has_many :test_cases, through: :test_cases_results
 
     private
 
-    # Compile the source code and run the test cases to check if the answer
+    # Compile the source code, set compiler_output and compilation_erro flag,
+    # and run the test cases if the answer is compiled succesfully to check if
     # is right or wrong. We use @results because after the answer is saved,
     # after create callback call a new method and use the same results.
     def set_correct
-      @results = question.test_all(plain_current_datetime, "pas", content)
-      self.correct = is_correct?(@results)
+      filename = plain_current_datetime
+      compile(filename, "pas", content)
+      self.compiler_output = compiler_output_content(filename)
+
+      if has_error?
+        self.compilation_error = true
+        self.correct = false
+      else
+        self.compilation_error = false
+        @results = question.test_all(filename, "pas", content)
+        self.correct = is_correct?(@results)
+      end
     end
 
     # Save the result accoring the result of each test case (@results is filled
