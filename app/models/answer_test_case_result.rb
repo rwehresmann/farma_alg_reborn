@@ -3,4 +3,8 @@ class AnswerTestCaseResult < ApplicationRecord
 
   belongs_to :answer
   belongs_to :test_case
+
+  def self.result(answer, test_case)
+    where(test_case: test_case, answer: answer)
+  end
 end
