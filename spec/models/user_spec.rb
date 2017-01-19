@@ -106,7 +106,7 @@ RSpec.describe User, type: :model do
 
     context "when is answered right" do
       before do
-        create_right_answer_to_question(question)
+        create_right_answer_to_question(question, user)
       end
 
       it "returns true" do

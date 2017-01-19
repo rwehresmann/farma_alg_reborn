@@ -8,7 +8,8 @@ module Helpers
     # wo is compiled succesfully, but to the question is added a test case who
     # doesn't return "Hello, worl.", and so the answer is evaluated as wrong.
 
-    def create_an_exercise_to_user(user)
+    def create_an_exercise_to_user(user = nil)
+      user ||= create(:user)
       create(:exercise, user: user)
     end
 
@@ -22,7 +23,7 @@ module Helpers
       create(:answer, question: question, user: user)
     end
     def create_wrong_answer_to_question(question, user = nil)
-      
+
       create(:test_case, question: question)
       user ||= create(:user)
       create(:answer, question: question, user: user)

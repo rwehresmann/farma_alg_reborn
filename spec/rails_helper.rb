@@ -63,7 +63,7 @@ RSpec.configure do |config|
 
   # Helpers
   config.include Helpers::Relationships, type: :model
-  config.include Helpers::AnswerProcessHelper, type: :model
+  config.include Helpers::AnswerProcessHelper
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include Warden::Test::Helpers
 end
