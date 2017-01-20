@@ -57,6 +57,7 @@ module SimilarityMachine
   def test_cases_output_similarity(answer_1, answer_2)
     similarity = []
     test_cases = common_test_cases(answer_1.test_cases, answer_2.test_cases)
+
     test_cases.each do |test_case|
       result_1 = AnswerTestCaseResult.result(answer_1, test_case)
       result_2 = AnswerTestCaseResult.result(answer_2, test_case)
