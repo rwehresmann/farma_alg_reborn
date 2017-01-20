@@ -26,15 +26,15 @@ class Answer < ApplicationRecord
     # after create callback call a new method and use the same results.
     def set_correct
       filename = plain_current_datetime
-      compile(filename, "pas", content)
-      self.compiler_output = compiler_output_content(filename)
+      self.compiler_output = compile(filename, "pas", content)
 
       if has_error?
         self.compilation_error = true
         self.correct = false
       else
         self.compilation_error = false
-        @results = question.test_all(filename, "pas", content)
+        # The source code is already compiled, so 'compile: false'.
+        @results = question.test_all(filename, "pas", content, compile: false)
         self.correct = is_correct?(@results)
       end
     end
