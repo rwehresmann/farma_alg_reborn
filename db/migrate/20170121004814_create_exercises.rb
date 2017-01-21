@@ -3,8 +3,9 @@ class CreateExercises < ActiveRecord::Migration[5.0]
     create_table :exercises do |t|
       t.string :title, null: false
       t.string :description, null: false
-      t.references :learning_object
-      t.timestamps
+      t.references :user
+
+      t.timestamps null: false
     end
   end
 end

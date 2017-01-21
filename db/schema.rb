@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170120131130) do
+ActiveRecord::Schema.define(version: 20170121012119) do
 
   create_table "answer_test_case_results", force: :cascade do |t|
     t.integer  "answer_id"
@@ -26,37 +26,32 @@ ActiveRecord::Schema.define(version: 20170120131130) do
   create_table "answers", force: :cascade do |t|
     t.string   "content",                           null: false
     t.boolean  "correct",           default: false, null: false
-    t.integer  "user_id"
-    t.integer  "question_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
     t.boolean  "compilation_error", default: false
     t.string   "compiler_output"
+    t.integer  "user_id"
+    t.integer  "question_id"
+    t.integer  "team_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
+    t.index ["team_id"], name: "index_answers_on_team_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
   create_table "exercises", force: :cascade do |t|
-    t.string   "title",              null: false
-    t.string   "description",        null: false
-    t.integer  "learning_object_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "title",       null: false
+    t.string   "description", null: false
     t.integer  "user_id"
-    t.index ["learning_object_id"], name: "index_exercises_on_learning_object_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["user_id"], name: "index_exercises_on_user_id"
   end
 
-  create_table "exercises_learning_objects", force: :cascade do |t|
-    t.integer "exercise_id"
-    t.integer "learning_object_id"
-    t.index ["exercise_id"], name: "index_exercises_learning_objects_on_exercise_id"
-    t.index ["learning_object_id"], name: "index_exercises_learning_objects_on_learning_object_id"
-  end
-
   create_table "exercises_teams", force: :cascade do |t|
-    t.integer "exercise_id"
-    t.integer "team_id"
+    t.integer  "exercise_id"
+    t.integer  "team_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["exercise_id"], name: "index_exercises_teams_on_exercise_id"
     t.index ["team_id"], name: "index_exercises_teams_on_team_id"
   end
@@ -80,20 +75,22 @@ ActiveRecord::Schema.define(version: 20170120131130) do
   end
 
   create_table "teams_users", force: :cascade do |t|
-    t.integer "team_id"
-    t.integer "user_id"
+    t.integer  "team_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["team_id"], name: "index_teams_users_on_team_id"
     t.index ["user_id"], name: "index_teams_users_on_user_id"
   end
 
   create_table "test_cases", force: :cascade do |t|
+    t.string   "title",       null: false
     t.string   "description"
     t.string   "input"
     t.string   "output",      null: false
     t.integer  "question_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.string   "title",       null: false
     t.index ["question_id"], name: "index_test_cases_on_question_id"
   end
 
