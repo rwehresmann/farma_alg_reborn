@@ -28,6 +28,10 @@ RSpec.describe Answer, type: :model do
       expect(relationship_type(Answer, :question)).to eq(:belongs_to)
     end
 
+    it "belongs to team" do
+      expect(relationship_type(Answer, :team)).to eq(:belongs_to)
+    end
+
     it "has many test cases results" do
       expect(relationship_type(Answer, :test_cases_results)).to eq(:has_many)
     end

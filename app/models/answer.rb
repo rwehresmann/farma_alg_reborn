@@ -15,6 +15,7 @@ class Answer < ApplicationRecord
 
   belongs_to :user
   belongs_to :question
+  belongs_to :team
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
 

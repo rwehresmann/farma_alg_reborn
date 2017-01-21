@@ -32,6 +32,10 @@ RSpec.describe Team, type: :model do
       expect(relationship_type(Team, :owner)).to eq(:belongs_to)
     end
 
+    it "has many answers" do
+      expect(relationship_type(Team, :answers)).to eq(:has_many)
+    end
+
     it "has and belongs to many users" do
       expect(relationship_type(Team, :users)).to eq(:has_and_belongs_to_many)
     end
