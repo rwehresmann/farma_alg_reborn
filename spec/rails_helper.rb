@@ -35,7 +35,7 @@ RSpec.configure do |config|
 
   # Database clean strategies are all treated whit DatabaseCleaner, because
   # 'before(:all)' blocks are used to speed up the test suite (these blocks are)
-  # invoked before the transaction is opened, living data around. 
+  # invoked before the transaction is opened, living data around.
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
@@ -87,4 +87,5 @@ RSpec.configure do |config|
   config.include Helpers::AnswerProcessHelper
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include Warden::Test::Helpers
+  config.include ActiveJob::TestHelper
 end
