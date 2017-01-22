@@ -35,6 +35,10 @@ RSpec.describe Answer, type: :model do
     it "has many test cases results" do
       expect(relationship_type(Answer, :test_cases_results)).to eq(:has_many)
     end
+
+    it "has many similarities" do
+      expect(relationship_type(Answer, :similarities)).to eq(:has_many)
+    end
   end
 
   describe "Callbacks -->" do
