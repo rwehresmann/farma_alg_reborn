@@ -42,7 +42,7 @@ RSpec.describe Answer, type: :model do
   end
 
   describe "Callbacks -->" do
-    describe '#set_correct (before_create)' do
+    describe '#before_create' do
       let!(:question) { create(:question) }
 
       context "when is correct answered" do
@@ -76,7 +76,7 @@ RSpec.describe Answer, type: :model do
       end
     end
 
-    describe '#save_test_cases_result (after_create)' do
+    describe '#after_create' do
       let(:question) { create(:question) }
       let(:results_count) { Proc.new { |answer| AnswerTestCaseResult.where(answer: answer).count } }
 
