@@ -36,6 +36,11 @@ RSpec.describe AnswerTestCaseResult, type: :model do
     let(:answer) { create(:answer, question: question) }
     let(:result) { AnswerTestCaseResult.result(answer, test_case) }
 
+    before do
+      create(:answer_test_case_result, answer: answer, test_case: test_case)
+      create_pair(:answer_test_case_result)
+    end
+
     it "returns the correct result" do
       expect(result.test_case).to eq(test_case)
       expect(result.answer).to eq(answer)

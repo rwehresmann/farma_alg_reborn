@@ -48,9 +48,9 @@ RSpec.describe Exercise, type: :model do
     context "when is incomplete but has a question answered correctly" do
       before do
         question = create_a_question_to_exercise(exercise)
-        create_right_answer_to_question(question, user)
+        create_right_answer_to_question(question, user: user)
         question = create_a_question_to_exercise(exercise)
-        create_wrong_answer_to_question(question, user)
+        create_wrong_answer_to_question(question, user: user)
       end
 
       it "returns a value between 0 and 100" do
@@ -62,7 +62,7 @@ RSpec.describe Exercise, type: :model do
       before do
         2.times do
           question = create_a_question_to_exercise(exercise)
-          create_right_answer_to_question(question, user)
+          create_right_answer_to_question(question, user: user)
         end
       end
 

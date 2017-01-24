@@ -5,6 +5,37 @@ FactoryGirl.define do
     question
     team
 
+    after(:build) do |answer|
+      class << answer
+        def check_answer; end
+        def save_results; end
+      end
+    end
+
+    trait :whit_custom_callbacks do
+      after(:build) do |answer|
+        class << answer
+          def check_answer; super; end
+          def save_results; super; end
+        end
+      end
+    end
+
+    trait :correct do
+      correct true
+      compilation_error false
+    end
+
+    trait :whit_compilation_error do
+      correct false
+      compilation_error false
+    end
+
+    trait :whit_compilation_error do
+      correct false
+      compilation_error false
+    end
+
     trait :invalid_content do
       content "This string doesn't compile as a code"
     end

@@ -46,7 +46,7 @@ RSpec.describe Answer, type: :model do
       let!(:question) { create(:question) }
 
       context "when is correct answered" do
-        let!(:answer) { create_right_answer_to_question(question) }
+        let!(:answer) { create_right_answer_to_question(question, callbacks: true) }
 
         it "correct is setted as true and compilation_error as false" do
           expect(answer.correct).to be_truthy
@@ -56,7 +56,7 @@ RSpec.describe Answer, type: :model do
       end
 
       context "when answer isn't correct answered, but compiled successfully" do
-        let(:answer) { create_wrong_answer_to_question(question) }
+        let(:answer) { create_wrong_answer_to_question(question, callbacks: true) }
 
         it "correct is setted as false and compilation_error as false too" do
           expect(answer.correct).to be_falsey
@@ -66,7 +66,7 @@ RSpec.describe Answer, type: :model do
       end
 
       context "when answer doesn't compile successfully" do
-        let(:answer) { create_answer_who_not_compile_to_question(question) }
+        let(:answer) { create_answer_whit_compilation_error_to_question(question, callbacks: true) }
 
         it "answer is setted as false and compilation_error too" do
           expect(answer.correct).to be_falsey
@@ -81,7 +81,7 @@ RSpec.describe Answer, type: :model do
       let(:results_count) { Proc.new { |answer| AnswerTestCaseResult.where(answer: answer).count } }
 
       context "when is correct answered" do
-        let!(:answer) { create_right_answer_to_question(question) }
+        let!(:answer) { create_right_answer_to_question(question, callbacks: true) }
 
         it "saves the test cases result" do
           expect(question.test_cases.count > 0).to be_truthy
@@ -90,7 +90,7 @@ RSpec.describe Answer, type: :model do
       end
 
       context "when answer isn't correct answered, but compiled successfully" do
-        let!(:answer) { create_wrong_answer_to_question(question) }
+        let!(:answer) { create_wrong_answer_to_question(question, callbacks: true) }
 
         it "saves the test cases result" do
           expect(question.test_cases.count > 0).to be_truthy
@@ -99,7 +99,7 @@ RSpec.describe Answer, type: :model do
       end
 
       context "when answer doesn't compile successfully" do
-        let!(:answer) { create_answer_who_not_compile_to_question(question) }
+        let!(:answer) { create_answer_whit_compilation_error_to_question(question, callbacks: true) }
 
         it "saves the test cases result" do
           expect(question.test_cases.count > 0).to be_truthy
