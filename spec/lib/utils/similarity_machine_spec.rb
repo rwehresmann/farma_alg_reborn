@@ -4,9 +4,19 @@ require 'utils/similarity_machine'
 include SimilarityMachine
 
 describe SimilarityMachine do
-  # TODO
+  # TODO: waithing a answer in https://github.com/rspec/rspec-rails/issues/1781
   describe '#answers_similarity' do
-    let(:answer_1) { create(:answer) }
+    subject { answers_similarity(answer_1, answer_2) }
+    let(:answer_1) { create(:answer, :whit_compilation_error) }
+
+    context "when both answers have compilation error" do
+      let(:answer_2) { create(:answer, :invalid_content) }
+
+      xit "calls compiler_output_similarity method" do
+        expect(described_class).to receive(:compiler_output_similarity)
+        subject
+      end
+    end
 
     context "when at least one answer have compilation error" do
 
@@ -65,16 +75,13 @@ describe SimilarityMachine do
     end
   end
 
-  # TODO: Add more interesting tests here, comparing "midle scenarios".
-  # To do that, is necessary whait the modification to deal with
-  # defferent inputs.
   describe '#test_cases_output_similarity' do
     let(:similarity) { test_cases_output_similarity(answer_1, answer_2) }
     let(:question) { create(:question) }
-    let(:answer_1) { create_right_answer_to_question(question) }
+    let(:answer_1) { create_right_answer_to_question(question, callbacks: true) }
 
     context "when are equal" do
-      let(:answer_2) { create_right_answer_to_question(question) }
+      let(:answer_2) { create_right_answer_to_question(question, callbacks: true) }
 
       it "returns 100% similarity" do
         expect(similarity).to eq(100)
@@ -82,7 +89,7 @@ describe SimilarityMachine do
     end
 
     context "when are completely different" do
-      let(:answer_2) { create(:answer, :ola_mundo, question: question) }
+      let(:answer_2) { create(:answer, :whit_custom_callbacks, :ola_mundo, question: question) }
 
       it "returns 0% similarity" do
         expect(similarity).to eq(0)

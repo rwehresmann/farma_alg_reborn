@@ -1,21 +1,30 @@
+require 'extensions/array'
+
 module SimilarityMachine
   include Amatch
 
   # Rules:
-  # - If at least one answer have compilation error, call
-  #   'compiler_output_similarity';
-  # - If none answer have compilation error, call source_code_similarity.
-  # The formula at the end compute the end similarity.
+  # - If both answers have compilation error, the most interesting is return
+  #   the compiler output similarity;
+  # - If at least one answer have compilation error, the most interesting is
+  #   return the source code similarity;
+  # - Any other case we don't have compilation error, and in this case the most
+  #   interesting is return the answers formula.
   def answers_similarity(answer_1, answer_2)
-    if !answer_1.correct? && !answer_2.correct?
-      content_sim = compiler_output_similarity(answer_1, answer_2)
+    if answer_1.compilation_error? && answer_2.compilation_error?
+      return compiler_output_similarity(answer_1, answer_2)
+    elsif answer_1.compilation_error? || answer_2.compilation_error?
+      return source_code_similarity(answer_1, answer_2)
     else
       content_sim = source_code_similarity(answer_1, answer_2)
+      test_cases_sim = test_cases_output_similarity(answer_1, answer_2)
+      answers_formula(content_sim, test_cases_sim)
     end
+  end
 
-    test_cases_sim = test_cases_output_similarity(answer_1, answer_2)
-
-    0.4 * content_sim + 0.6 * test_cases_sim
+  # Formula to compute answers similarity.
+  def answers_formula(content_sim, test_cases_sim)
+    0.4 * content_sim + 0.6 * test_cases_sim if test_cases_sim
   end
 
   # Check the similarity between the compiler output for each answer.
@@ -56,7 +65,7 @@ module SimilarityMachine
   # Because that we check for common test cases.
   def test_cases_output_similarity(answer_1, answer_2)
     similarity = []
-    test_cases = common_test_cases(answer_1.test_cases, answer_2.test_cases)
+    test_cases = answer_1.test_cases.to_a.common_values(answer_2.test_cases.to_a)
 
     test_cases.each do |test_case|
       result_1 = AnswerTestCaseResult.result(answer_1, test_case)
@@ -65,16 +74,6 @@ module SimilarityMachine
     end
 
     return 0 if similarity.empty?
-    similarity.reduce(:+).to_f / similarity.size
-  end
-
-  # User exclusively in 'test_cases_output_similarity' method, to filter the
-  # test cases to check when the answers haven't been tested in all the same
-  # test cases. In this case, we would like to check t
-  def common_test_cases(test_cases_1, test_cases_2)
-    not_common = []
-    not_common += test_cases_1 - test_cases_2
-    not_common += test_cases_2 - test_cases_1
-    (test_cases_1 + test_cases_2 - not_common).uniq
+    similarity.avg
   end
 end
