@@ -4,26 +4,44 @@ require 'utils/similarity_machine'
 include SimilarityMachine
 
 describe SimilarityMachine do
-  # TODO: waithing a answer in https://github.com/rspec/rspec-rails/issues/1781
+  # TODO: Add similarity tests
   describe '#answers_similarity' do
-    subject { answers_similarity(answer_1, answer_2) }
-    let(:answer_1) { create(:answer, :whit_compilation_error) }
+    let(:test_obj) { Object.new }
+
+    subject do
+      test_obj.extend(SimilarityMachine)
+      test_obj.answers_similarity(answer_1, answer_2)
+    end
 
     context "when both answers have compilation error" do
-      let(:answer_2) { create(:answer, :invalid_content) }
+      let(:answer_1) { create(:answer, :whit_compilation_error) }
+      let(:answer_2) { create(:answer, :whit_compilation_error) }
 
-      xit "calls compiler_output_similarity method" do
-        expect(described_class).to receive(:compiler_output_similarity)
+      it "calls compiler_output_similarity method" do
+        expect(test_obj).to receive(:compiler_output_similarity)
         subject
       end
     end
 
     context "when at least one answer have compilation error" do
+      let(:answer_1) { create(:answer) }
+      let(:answer_2) { create(:answer, :whit_compilation_error) }
 
+      it "calls source_code_similarity method" do
+        expect(test_obj).to receive(:source_code_similarity)
+        subject
+      end
     end
 
     context "when none answer have compilation error" do
+      let(:answer_1) { create(:answer) }
+      let(:answer_2) { create(:answer) }
 
+      it "calls source_code_similarity and test_cases_output_similarity method" do
+        expect(test_obj).to receive(:source_code_similarity)
+        expect(test_obj).to receive(:test_cases_output_similarity)
+        subject
+      end
     end
   end
 
