@@ -4,6 +4,7 @@ FactoryGirl.define do
     user
     question
     team
+    compiler_output "compiler output"
 
     after(:build) do |answer|
       class << answer
@@ -28,7 +29,7 @@ FactoryGirl.define do
 
     trait :whit_compilation_error do
       correct false
-      compilation_error false
+      compilation_error true
     end
 
     trait :whit_compilation_error do
