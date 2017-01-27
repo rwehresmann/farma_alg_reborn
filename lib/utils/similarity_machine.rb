@@ -29,7 +29,9 @@ module SimilarityMachine
 
   # Check the similarity between the compiler output for each answer.
   def compiler_output_similarity(answer_1, answer_2)
-    string_similarity(answer_1.compiler_output, answer_2.compiler_output)
+    answer_1_error = get_error(answer_1.compiler_output)
+    answer_2_error = get_error(answer_2.compiler_output)
+    string_similarity(answer_1_error, answer_2_error)
   end
 
   # Call Stanford Moss server to calculate source code similarity. When Moss
@@ -75,5 +77,36 @@ module SimilarityMachine
 
     return 0 if similarity.empty?
     similarity.avg
+  end
+
+  def get_error(content)
+    content.split("\n").grep(/(?i)error/).join("\n")
+  end
+
+  def users_similarity(user_1, user_2, team)
+    user_1_questions = user_1.team_questions_answered(team)
+    user_2_questions = user_2.team_questions_answered(team)
+    questions = user_1_questions.common_values(user_2_questions)
+
+    similarities = []
+    questions.each do |question|
+      user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
+      user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
+
+      user_1_answers.each do |user_1_answer|
+        user_2_answers.each do |user_2_answer|
+          similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+        end
+      end
+    end
+    similarities.compact!
+
+    return 0 if similarities.empty?
+    users_formula(similarities, questions.count)
+  end
+
+  # Calculate the users similarity.
+  def users_formula(similarities, questions_count)
+    similarities.avg.fdiv(questions_count)
   end
 end
