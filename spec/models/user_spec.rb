@@ -141,4 +141,21 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#team_questions_answered' do
+    before do
+      user = create(:user)
+      exercise = create(:exercise)
+      team = create(:team, exercises: [exercise])
+      team.enroll(user)
+      @questions = create_pair(:question, exercise: exercise)
+      2.times { create(:answer, question: @questions.first, user: user, team: team) }
+      create(:answer, question: @questions.last, user: user, team: team)
+      @questions_answered = user.team_questions_answered(team)
+    end
+
+    it "returns the questions that the user answered in his team" do
+      expect(@questions_answered).to eq(@questions)
+    end
+  end
 end

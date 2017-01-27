@@ -32,4 +32,9 @@ class User < ApplicationRecord
   def answered_correctly?(question)
     !answers.where(question: question, correct: true).empty?
   end
+
+  # Return the questions answered by the user to a specific team.
+  def team_questions_answered(team)
+    answers.where(team: team).map(&:question).uniq
+  end
 end
