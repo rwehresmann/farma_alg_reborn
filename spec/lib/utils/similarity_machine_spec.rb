@@ -4,7 +4,7 @@ require 'utils/similarity_machine'
 include SimilarityMachine
 
 describe SimilarityMachine do
-  # TODO: Add similarity tests
+
   describe '#answers_similarity' do
     let(:test_obj) { Object.new }
 
@@ -45,10 +45,35 @@ describe SimilarityMachine do
     end
   end
 
-  # TODO: To add interesting tests here, first is necessary implement a way
-  # to get only the compiler output piece from the error.
-  describe '#compiler_output_similarity' do
 
+  describe '#compiler_output_similarity' do
+    let(:answer_1) { create(:answer, :invalid_content, :whit_custom_callbacks) }
+
+    context "when the output is the same" do
+      let(:similarity) { compiler_output_similarity(answer_1, answer_1) }
+
+      it "returns 100% os similarity" do
+        expect(similarity).to eq(100)
+      end
+    end
+
+    context "when the output is very similar" do
+      let(:answer_2) { create(:answer, :whit_custom_callbacks, content: "test") }
+      let(:similarity) { compiler_output_similarity(answer_1, answer_2) }
+
+      it "returns high similarity" do
+        expect(similarity >= 70).to be_truthy
+      end
+    end
+
+    context "when the output is very different" do
+      let(:answer_2) { create(:answer, compiler_output: "Fatal: Test error, this is a ficticius error") }
+      let(:similarity) { compiler_output_similarity(answer_1, answer_2) }
+
+      it "returns low similarity" do
+        expect(similarity <= 30).to be_truthy
+      end
+    end
   end
 
   describe '#source_code_similarity' do
@@ -111,6 +136,68 @@ describe SimilarityMachine do
 
       it "returns 0% similarity" do
         expect(similarity).to eq(0)
+      end
+    end
+  end
+
+  describe '#get_error' do
+    let(:error) { "This is the simulation of the compiler output\nThis is the error line\nHere I mention 'Error' again" }
+    let!(:result) { get_error(error) }
+    let(:expected) do
+      expected = error.split("\n")
+      expected.shift
+      expected.join("\n")
+    end
+
+    it "returns the lines where mention the word 'error'"do
+      expect(result).to eq(expected)
+    end
+  end
+
+  describe '#users_similarity' do
+    context "when users are very similar" do
+      subject(:similarity) do
+        user_1 = create(:user)
+        user_2 = create(:user)
+        team = create(:team, users: [user_1, user_2])
+
+        exercise = create(:exercise)
+        question = create(:question, exercise: exercise)
+        create(:test_case, question: question)
+
+        create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_1)
+        answer = create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_2)
+
+        ComputeSimilarityJob.perform_now(answer)
+
+        users_similarity(user_1, user_2, team)
+      end
+
+      it "return high similarity" do
+        expect(similarity >= 80).to be_truthy
+      end
+    end
+
+    context "when users aren't very similar" do
+      subject(:similarity) do
+        user_1 = create(:user)
+        user_2 = create(:user)
+        team = create(:team, users: [user_1, user_2])
+
+        exercise = create(:exercise)
+        question = create(:question, exercise: exercise)
+        create(:test_case, question: question)
+
+        create(:answer, :params, :whit_custom_callbacks, question: question, team: team, user: user_1)
+        answer = create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_2)
+
+        ComputeSimilarityJob.perform_now(answer)
+
+        users_similarity(user_1, user_2, team)
+      end
+
+      it "return low similarity" do
+        expect(similarity <= 30).to be_truthy
       end
     end
   end
