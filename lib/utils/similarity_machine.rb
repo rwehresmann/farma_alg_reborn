@@ -79,34 +79,57 @@ module SimilarityMachine
     similarity.avg
   end
 
-  def get_error(content)
-    content.split("\n").grep(/(?i)error/).join("\n")
-  end
 
-  def users_similarity(user_1, user_2, team)
-    user_1_questions = user_1.team_questions_answered(team)
-    user_2_questions = user_2.team_questions_answered(team)
-    questions = user_1_questions.common_values(user_2_questions)
+    def users_questions_similarity(user_1, user_2, team)
+      user_1_questions = user_1.team_questions_answered(team)
+      user_2_questions = user_2.team_questions_answered(team)
+      questions = user_1_questions.common_values(user_2_questions)
 
-    similarities = []
-    questions.each do |question|
-      user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
-      user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
+      similarities = []
+      questions.each do |question|
+        user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
+        user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
 
-      user_1_answers.each do |user_1_answer|
-        user_2_answers.each do |user_2_answer|
-          similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+        user_1_answers.each do |user_1_answer|
+          user_2_answers.each do |user_2_answer|
+            similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+          end
         end
       end
+      similarities.compact!
+
+      questions_formula(similarities)
     end
-    similarities.compact!
 
-    return 0 if similarities.empty?
-    users_formula(similarities, questions.count)
+  # Calculate the similarity between two users of the same team.
+  def users_similarity(user_1, user_2, team)
+    questions_sim = users_questions_similarity(user_1, user_2, team)
+    questions = common_users_questions_answered(user_1, user_2, team)
+    users_formula(questions_sim, questions.count)
   end
 
-  # Calculate the users similarity.
-  def users_formula(similarities, questions_count)
-    similarities.avg.fdiv(questions_count)
-  end
+    private
+
+    # Get the lines where the error is described.
+    def get_error(content)
+      content.split("\n").grep(/(?i)error/).join("\n")
+    end
+
+    # Get the common questions answered between two users of a team.
+    def common_users_questions_answered(user_1, user_2, team)
+      user_1_questions = user_1.team_questions_answered(team)
+      user_2_questions = user_2.team_questions_answered(team)
+      user_1_questions.common_values(user_2_questions)
+    end
+
+    # Returns the users similarity.
+    def users_formula(questions_similarity, questions_count)
+      questions_similarity.fdiv(questions_count)
+    end
+
+    # Returns the questions similarity.
+    def questions_formula(similarities)
+      return 0 if similarities.empty?
+      similarities.avg.fdiv(similarities.count)
+    end
 end
