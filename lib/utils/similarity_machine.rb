@@ -195,7 +195,7 @@ module SimilarityMachine
     end
 
     # Based on a hash of similarities, return the most representative of all
-    # (this is, the biggest)
+    # (this is, the biggest).
     def most_representative(similarities)
       similarities.key(similarities.value.max)
     end
