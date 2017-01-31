@@ -79,33 +79,88 @@ module SimilarityMachine
     similarity.avg
   end
 
+  # Calculate the similarity between two users of the same team.
+  def users_similarity(user_1, user_2, team)
+    questions = common_team_users_questions_answered(team, [user_1, user_2])
+    similarities = questions_similarity(questions, user_1, user_2, team)
+    users_formula(similarities, questions.count)
+  end
 
-    def users_questions_similarity(user_1, user_2, team)
-      user_1_questions = user_1.team_questions_answered(team)
-      user_2_questions = user_2.team_questions_answered(team)
-      questions = user_1_questions.common_values(user_2_questions)
+  # Get the similarity from two users from the same team to the same question.
+  def question_similarity(question, user_1, user_2, team)
+    user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
+    user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
 
-      similarities = []
-      questions.each do |question|
-        user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
-        user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
+    similarities = []
+    user_1_answers.each do |user_1_answer|
+      user_2_answers.each do |user_2_answer|
+        similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+      end
+    end
+    # If the similarity between the two answers isn't already computed, returns
+    # nil. So 'compact!' must be called to remove the nils.
+    similarities.compact!
 
-        user_1_answers.each do |user_1_answer|
-          user_2_answers.each do |user_2_answer|
-            similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+    users_question_formula(similarities)
+  end
+
+  # Get the similarity of a specific group of questions that the two users
+  # answered in the same team. If none question is passed, all questions that
+  # both have answered in the same team are caught.
+  def questions_similarity(questions = nil, user_1, user_2, team)
+    questions ||= common_team_users_questions_answered(team, [user_1, user_2])
+
+    similarities = []
+    questions.each do |question|
+      similarities = question_similarity(question, user_1, user_2, team)
+    end
+
+    similarities
+  end
+
+  def most_relevante_question(users_component, team)
+    # Find questions that all users from the component answered. If none
+    # question returns, return nil.
+    questions = common_team_users_questions_answered(team, users_component)
+    return if questions.empty?
+
+    questions_sim = {}
+
+    # Compare each user with each user in each question to get the similarities.
+    users_component_copy = users_component.dup
+    users_component.count.times do
+      user_1 = users_component_copy.shift
+      users_component_copy.each do |user_2|
+
+        questions.each do |question|
+          similarity = question_similarity(question, user_1, user_2, team)
+          if questions_sim[:question]
+            questions_sim[:question] += similarity
+          else
+            questions_sim[:question] = similarity
           end
         end
       end
-      similarities.compact!
-
-      questions_formula(similarities)
     end
 
-  # Calculate the similarity between two users of the same team.
-  def users_similarity(user_1, user_2, team)
-    questions_sim = users_questions_similarity(user_1, user_2, team)
-    questions = common_users_questions_answered(user_1, user_2, team)
-    users_formula(questions_sim, questions.count)
+    # Returns the questions with the highest similarity.
+    questions_sim.key(questions_sim.values.max)
+  end
+
+  def most_representative_answer(question, users_component, team)
+    answers = Answer.where(question: answer.question, user: users, team: team)
+
+    similarities = {}
+    answers_copy = answers.dup
+    answers.count.times do
+      answer_1 = answers_copy.shift
+      similarities[:answer_1] ||= 0
+      answers_copy.each do |answer_2|
+        similarities[:answer_1] += AnswerConnection.similarity(answer_1, answer_2)
+      end
+    end
+
+    similarities.key(similarities.values.max)     
   end
 
     private
@@ -116,10 +171,22 @@ module SimilarityMachine
     end
 
     # Get the common questions answered between two users of a team.
-    def common_users_questions_answered(user_1, user_2, team)
-      user_1_questions = user_1.team_questions_answered(team)
-      user_2_questions = user_2.team_questions_answered(team)
-      user_1_questions.common_values(user_2_questions)
+    def common_team_users_questions_answered(team, users)
+      users_copy = users.dup
+      groups = []
+      users.count.times do
+        user_1 = users_copy.shift
+        users_copy.each do |user_2|
+          user_1_questions = user_1.team_questions_answered(team)
+          user_2_questions = user_2.team_questions_answered(team)
+          groups << user_1_questions.common_values(user_2_questions)
+        end
+      end
+
+      common_answers = groups.shift
+      groups.each { |group| common_answers = common_answers.common_values(group) }
+
+      common_answers
     end
 
     # Returns the users similarity.
@@ -127,8 +194,8 @@ module SimilarityMachine
       questions_similarity.fdiv(questions_count)
     end
 
-    # Returns the questions similarity.
-    def questions_formula(similarities)
+    # Returns the question similarity.
+    def users_question_formula(similarities)
       return 0 if similarities.empty?
       similarities.avg.fdiv(similarities.count)
     end
