@@ -116,15 +116,16 @@ module SimilarityMachine
 
   # Get the most representative answer based in the answers of a group ou users,
   # from a specific team to a specific question.
-  def most_representative_answer(question, users_component, team)
-    answers = Answer.where(question: answer.question, user: users, team: team)
+  def most_representative_answer(question, users, team)
+    answers = Answer.where(question: question, user: users, team: team).to_a
 
-    similarities = Array.new(0)
+    similarities = Hash.new(0)
     count = answers.count
     count.times do
       answer_1 = answers.shift
       answers.each do |answer_2|
-        similarities[:answer_1] += AnswerConnection.similarity(answer_1, answer_2)
+        similarity = AnswerConnection.similarity(answer_1, answer_2)
+        similarities[answer_1] += similarity unless similarity.nil?
       end
     end
 

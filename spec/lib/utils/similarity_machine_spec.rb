@@ -149,7 +149,7 @@ describe SimilarityMachine do
       expected.join("\n")
     end
 
-    it "returns the lines where mention the word 'error'"do
+    it "returns in a string the lines where mention the word 'error'"do
       expect(result).to eq(expected)
     end
   end
@@ -196,7 +196,7 @@ describe SimilarityMachine do
         users_similarity(user_1, user_2, team)
       end
 
-      it "return low similarity" do
+      it "returns low similarity" do
         expect(similarity <= 30).to be_truthy
       end
     end
@@ -326,6 +326,29 @@ describe SimilarityMachine do
       it "returns nil" do
         expect(most_representative_question(users, team)).to be_nil
       end
+    end
+  end
+
+  describe '#most_representative_answer' do
+    let(:team) { create(:team) }
+    let(:users) { create_pair(:user) }
+    let(:question) { create(:question) }
+
+    before do
+      users.each { |user| create_pair(:answer, user: user, question: question,
+                                      team: team) }
+                                      
+      answers = Answer.all_team_answers_to_question(team, question).to_a
+      answers.count.times do |i|
+        answer_1 = answers.shift
+        answers.each do |answer_2|
+          AnswerConnection.create_simetrical_record(answer_1, answer_2, 100 - i)
+        end
+      end
+    end
+
+    it "returns the answer whit biggest similarity" do
+      expect(most_representative_answer(question, users, team)).to eq(Answer.first)
     end
   end
 end
