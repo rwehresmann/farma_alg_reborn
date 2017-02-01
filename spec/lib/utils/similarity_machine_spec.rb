@@ -201,4 +201,131 @@ describe SimilarityMachine do
       end
     end
   end
+
+  describe '#most_representative' do
+    let(:hash) { { first: 1, second: 2, third: 3 } }
+
+    it "return the key with the biggest value" do
+      expect(most_representative(hash)).to eq(:third)
+    end
+
+    context "when the biggest values is repeated" do
+      before { hash[:fourth] = 3 }
+
+      it "return only one key" do
+        biggest = most_representative(hash)
+        expect(biggest == :third || biggest == :fourth).to be_truthy
+      end
+    end
+  end
+
+  describe '#common_questions_answered' do
+    let(:team) { create(:team) }
+    let(:users) { create_pair(:user, teams: [team]) }
+    let(:questions) { create_pair(:question) }
+
+    before do
+      users.each { |user| create(:answer, user: user, question: questions.first,
+                                 team: team) }
+    end
+
+    it "returns the questions answered by the specified users" do
+      expect(common_questions_answered(users, team)).to eq([questions.first])
+    end
+  end
+
+  describe '#question_similarity' do
+    let(:team) { create(:team) }
+    let(:users) { create_pair(:user, teams: [team]) }
+    let(:question) { create(:question) }
+
+    before do
+      users.each { |user| create_pair(:answer, user: user,
+                                         question: question, team: team) }
+      answers = Answer.all_team_answers_to_question(team, question).to_a
+      AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
+      AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
+    end
+
+    it "returns the right similarity" do
+      expect(question_similarity(question, users.first, users.last, team)).to eq(75)
+    end
+  end
+
+  describe '#questions_similarity' do
+    let(:team) { create(:team) }
+    let(:users) { create_pair(:user, teams: [team]) }
+    let(:questions) { create_pair(:question) }
+
+    before do
+      users.each do |user|
+        questions.each do |question|
+          create_pair(:answer, user: user, question: question, team: team)
+        end
+      end
+
+      2.times do |i|
+        answers = Answer.all_team_answers_to_question(team, questions[i]).to_a
+        AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
+        AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
+      end
+    end
+
+    context "when only questions that both users answered are specified" do
+      it "returns the right similarity" do
+        expect(questions_similarity(questions, users.first, users.last, team)).to eq(75)
+      end
+    end
+
+    context "when questions that both users didn't answered are specified" do
+      before { create(:question) }
+
+      it "returns the right similarity" do
+        expect(questions_similarity(questions, users.first, users.last, team)).to eq(75)
+      end
+    end
+
+    context "when a question where only one of the two users answered are specified" do
+      before do
+        question = create(:question)
+        create(:answer, user: users.first, team: team, question: question)
+      end
+
+      it "returns the right similarity" do
+        expect(questions_similarity(questions, users.first, users.last, team)).to eq(75)
+      end
+    end
+  end
+
+  describe '#most_representative_question' do
+    let(:team) { create(:team) }
+    let(:users) { create_pair(:user, teams: [team]) }
+    let(:questions) { create_pair(:question) }
+
+    context "when the users have common questions answered" do
+      before do
+        users.each do |user|
+          questions.each do |question|
+            create_pair(:answer, user: user, question: question, team: team)
+          end
+        end
+
+        2.times do |i|
+          answers = Answer.all_team_answers_to_question(team, questions[i]).to_a
+          AnswerConnection.create_simetrical_record(answers.first, answers.last, i)
+          AnswerConnection.create_simetrical_record(answers[1], answers[2], i)
+        end
+      end
+
+      it "returns the questions whit greater similarity between the specified users" do
+        expect(most_representative_question(users, team)).to eq(questions.last)
+      end
+    end
+
+    context "when the users haven't common questions answered" do
+      it "returns nil" do
+        expect(most_representative_question(users, team)).to be_nil
+      end
+    end
+  end
 end

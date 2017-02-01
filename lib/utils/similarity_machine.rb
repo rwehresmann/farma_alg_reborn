@@ -76,58 +76,37 @@ module SimilarityMachine
 
   # Calculate the similarity between two users of the same team.
   def users_similarity(user_1, user_2, team)
-    questions = common_questions_answered(team, [user_1, user_2])
+    questions = common_questions_answered([user_1, user_2], team)
     similarities = questions_similarity(questions, user_1, user_2, team)
     users_formula(similarities, questions.count)
   end
 
-  # Get the similarity from two users from the same team to the same question.
-  def question_similarity(question, user_1, user_2, team)
-    user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
-    user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
-
-    similarities = []
-    user_1_answers.each do |user_1_answer|
-      user_2_answers.each do |user_2_answer|
-        similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
-      end
-    end
-    # If the similarity between the two answers isn't already computed, returns
-    # nil. So 'compact!' must be called to remove the nils.
-    similarities.compact!
-
-    users_question_formula(similarities)
-  end
-
   # Get the similarity of a specific group of questions that the two users
-  # answered in the same team. If none question is passed, all questions that
-  # both have answered in the same team are caught.
-  def questions_similarity(questions = nil, user_1, user_2, team)
-    questions ||= common_questions_answered(team, [user_1, user_2])
-
+  # answered in the same team.
+  def questions_similarity(questions, user_1, user_2, team)
     similarities = []
     questions.each do |question|
-      similarities = question_similarity(question, user_1, user_2, team)
+      similarities << question_similarity(question, user_1, user_2, team)
     end
-
-    similarities
+    similarities.compact!
+    similarities.avg
   end
 
   # Get the most relevante question for a specific group of users, from a
   # specific team.
   def most_representative_question(users, team)
-    questions = common_questions_answered(team, users_component)
+    questions = common_questions_answered(users, team)
     return if questions.empty?
 
     similarities = Hash.new(0)
 
     count = users.count
     count.times do
-      user_1 = users_component.shift
+      user_1 = users.shift
       users.each do |user_2|
         questions.each do |question|
           similarity = question_similarity(question, user_1, user_2, team)
-          similarities[:question] += similarity
+          similarities[question] += similarity
         end
       end
     end
@@ -154,13 +133,31 @@ module SimilarityMachine
 
     private
 
+    # Get the similarity from two users from the same team to the same question.
+    def question_similarity(question, user_1, user_2, team)
+      user_1_answers = user_1.answers.where(question: question, team: team, user: user_1)
+      user_2_answers = user_2.answers.where(question: question, team: team, user: user_2)
+
+      similarities = []
+      user_1_answers.each do |user_1_answer|
+        user_2_answers.each do |user_2_answer|
+          similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
+        end
+      end
+      # If the similarity between the two answers isn't already computed, returns
+      # nil. So 'compact!' must be called to remove the nils.
+      similarities.compact!
+
+      users_question_formula(similarities)
+    end
+
     # Get the lines where the error is described.
     def get_error(content)
       content.split("\n").grep(/(?i)error/).join("\n")
     end
 
     # Get the common questions answered between two users of a team.
-    def common_questions_answered(team, users)
+    def common_questions_answered(users, team)
       users_copy = users.dup
       groups = []
       users.count.times do
@@ -185,8 +182,8 @@ module SimilarityMachine
 
     # Returns the question similarity between two users.
     def users_question_formula(similarities)
-      return 0 if similarities.empty?
-      similarities.avg.fdiv(similarities.count)
+      return if similarities.empty?
+      similarities.avg
     end
 
     # Compute answers similarity.
@@ -197,7 +194,7 @@ module SimilarityMachine
     # Based on a hash of similarities, return the most representative of all
     # (this is, the biggest).
     def most_representative(similarities)
-      similarities.key(similarities.value.max)
+      similarities.key(similarities.values.max)
     end
 
 =begin
