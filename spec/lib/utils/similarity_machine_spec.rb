@@ -337,7 +337,7 @@ describe SimilarityMachine do
     before do
       users.each { |user| create_pair(:answer, user: user, question: question,
                                       team: team) }
-                                      
+
       answers = Answer.all_team_answers_to_question(team, question).to_a
       answers.count.times do |i|
         answer_1 = answers.shift
