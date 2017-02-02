@@ -99,18 +99,12 @@ module SimilarityMachine
     return if questions.empty?
 
     similarities = Hash.new(0)
-
-    count = users.count
-    count.times do
-      user_1 = users.shift
-      users.each do |user_2|
-        questions.each do |question|
-          similarity = question_similarity(question, user_1, user_2, team)
-          similarities[question] += similarity
-        end
+    each_object(users, similarities) do |user_1, user_2|
+      questions.each do |question|
+        similarity = question_similarity(question, user_1, user_2, team)
+        similarities[question] += similarity unless similarity.nil?
       end
     end
-
     most_representative(similarities)
   end
 
@@ -120,13 +114,9 @@ module SimilarityMachine
     answers = Answer.where(question: question, user: users, team: team).to_a
 
     similarities = Hash.new(0)
-    count = answers.count
-    count.times do
-      answer_1 = answers.shift
-      answers.each do |answer_2|
-        similarity = AnswerConnection.similarity(answer_1, answer_2)
-        similarities[answer_1] += similarity unless similarity.nil?
-      end
+    each_object(answers, similarities) do |answer_1, answer_2|
+      similarity = AnswerConnection.similarity(answer_1, answer_2)
+      similarities[answer_1] += similarity unless similarity.nil?
     end
 
     most_representative(similarities)
@@ -159,15 +149,11 @@ module SimilarityMachine
 
     # Get the common questions answered between two users of a team.
     def common_questions_answered(users, team)
-      users_copy = users.dup
       groups = []
-      users.count.times do
-        user_1 = users_copy.shift
-        users_copy.each do |user_2|
-          user_1_questions = user_1.team_questions_answered(team)
-          user_2_questions = user_2.team_questions_answered(team)
-          groups << user_1_questions.common_values(user_2_questions)
-        end
+      each_object(users, groups) do |user_1, user_2|
+        user_1_questions = user_1.team_questions_answered(team)
+        user_2_questions = user_2.team_questions_answered(team)
+        groups << user_1_questions.common_values(user_2_questions)
       end
 
       common_answers = groups.shift
@@ -198,13 +184,14 @@ module SimilarityMachine
       similarities.key(similarities.values.max)
     end
 
-=begin
-    def each_similarity(array, similarities = [], &block)
-      length = array.count
-      length.times do
-        object_1 = array.shift
-        array.each { |object_2| &block }
+    # Auxiliar structure created to use in the comparation of all array
+    # elements. This comparation is simetrical (if I test a[0] whit a[1], a[1]
+    # whit a[0] will not be tested).
+    def each_object(array, similarities)
+      array_copy = array.dup
+      array.count.times do
+        object_1 = array_copy.shift
+        array_copy.each { |object_2| yield(object_1, object_2) }
       end
     end
-=end
 end
