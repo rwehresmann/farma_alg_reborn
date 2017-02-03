@@ -2,6 +2,7 @@
   "name": "integration_rails_adminlte2",
   "dependencies": {
     "AdminLTE": "adminlte#^2.3.8",
-    "simplemde": "simplemde-markdown-editor#^1.11.2"
+    "simplemde": "simplemde-markdown-editor#^1.11.2",
+    "ace-builds": "^1.2.6"
   }
 }
