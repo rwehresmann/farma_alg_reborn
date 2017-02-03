@@ -16,4 +16,7 @@
 //= require AdminLTE/bootstrap/js/bootstrap
 //= require AdminLTE/dist/js/app
 //= require simplemde/dist/simplemde.min
+//= require ace-builds/src-min/ace
+//= require ace-builds/src-min/theme-twilight
+//= require ace-builds/src-min/mode-pascal
 //= require_tree .
