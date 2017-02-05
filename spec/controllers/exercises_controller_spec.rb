@@ -6,7 +6,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -19,7 +19,7 @@ RSpec.describe ExercisesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -29,7 +29,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -42,7 +42,7 @@ RSpec.describe ExercisesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -52,7 +52,7 @@ RSpec.describe ExercisesController, type: :controller do
              params: { exercise: attributes_for(:exercise) } }
 
     context "when logged-in -->" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
         it "creates a new object" do
@@ -80,8 +80,8 @@ RSpec.describe ExercisesController, type: :controller do
     context "when not logged-in" do
       before { post_with_valid_attributes }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -91,7 +91,7 @@ RSpec.describe ExercisesController, type: :controller do
     subject { delete :destroy, params: { id: exercise } }
 
     context "when logged-in" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       it "deletes the object" do
         expect { subject }.to change(Exercise, :count).by(-1)
@@ -101,8 +101,8 @@ RSpec.describe ExercisesController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -126,7 +126,7 @@ RSpec.describe ExercisesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -140,7 +140,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -152,15 +152,15 @@ RSpec.describe ExercisesController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
 
   describe "PUT #update" do
     context "when logged-in -->" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
       let(:exercise) { create(:exercise) }
 
       context "whit valid attributes" do
@@ -188,8 +188,8 @@ RSpec.describe ExercisesController, type: :controller do
       before { put :update, params: { id: create(:exercise),
                exercise: attributes_for(:exercise, title: "New title") } }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end

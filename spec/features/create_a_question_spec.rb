@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Create a quetsion", type: :feature do
   let(:question) { build(:question) }
   before do
-    login_as create(:user)
+    login_as create(:user, :teacher)
     exercise = create(:exercise)
     visit new_exercise_question_url(exercise.id)
   end

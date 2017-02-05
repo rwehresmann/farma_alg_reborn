@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Create an exercise", type: :feature do
   let(:exercise) { build(:exercise) }
   before do
-    login_as create(:user)
+    login_as create(:user, :teacher)
     visit new_exercise_url
   end
 

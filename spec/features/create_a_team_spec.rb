@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Create a team", type: :feature do
   let(:team) { build(:team) }
   before do
-    login_as create(:user)
+    login_as create(:user, :teacher)
     visit new_team_url
   end
 

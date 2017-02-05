@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  load_and_authorize_resource
+
   before_action :authenticate_user!
   before_action :find_question, only: [:show, :edit, :update, :destroy]
   before_action :find_exercise, only: [:index, :new, :create]

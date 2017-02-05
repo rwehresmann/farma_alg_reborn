@@ -6,7 +6,7 @@ RSpec.describe TeamsController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -19,7 +19,7 @@ RSpec.describe TeamsController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -29,7 +29,7 @@ RSpec.describe TeamsController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -42,7 +42,7 @@ RSpec.describe TeamsController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -52,7 +52,7 @@ RSpec.describe TeamsController, type: :controller do
              params: { team: attributes_for(:team) } }
 
     context "when logged-in -->" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
         it "creates a new object" do
@@ -73,18 +73,22 @@ RSpec.describe TeamsController, type: :controller do
     context "when not logged-in" do
       before { post_with_valid_attributes }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
 
   describe "DELETE #destroy" do
-    let!(:team) { create(:team) }
+    let(:team) { create(:team) }
     subject { delete :destroy, params: { id: team } }
 
     context "when logged-in" do
-      before { sign_in create(:user) }
+      before do
+        user = create(:user, :teacher)
+        team.update_attributes(owner: user)
+        sign_in user
+      end
 
       it "deletes the object" do
         expect { subject }.to change(Team, :count).by(-1)
@@ -94,8 +98,8 @@ RSpec.describe TeamsController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -106,7 +110,7 @@ RSpec.describe TeamsController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -119,7 +123,7 @@ RSpec.describe TeamsController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -131,7 +135,9 @@ RSpec.describe TeamsController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        user = create(:user, :teacher)
+        team.update_attributes(owner: user)
+        sign_in user
         subject
       end
 
@@ -143,16 +149,18 @@ RSpec.describe TeamsController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
 
   describe "PUT #update" do
     context "when logged-in -->" do
-      before { sign_in create(:user) }
-      let(:team) { create(:team) }
+      let(:team) { create(:team, owner: user) }
+      let(:user) { create(:user, :teacher) }
+
+      before { sign_in user }
 
       context "whit valid attributes" do
         subject { put :update, params: { id: team,
@@ -179,8 +187,8 @@ RSpec.describe TeamsController, type: :controller do
       before { put :update, params: { id: create(:team),
                team: attributes_for(:team, name: "New name") } }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -194,7 +202,7 @@ RSpec.describe TeamsController, type: :controller do
     context "when logged-in -->" do
       context "when the password is right" do
         before do
-          sign_in user
+          sign_in(user)
           post_with_right_password
         end
 
@@ -214,14 +222,6 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
     end
-
-    context "when not logged-in" do
-      before { post_with_right_password }
-
-      it "resturns UNAUTHORIZED status" do
-        expect(response.status).to eq(401)
-      end
-    end
   end
 
   describe 'POST #unenroll' do
@@ -239,8 +239,8 @@ RSpec.describe TeamsController, type: :controller do
       before { put :update, params: { id: create(:team),
                team: attributes_for(:team, name: "New name") } }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end

@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  load_and_authorize_resource
+
   before_action :authenticate_user!
   before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update, :destroy]
 
@@ -50,6 +52,7 @@ class TeamsController < ApplicationController
   def enroll
     if @team.authenticate(params[:password])
       @team.enroll(current_user)
+      flash[:success] = "Matrícula realizada!"
       @enrolled = true
     else
       @enrolled = false

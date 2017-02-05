@@ -30,4 +30,8 @@ class Team < ApplicationRecord
   def unenroll(user)
     self.users.delete(user)
   end
+
+  def owner?(user)
+    self.owner == user
+  end
 end

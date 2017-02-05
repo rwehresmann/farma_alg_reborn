@@ -42,6 +42,8 @@ gem 'moss_ruby', git: 'https://github.com/rwehresmann/moss_ruby.git'
 gem 'amatch'
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'whenever'
+gem 'cancancan', '~> 1.15'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

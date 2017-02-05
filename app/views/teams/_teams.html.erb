@@ -13,10 +13,11 @@
 
         <div class="pull-right">
           <%= link_to "Ver", team %>
-
-            <% if current_user == team.owner %>
-              | <%= link_to "Editar", edit_team_path(team) %> |
-              <%= link_to "Excluir", team, method: :delete,
+            <% if can? :update, team %>
+              | <%= link_to "Editar", edit_team_path(team) %>
+            <% end %>
+            <% if can? :delete, team %>
+              | <%= link_to "Excluir", team, method: :delete,
                           data: { confirm: "Tem certeza que deseja excluir?" } %>
             <% end %>
         </div>

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Create a test case", type: :feature do
   let(:test_case) { build(:test_case) }
   before do
-    login_as create(:user)
+    login_as create(:user, :teacher)
     question = create(:question)
     visit new_question_test_case_url(question.id)
   end

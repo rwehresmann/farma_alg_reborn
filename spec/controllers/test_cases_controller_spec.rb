@@ -8,7 +8,7 @@ RSpec.describe TestCasesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -21,7 +21,7 @@ RSpec.describe TestCasesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe TestCasesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -45,7 +45,7 @@ RSpec.describe TestCasesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe TestCasesController, type: :controller do
                        question_id: question } }
 
     context "when logged-in -->" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
         it "creates a new object" do
@@ -81,8 +81,8 @@ RSpec.describe TestCasesController, type: :controller do
     context "when not logged-in" do
       before { post_with_valid_attributes }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -93,7 +93,7 @@ RSpec.describe TestCasesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -106,7 +106,7 @@ RSpec.describe TestCasesController, type: :controller do
       before { subject }
 
       it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -120,7 +120,7 @@ RSpec.describe TestCasesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        sign_in create(:user, :teacher)
         subject
       end
 
@@ -132,8 +132,8 @@ RSpec.describe TestCasesController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -142,7 +142,7 @@ RSpec.describe TestCasesController, type: :controller do
     let(:test_case) { create(:test_case) }
 
     context "when logged-in -->" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
         subject { put :update, params: {
@@ -171,8 +171,8 @@ RSpec.describe TestCasesController, type: :controller do
                id: test_case,
                question: attributes_for(:question, description: "New description") } }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -182,7 +182,7 @@ RSpec.describe TestCasesController, type: :controller do
     subject { delete :destroy, params: { id: test_case } }
 
     context "when logged-in" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       it "deletes the object" do
         expect { subject }.to change(TestCase, :count).by(-1)
@@ -192,8 +192,8 @@ RSpec.describe TestCasesController, type: :controller do
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign-in page" do
-        expect(response).to redirect_to(new_user_session_url)
+      it "redirects to root page" do
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -205,18 +205,10 @@ RSpec.describe TestCasesController, type: :controller do
               params: { id: test_case.id, source_code: source_code } }
 
     context "when logged-in" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
       it "resturns OK status" do
         expect(response.status).to eq(200)
-      end
-    end
-
-    context "when not logged-in" do
-      before { subject }
-
-      it "resturns UNAUTHORIZED status" do
-        expect(response.status).to eq(401)
       end
     end
   end
@@ -228,18 +220,10 @@ RSpec.describe TestCasesController, type: :controller do
               params: { question_id: question.id, source_code: source_code } }
 
     context "when logged-in" do
-      before { sign_in create(:user) }
+      before { sign_in create(:user, :teacher) }
 
-      it "resturns OK status" do
+      it "returns OK status" do
         expect(response.status).to eq(200)
-      end
-    end
-
-    context "when not logged-in" do
-      before { subject }
-
-      it "resturns UNAUTHORIZED status" do
-        expect(response.status).to eq(401)
       end
     end
   end
