@@ -9,14 +9,19 @@ class Ability
       can :manage, Team do |team|
         team.owner == user
       end
-      can [:read, :create, ], Team
+
+      can :create, Team
     else
-      can [:enroll], Team do |team|
-        !team.enrolled?(user)
-      end
-      can [:unenroll], Team do |team|
-        team.enrolled?(user)
-      end
     end
+
+    can [:enroll], Team do |team|
+      !team.enrolled?(user)
+    end
+
+    can [:unenroll], Team do |team|
+      team.enrolled?(user)
+    end
+
+    can :read, Team
   end
 end
