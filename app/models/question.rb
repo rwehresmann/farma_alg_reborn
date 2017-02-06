@@ -2,7 +2,7 @@ require 'utils/compilers'
 
 class Question < ApplicationRecord
   include Compilers
-  validates_presence_of :description
+  validates_presence_of :description, :score
 
   belongs_to :exercise
   has_many :test_cases

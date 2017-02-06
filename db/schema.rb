@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 20170122201413) do
 
   create_table "questions", force: :cascade do |t|
     t.string   "description", null: false
+    t.float    "score",       null: false
     t.integer  "exercise_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false

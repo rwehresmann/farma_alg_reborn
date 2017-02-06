@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :question do
     description "question description"
     exercise
+    score 10
 
     transient do
       test_cases_count 0
