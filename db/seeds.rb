@@ -21,7 +21,8 @@ end
 # Create questions.
 Exercise.all.each do |exercise|
   4.times do |i|
-    exercise.questions.find_or_create_by!(description: "Question #{i} from exercise #{exercise.title}")
+    exercise.questions.find_or_create_by!(description: "Question #{i} from exercise #{exercise.title}",
+                                          score: 10)
   end
 end
 
