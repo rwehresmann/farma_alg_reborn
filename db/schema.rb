@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170122201413) do
+ActiveRecord::Schema.define(version: 20170207154357) do
 
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
@@ -79,6 +79,16 @@ ActiveRecord::Schema.define(version: 20170122201413) do
     t.datetime "updated_at",  null: false
     t.index ["exercise_id"], name: "index_exercises_teams_on_exercise_id"
     t.index ["team_id"], name: "index_exercises_teams_on_team_id"
+  end
+
+  create_table "question_dependencies", force: :cascade do |t|
+    t.integer  "question_1_id"
+    t.integer  "question_2_id"
+    t.string   "operator",      default: ""
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["question_1_id"], name: "index_question_dependencies_on_question_1_id"
+    t.index ["question_2_id"], name: "index_question_dependencies_on_question_2_id"
   end
 
   create_table "questions", force: :cascade do |t|
