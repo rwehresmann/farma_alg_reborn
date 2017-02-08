@@ -7,6 +7,8 @@ class Question < ApplicationRecord
   belongs_to :exercise
   has_many :test_cases
   has_many :answers
+  has_many :question_dependencies, foreign_key: :question_1_id
+  has_many :dependencies, through: :question_dependencies, source: :question_2
 
   # Test the source code with the specified input of each test case and check
   # its output.
