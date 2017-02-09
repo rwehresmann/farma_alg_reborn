@@ -11,8 +11,41 @@
           <%= render 'shared/error_messages', object: f.object %>
 
           <div class="form-group">
+            <%= f.label "Pontuação" %>
+            <%= f.number_field :score, min: 0 %>
+          </div>
+
+          <div class="form-group">
             <%= f.label "Descrição" %>
             <%= f.text_area :description, class: "form-control" %>
+          </div>
+
+          <div class="box-body">
+            <a style="cursor: pointer" data-toggle="collapse" data-target="#and-dependencies">
+              <i class="fa fa-plus-square"></i> Dependências
+            </a>
+
+            <div id="and-dependencies" class="collapse">
+              <table class="table table-condensed" style="width: 60%">
+                <tbody>
+                  <% @questions.each do |question| %>
+                    <tr>
+                      <td>
+                          <%= truncate(question.description, length: 50,
+                                                             separator: " ") %>
+                      </td>
+                      <td>
+                        <select name="question-<%= question.id %>" class="form-control" style="width: 80px">
+                          <option value=""></option>
+                          <option value="AND">AND</option>
+                          <option value="OR">OR</option>
+                        </select>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <%= f.submit yield(:button_text), class: "btn btn-primary pull-right" %>
@@ -23,22 +56,21 @@
 </div>
 
 <script type="text/javascript">
-console.log($('textarea')[0])
-var simplemde = new SimpleMDE( { element: $('textarea')[0],
-                                 toolbar: ["preview",
-                                           "|",
-                                           "bold",
-                                           "italic",
-                                           "heading-1",
-                                           "heading-2",
-                                           "heading-3",
-                                           "link",
-                                           "image",
-                                           "table",
-                                           "code",
-                                           "quote",
-                                           "unordered-list",
-                                           "ordered-list",
-                                           "|",
-                                           "guide"]});
+  var simplemde = new SimpleMDE( { element: $('textarea')[0],
+                                   toolbar: ["preview",
+                                             "|",
+                                             "bold",
+                                             "italic",
+                                             "heading-1",
+                                             "heading-2",
+                                             "heading-3",
+                                             "link",
+                                             "image",
+                                             "table",
+                                             "code",
+                                             "quote",
+                                             "unordered-list",
+                                             "ordered-list",
+                                             "|",
+                                             "guide"]});
 </script>

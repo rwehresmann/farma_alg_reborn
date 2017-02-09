@@ -3,3 +3,9 @@
 <% breadcrumb :edit_question, @question %>
 
 <%= render partial: "form" %>
+
+<script type="text/javascript">
+  <% @dependencies.each do |dependency| %>
+    $("select[name='question-<%= dependency.question_2_id %>']").val("<%= dependency.operator %>")
+  <% end %>
+</script>
