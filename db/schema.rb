@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170207154357) do
+ActiveRecord::Schema.define(version: 20170210152703) do
 
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
@@ -61,6 +61,18 @@ ActiveRecord::Schema.define(version: 20170207154357) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "earned_scores", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.integer  "question_id"
+    t.integer  "score"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["question_id"], name: "index_earned_scores_on_question_id"
+    t.index ["team_id"], name: "index_earned_scores_on_team_id"
+    t.index ["user_id"], name: "index_earned_scores_on_user_id"
   end
 
   create_table "exercises", force: :cascade do |t|
