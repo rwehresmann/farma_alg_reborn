@@ -99,6 +99,7 @@ class QuestionsController < ApplicationController
       @dependencies = @question.question_dependencies
     end
 
+    # Get the operator sended to the question in the form.
     def dependency_operator(question)
       params["question-#{question.id}"] || ""
     end
