@@ -10,6 +10,7 @@ describe "Create a quetsion", type: :feature do
 
   context "whit valid attributes" do
     subject do
+      fill_in "question_score", with: question.score
       fill_in "question_description", with: question.description
       click_on "Criar"
     end
