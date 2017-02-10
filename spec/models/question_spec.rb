@@ -17,6 +17,20 @@ RSpec.describe Question, type: :model do
       question.description = nil
       expect(question).to_not be_valid
     end
+
+    context "when the question is deleted" do
+      before do
+        exercise = create(:exercise)
+        questions = create_pair(:question, exercise: exercise)
+        QuestionDependency.create_symmetrical_record(questions[0], questions[1], "OR")
+      end
+
+      subject { Question.first.destroy }
+
+      it "destroys the question dependencies associated" do
+        expect { subject }.to change(QuestionDependency, :count).by(-2)
+      end
+    end
   end
 
   describe "Relationships -->" do

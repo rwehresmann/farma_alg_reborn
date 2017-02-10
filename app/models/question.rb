@@ -2,6 +2,9 @@ require 'utils/compilers'
 
 class Question < ApplicationRecord
   include Compilers
+
+  before_destroy :destroy_dependencies
+
   validates_presence_of :description, :score
 
   belongs_to :exercise
@@ -24,4 +27,11 @@ class Question < ApplicationRecord
     end
     results
   end
+
+    private
+
+    # Destroy all dependencies (the symmetrical pair).
+    def destroy_dependencies
+      question_dependencies.each { |dep| dep.destroy_symmetrical_record }
+    end
 end

@@ -1,8 +1,8 @@
 class QuestionDependency < ApplicationRecord
   DEPENDENCIES = ["AND", "OR"]
 
-  belongs_to :question_1, class_name: :Question, dependent: :destroy
-  belongs_to :question_2, class_name: :Question, dependent: :destroy
+  belongs_to :question_1, class_name: :Question
+  belongs_to :question_2, class_name: :Question
 
   validates_inclusion_of :operator, in: DEPENDENCIES
   validate :belongs_to_same_exercise
