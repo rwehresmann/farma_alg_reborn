@@ -48,10 +48,11 @@ RSpec.describe Answer, type: :model do
       context "when is correct answered" do
         let!(:answer) { create_right_answer_to_question(question, callbacks: true) }
 
-        it "correct is setted as true and compilation_error as false" do
+        it "flags are right setted and a record in earned_scores is created" do
           expect(answer.correct).to be_truthy
           expect(answer.compilation_error).to be_falsey
           expect(answer.compiler_output).to_not be_nil
+          expect(EarnedScore.count).to eq(1)
         end
       end
 
