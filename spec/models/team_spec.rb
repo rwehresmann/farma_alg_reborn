@@ -84,8 +84,20 @@ RSpec.describe Team, type: :model do
 
     before { team.enroll(user) }
 
-    it "enroll the user" do
+    it "enroll the user and create an UserScore record" do
       expect(team.enrolled?(user)).to be_truthy
+      expect(UserScore.find_by(user: user, team: team)).to_not be_nil
+    end
+
+    context "when UserScore record already exists" do
+      before do
+        team.unenroll(user)
+        team.enroll(user)
+      end
+
+      it "doesn't recreate it" do
+        expect(UserScore.where(user: user, team: team).count).to eq(1)
+      end
     end
   end
 end

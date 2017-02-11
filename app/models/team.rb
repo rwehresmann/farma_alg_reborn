@@ -21,9 +21,11 @@ class Team < ApplicationRecord
     users.include?(user)
   end
 
-  # Add a user to the team.
+  # Add a user to the team and initialize an UserScore record to this user in
+  # this team.
   def enroll(user)
     self.users << user
+    UserScore.find_or_create_by(user: user, team: self)
   end
 
   # Remove the user from the team.
