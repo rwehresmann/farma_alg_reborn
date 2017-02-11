@@ -53,15 +53,34 @@ RSpec.describe QuestionsController, type: :controller do
   describe "POST #create" do
     let(:exercise) { create(:exercise) }
     subject(:post_with_valid_attributes) { post :create,
-             params: { question: attributes_for(:question),
-                       exercise_id: exercise } }
+             params: params }
 
     context "when logged-in -->" do
       before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
+        let(:params) { { question: attributes_for(:question),
+                         exercise_id: exercise } }
+
         it "creates a new object" do
           expect{ post_with_valid_attributes }.to change(Question, :count).by(1)
+        end
+
+        context "when dependencies are defined" do
+          let!(:questions) { create_pair(:question, exercise: exercise) }
+
+          before do
+            params[:"question-#{questions.first.id}"] = "OR"
+            params[:"question-#{questions.last.id}"] = ""
+          end
+
+          it "creates a new object" do
+            expect{ post_with_valid_attributes }.to change(Question, :count).by(1)
+          end
+
+          it "creates the question dependencies" do
+            expect { post_with_valid_attributes }.to change(QuestionDependency, :count).by(2)
+          end
         end
       end
 
@@ -79,6 +98,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context "when not logged-in" do
+      let(:params) { { question: attributes_for(:question),
+                       exercise_id: exercise } }
       before { post_with_valid_attributes }
 
       it "redirects to root page" do
@@ -139,36 +160,73 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:question) { create(:question) }
+    let(:questions) do
+      exercise = create(:exercise)
+      create_pair(:question, exercise: exercise)
+    end
+
+    subject { put :update, params: params }
 
     context "when logged-in -->" do
       before { sign_in create(:user, :teacher) }
 
       context "whit valid attributes" do
-        subject { put :update, params: {
-                  id: question,
-                  question: attributes_for(:question, description: "New description") } }
+        let(:params) { { id: questions.first,
+                         question: attributes_for(:question, description: "New description") } }
 
         it "updates object attributes" do
           subject
-          expect(question.reload.description).to eq("New description")
+          expect(questions.first.reload.description).to eq("New description")
+        end
+
+        context "when dependency is marked to be deleted" do
+          before do
+            QuestionDependency.create_symmetrical_record(questions.first,
+                                                         questions.last, "OR")
+            params[:"question-#{questions.last.id}"] = ""
+          end
+
+          it "deletes the dependency" do
+            expect { subject }.to change(QuestionDependency, :count).by(-2)
+          end
+        end
+
+        context "when dependency is marked to be changed" do
+          before do
+            QuestionDependency.create_symmetrical_record(questions.first,
+                                                         questions.last, "OR")
+            params[:"question-#{questions.last.id}"] = "AND"
+            subject
+          end
+
+          it "changes the dependency operator" do
+            expect(questions.first.dependency_with(questions.last)).to eq("AND")
+          end
+        end
+
+        context "when dependencies are created" do
+          before { params[:"question-#{questions.last.id}"] = "AND" }
+
+          it "created the dependency" do
+            expect { subject }.to change(QuestionDependency, :count).by(2)
+          end
         end
       end
 
       context "whit invalid attributes" do
         before { put :update, params: {
-                 id: question,
+                 id: questions.first,
                  question: attributes_for(:question, description: nil) } }
 
         it "does not update object attributes" do
-          expect(question.reload.description).to_not be_nil
+          expect(questions.first.reload.description).to_not be_nil
         end
       end
     end
 
     context "when not logged-in" do
       before { put :update, params: {
-               id: question,
+               id: questions.first,
                question: attributes_for(:question, description: "New description") } }
 
       it "redirects to root page" do
@@ -178,14 +236,25 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    let!(:question) { create(:question) }
-    subject { delete :destroy, params: { id: question } }
+    let(:exercise) { create(:exercise) }
+    let(:questions) { create_pair(:question, exercise: exercise) }
+
+    before do
+      QuestionDependency.create_symmetrical_record(questions.first,
+                                                   questions.last, "OR")
+    end
+
+    subject { delete :destroy, params: { id: questions.first } }
 
     context "when logged-in" do
       before { sign_in create(:user, :teacher) }
 
       it "deletes the object" do
         expect { subject }.to change(Question, :count).by(-1)
+      end
+
+      it "deletes the question dependencies" do
+        expect { subject }.to change(QuestionDependency, :count).by(-2)
       end
     end
 
