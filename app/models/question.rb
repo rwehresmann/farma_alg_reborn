@@ -28,6 +28,10 @@ class Question < ApplicationRecord
     results
   end
 
+  def dependency_with(question)
+    QuestionDependency.where(question_1: self, question_2: question).pluck(:operator).first
+  end
+
     private
 
     # Destroy all dependencies (the symmetrical pair).

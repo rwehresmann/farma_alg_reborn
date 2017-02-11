@@ -70,4 +70,15 @@ RSpec.describe Question, type: :model do
       expect(results.first[:output]).to_not be_nil
     end
   end
+
+  describe "#dependency_with" do
+    let(:exercise) { create(:exercise) }
+    let(:questions) { create_pair(:question, exercise: exercise) }
+    before { QuestionDependency.create_symmetrical_record(questions.first,
+                                                          questions.last, "OR") }
+
+    it "returns the dependency operator" do
+      expect(questions.first.dependency_with(questions.last)).to eq("OR")
+    end
+  end
 end
