@@ -248,7 +248,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   moss_ruby!
-  poltergeist
+  poltergeist (~> 1.13)
   puma (~> 3.0)
   railroady
   rails (~> 5.0.0, >= 5.0.0.1)
