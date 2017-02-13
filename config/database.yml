@@ -22,4 +22,8 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  host: localhost
+  database: farma_alg_production
+  username: rwehresmann
+  password: <%= Rails.application.secrets[:password] %>
