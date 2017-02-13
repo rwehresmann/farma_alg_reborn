@@ -58,7 +58,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara-screenshot'
+  gem 'poltergeist', '~> 1.13'
 end
 
 group :development do

@@ -5,13 +5,19 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
-require 'capybara-screenshot/rspec'
 
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'capybara/rails'
+require 'capybara/rspec'
+require 'capybara/poltergeist'
+
 require 'support/helpers/relationships_helper'
 require 'support/helpers/answer_process_helper'
 
-Capybara::Screenshot.autosave_on_failure = false
+Capybara.javascript_driver = :poltergeist
+# Time must be high because test involving Answer model need a time to compile
+# and run the answer.
+Capybara.default_max_wait_time = 20
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
