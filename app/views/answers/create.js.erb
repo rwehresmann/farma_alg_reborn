@@ -1,7 +1,12 @@
+// Remove old error explanation.
+$('#error_explanation').remove();
+// Remove spin icon that indicates that the answer is being processing.
+$('.fa.fa-refresh.fa-spin').remove();
+// Remove old flash message (indicating that the answer is correct or incorrect).
+$('#flash-messages').remove();
+
 <% if @answer.errors.any? %>
-  $('#error_explanation').remove();
   $('#new_answer').prepend('<%= j(render "shared/error_messages", object: @answer) %>');
 <% else %>
-  $('#flash-messages').remove();
   $('.content-header').append('<%= j(render "shared/flash_messages", object: flash) %>');
 <% end %>

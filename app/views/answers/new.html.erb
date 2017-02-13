@@ -8,35 +8,38 @@
       <div id="editor_div"><%= @escaped_text %></div>
     </div>
 
-    <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
+    <div class="submit">
+      <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
+    </div>
   <% end %>
 
   <div id="test-results"></div>
 </div>
 
-<div class="row">
-  <div class="col-md-6">
-    <div class="box box-solid">
-      <div class="box-header with-border">
-        <h3 class="box-title"><b>Enunciado:</b></h3>
-      </div>
+<div class="col-md-6">
+  <div class="box box-solid">
+    <div class="box-header with-border">
+      <h3 class="box-title"><b>Enunciado:</b></h3>
+    </div>
 
-      <div class="box-body">
-        <%= markdown(@question.description) %>
-      </div>
+    <div class="box-body">
+      <%= markdown(@question.description) %>
     </div>
   </div>
+</div>
 
 <script>
   var textarea = $('#editor');
   textarea.hide();
 
+  // Create and customize ace editor.
   var editor = ace.edit("editor_div");
   editor.setTheme("ace/theme/twilight");
   editor.getSession().setMode("ace/mode/pascal");
 
+  // When click put ace editor content in form hidden textarea.
   $('input[name="commit"]').on('click', function() {
-    console.log(editor.getSession().getValue())
     textarea.val(editor.getSession().getValue());
+    $('.submit').append('<i class="fa fa-refresh fa-spin"></i>');
   });
 </script>
