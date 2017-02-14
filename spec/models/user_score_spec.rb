@@ -31,10 +31,7 @@ RSpec.describe UserScore, type: :model do
   describe ".by_user" do
     let(:users) { create_pair(:user) }
 
-    before do
-      team = create(:team)
-      2.times { |i| create(:user_score, user: users[i], team: team) }
-    end
+    before { 2.times { |i| create(:user_score, user: users[i]) } }
 
     it "returns data of the right user" do
       expect(UserScore.by_user(users.first).map(&:user)).to eq([users.first])
@@ -44,10 +41,7 @@ RSpec.describe UserScore, type: :model do
   describe ".by_team" do
     let(:teams) { create_pair(:team) }
 
-    before do
-      user = create(:user)
-      2.times { |i| create(:user_score, user: user, team: teams[i]) }
-    end
+    before { 2.times { |i| create(:user_score, team: teams[i]) } }
 
     it "returns data of the right team" do
       expect(UserScore.by_team(teams.first).map(&:team)).to eq([teams.first])
@@ -55,10 +49,13 @@ RSpec.describe UserScore, type: :model do
   end
 
   describe ".top" do
-    before { 4.times { create(:user_score) } }
+    let!(:biggest_score) { create(:user_score, score: 1000) }
+    before { 3.times { create(:user_score) } }
 
     it "returns the top x" do
-      expect(UserScore.top(2).count).to eq(2)
+      received = UserScore.top(2)
+      expect(received.count).to eq(2)
+      expect(received.first).to eq(biggest_score)
     end
   end
 
