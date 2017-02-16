@@ -29,6 +29,14 @@ class TeamsController < ApplicationController
 
   def show
     @exercises = @team.exercises
+    @weekly_ranking = EarnedScore.rank_user(team: @team,
+                                            starting_from: current_week_date,
+                                            limit: 5)
+    records = UserScore.rank(team: @team, limit: 5)
+    @general_ranking = format_ranking(records)
+
+    @general_base_score = @general_ranking.first[:score] unless records.empty?
+    @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
   end
 
   def edit
@@ -83,5 +91,16 @@ class TeamsController < ApplicationController
 
     def find_team
       @team = Team.find(params[:id])
+    end
+
+    # Format to an array of hashes, where the first key is the user object, and
+    # the second is the score (this format is needed to use in the ranking
+    # partial, shared with the weekly ranking).
+    def format_ranking(records)
+      records.map.inject([]) { |array, obj| array << { user: obj.user, score: obj.score } }
+    end
+
+    def current_week_date
+      Date.today.at_beginning_of_week
     end
 end

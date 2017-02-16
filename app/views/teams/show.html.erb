@@ -1,6 +1,9 @@
 <div class="nav-tabs-custom">
   <ul class="nav nav-tabs">
     <li class="active">
+      <a href="#rankings" data-toggle="tab" aria-expanded="true">Rankings</a>
+    </li>
+    <li>
       <a href="#exercise-lists" data-toggle="tab" aria-expanded="true">Listas de exercício</a>
     </li>
     <li>
@@ -12,8 +15,22 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane active" id="exercise-lists">
+    <div class="tab-pane active" id="rankings">
+      <div class="row">
+        <div class="col-md-6">
+          <%= render partial: 'ranking', locals: { title: "Ranking geral",
+                                                   ranking: @general_ranking,
+                                                   base_score: @general_base_score } %>
+        </div>
+        <div class="col-md-6">
+          <%= render partial: 'ranking', locals: { title: "Ranking da semana",
+                                                   ranking: @weekly_ranking,
+                                                   base_score: @weekly_base_score } %>
+        </div>
+      </div>
+    </div>
 
+    <div class="tab-pane" id="exercise-lists">
       <div class="box-body">
         <table class="table table-bordered">
           <tbody>

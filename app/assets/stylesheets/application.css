@@ -32,3 +32,19 @@
     height: 400px;
     font-size: 15px;
 }
+
+.bg-gold {
+  background-color: gold;
+}
+
+.bg-silver {
+  background-color: silver;
+}
+
+.bg-bronze {
+  background-color: brown;
+}
+
+.user-row {
+  background-color: #F0F4C3;
+}
