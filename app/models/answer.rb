@@ -10,15 +10,30 @@ class Answer < ApplicationRecord
   after_create :save_results
 
   validates_presence_of :content
-  belongs_to :user
   validates_inclusion_of :correct, in: [true, false]
 
+  belongs_to :user
   belongs_to :question
   belongs_to :team
   has_many :answer_connections, foreign_key: :answer_1_id
   has_many :similarities, through: :answer_connections, source: :answer_2
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
+
+  scope :by_user, -> (user = nil) do
+    return unless user.present?
+    where(user: user)
+  end
+
+  scope :by_team, -> (team = nil) do
+    return unless team.present?
+    where(team: team)
+  end
+
+  scope :by_question, -> (question = nil) do
+    return unless question.present?
+    where(question: question)
+  end
 
   def self.all_team_answers_to_question(team, question, options = {})
     query = "team_id = ? AND question_id = ? "
