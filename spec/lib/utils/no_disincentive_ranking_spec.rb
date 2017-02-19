@@ -193,7 +193,7 @@ describe NoDisincentiveRanking do
       end
     end
 
-    describe ".build" do
+    describe ".rank" do
       before { 4.times { team.enroll(create(:user)) } }
 
       context "when limit is specified" do
@@ -204,7 +204,7 @@ describe NoDisincentiveRanking do
           let(:expected) { records[0..2] }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limits)
+            received = described_class.rank(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
@@ -214,7 +214,7 @@ describe NoDisincentiveRanking do
           let(:expected) { [records[-2], records.last] }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limits)
+            received = described_class.rank(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
@@ -224,7 +224,7 @@ describe NoDisincentiveRanking do
           let(:expected) { records }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limits)
+            received = described_class.rank(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
@@ -234,8 +234,40 @@ describe NoDisincentiveRanking do
         let(:selected_user) { records[2].user }
 
         it "returns all records" do
-          received = described_class.build(selected_user, team)
+          received = described_class.rank(selected_user, team)
           expect(received).to eq(records)
+        end
+      end
+    end
+
+    describe ".build" do
+      let(:selected_user) { records[2].user }
+      let(:limits) { { upto: 1, downto: 1, answers: 1 } }
+      let(:ranking) { described_class.build(selected_user, team, limits) }
+
+      before do
+        4.times { team.enroll(create(:user)) }
+        User.all.each { |user| create_pair(:answer, user: selected_user, team: team) }
+        UserScore.all.each.inject(0) do |score, user_score|
+          user_score.update_attributes(score: score)
+          score += 1
+        end
+      end
+
+      it "returns an array of hashes whit the right data" do
+        expect(ranking.count).to eq(3)
+
+        ranking.each do |object|
+          expected = records.where(user: object[:user]).first
+          expect(object[:score]).to eq(expected.score)
+          expect(object[:answers].count).to eq(limits[:answers])
+          expect(object[:answers].first.user).to eq(selected_user)
+          expect(object[:answers].first.team).to eq(team)
+        end
+
+        # Check if is ordered by score.
+        (records.count - 2).times do |idx|
+          expect(records[idx][:score] >= records[idx + 1][:score] )
         end
       end
     end

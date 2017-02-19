@@ -2,7 +2,20 @@ module NoDisincentiveRanking
   DIRECTIONS_ORDER = [:downto, :upto]
 
   class << self
+
+    # Build the ranking in an array of hashes, including the last answers (the
+    # limit of answers is specified whit the option ':answers' in the limits
+    # hash argument) of the users of the ranking. 
     def build(user, team, limits = {})
+      ranking = rank(user, team, limits)
+      ranking.each.inject([]) do |array, user_score|
+        answers = Answer.by_team(team).by_user(user).limit(limits[:answers])
+        array << { user: user_score.user, score: user_score.score, answers: answers }
+      end
+    end
+
+    # Create the user score ranking.
+    def rank(user, team, limits = {})
       team_records = UserScore.rank(team: team)
       ranking = initialize_ranking(team_records, user)
       selected_index = user_index(team_records, user)
@@ -17,6 +30,10 @@ module NoDisincentiveRanking
     end
 
       private
+
+      def last_placed?(user, ranking)
+        ranking.last.user == user
+      end
 
       # Based in the UserScore records passed, find the record with the
       # selected user and return the array index from where the record is.
