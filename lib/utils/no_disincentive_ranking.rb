@@ -2,14 +2,14 @@ module NoDisincentiveRanking
   DIRECTIONS_ORDER = [:downto, :upto]
 
   class << self
-    def build(user, team, limit = nil)
+    def build(user, team, limits = {})
       team_records = UserScore.rank(team: team)
       ranking = initialize_ranking(team_records, user)
       selected_index = user_index(team_records, user)
 
       DIRECTIONS_ORDER.each do |direction|
         return if team_records.count == 1
-        half = desired_records(team_records, selected_index, direction, limit)
+        half = desired_records(team_records, selected_index, direction, limits[direction])
         ranking = join_records(ranking, half, direction) unless half.nil?
       end
 

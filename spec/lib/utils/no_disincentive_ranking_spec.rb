@@ -58,7 +58,6 @@ describe NoDisincentiveRanking do
 
   describe ".last_index_to_get" do
     context "when direction is from middle to the beginning -->" do
-
       before { 4.times { team.enroll(create(:user)) } }
 
       context "when no limit is specified -->" do
@@ -198,14 +197,14 @@ describe NoDisincentiveRanking do
       before { 4.times { team.enroll(create(:user)) } }
 
       context "when limit is specified" do
-        let(:limit) { 1 }
+        let(:limits) { { downto: 1, upto: 2 } }
 
         context "when user is the first record" do
           let(:selected_user) { records.first.user }
-          let(:expected) { records[0..1] }
+          let(:expected) { records[0..2] }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limit)
+            received = described_class.build(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
@@ -215,17 +214,17 @@ describe NoDisincentiveRanking do
           let(:expected) { [records[-2], records.last] }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limit)
+            received = described_class.build(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
 
         context "when user in the middle of the records" do
-          let(:selected_user) { records[2].user }
-          let(:expected) { records[1..3] }
+          let(:selected_user) { records[1].user }
+          let(:expected) { records }
 
           it "returns the right records respecting the specified limit" do
-            received = described_class.build(selected_user, team, limit)
+            received = described_class.build(selected_user, team, limits)
             expect(received).to eq(expected)
           end
         end
