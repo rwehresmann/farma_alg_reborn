@@ -1,11 +1,11 @@
-module NoDisincentiveRanking
+module IncentiveRanking
   DIRECTIONS_ORDER = [:downto, :upto]
 
   class << self
 
     # Build the ranking in an array of hashes, including the last answers (the
     # limit of answers is specified whit the option ':answers' in the limits
-    # hash argument) of the users of the ranking. 
+    # hash argument) of the users of the ranking.
     def build(user, team, limits = {})
       ranking = rank(user, team, limits)
       ranking.each.inject([]) do |array, user_score|

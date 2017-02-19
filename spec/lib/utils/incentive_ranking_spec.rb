@@ -1,9 +1,9 @@
 require 'rails_helper'
-require 'utils/no_disincentive_ranking'
+require 'utils/incentive_ranking'
 
-include NoDisincentiveRanking
+include IncentiveRanking
 
-describe NoDisincentiveRanking do
+describe IncentiveRanking do
   let(:team) { create(:team) }
   let(:records) { UserScore.by_team(team) }
 
@@ -305,12 +305,12 @@ describe NoDisincentiveRanking do
 
     # Iterates over the directions.
     def each_direction
-      NoDisincentiveRanking::DIRECTIONS_ORDER.each { |direction| yield(direction) }
+      IncentiveRanking::DIRECTIONS_ORDER.each { |direction| yield(direction) }
     end
 
     def expected_records(records, selected_index, direction, limit = nil)
-      last_index = NoDisincentiveRanking.send(:last_index_to_get, records,
-                                              selected_index, direction, limit)
+      last_index = described_class.send(:last_index_to_get, records,
+                                        selected_index, direction, limit)
       indexes = get_expected_records_indexes(selected_index, last_index, direction)
       indexes.each.inject([]) { |array, index| array << records[index] }
     end
