@@ -18,7 +18,7 @@
  *= require_self
  */
 
- #error_explanation {
+#error_explanation {
   color: red;
   ul {
     color: red;
@@ -28,7 +28,7 @@
 
 #editor_div {
     display: block;
-    width: 100%%;
+    width: 100%;
     height: 400px;
     font-size: 15px;
 }
@@ -47,4 +47,26 @@
 
 .user-row {
   background-color: #F0F4C3;
+}
+
+.flex-box {
+  display: flex;
+  flex-flow: row wrap;
+  width: auto;
+
+  .flex-item {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin: 1px;
+    padding: 2px;
+  }
+}
+
+.correct {
+  background: green;
+}
+
+.incorrect {
+  background: red;
 }

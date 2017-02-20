@@ -1,5 +1,10 @@
+require 'utils/incentive_ranking'
+
 class User < ApplicationRecord
+  include IncentiveRanking
+
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -36,5 +41,9 @@ class User < ApplicationRecord
   # Return the questions answered by the user to a specific team.
   def team_questions_answered(team)
     answers.where(team: team).map(&:question).uniq
+  end
+
+  def incentive_ranking(team, limits = {})
+    IncentiveRanking.build(self, team, limits)
   end
 end

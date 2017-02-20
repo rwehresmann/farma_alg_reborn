@@ -29,14 +29,10 @@ class TeamsController < ApplicationController
 
   def show
     @exercises = @team.exercises
-    @weekly_ranking = EarnedScore.rank_user(team: @team,
-                                            starting_from: current_week_date,
-                                            limit: 5)
     records = UserScore.rank(team: @team, limit: 5)
-    @general_ranking = format_ranking(records)
-
-    @general_base_score = @general_ranking.first[:score] unless records.empty?
-    @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
+    set_general_ranking_data(records)
+    set_weekly_ranking_data(records)
+    set_incentive_ranking_data
   end
 
   def edit
@@ -102,5 +98,28 @@ class TeamsController < ApplicationController
 
     def current_week_date
       Date.today.at_beginning_of_week
+    end
+
+    def set_general_ranking_data(records)
+      @general_ranking = format_ranking(records)
+      @general_base_score = @general_ranking.first[:score] unless records.empty?
+    end
+
+    def set_weekly_ranking_data(records)
+      @weekly_ranking = EarnedScore.rank_user(team: @team,
+                                              starting_from: current_week_date,
+                                              limit: 5)
+      @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
+    end
+
+    def set_incentive_ranking_data
+      limits = { downto: 1, upto: 1, answers: 5 }
+      @incentive_ranking = current_user.incentive_ranking(@team, limits)
+      @current_user_index = current_user_index
+    end
+
+    def current_user_index
+      record = @incentive_ranking.select { |data| data[:user] == current_user }.first
+      @incentive_ranking.index(record)
     end
 end

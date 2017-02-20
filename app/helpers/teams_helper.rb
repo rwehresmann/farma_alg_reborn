@@ -17,4 +17,14 @@ module TeamsHelper
   def score_representation(base_score, score)
     "#{(100 * score) / base_score}%"
   end
+
+  def incentive_ranking_position(index, current_user_index)
+    if index > current_user_index
+      raw "<i class='fa fa-arrow-circle-down'></i>"
+    elsif index == current_user_index
+      raw "<i class='fa fa-angle-double-right'></i>"
+    else
+      raw "<i class='fa fa-arrow-circle-up'></i>"
+    end
+  end
 end

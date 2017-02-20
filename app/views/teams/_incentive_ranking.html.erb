@@ -1,0 +1,40 @@
+<div class="box">
+  <div class="box-header">
+    <h3 class="box-title"><b>Sua situação atual</b></h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body no-padding">
+    <table class="table table-condensed">
+      <tbody>
+        <tr>
+          <th style="width: 10px"></th>
+          <th>Aluno</th>
+          <th>Últimas respostas</th>
+        </tr>
+
+        <% @incentive_ranking.each_with_index do |data, index| %>
+          <% if data[:user] == current_user %>
+            <tr class="user-row">
+          <% else %>
+            <tr>
+          <% end %>
+            <td><%= incentive_ranking_position(index, @current_user_index) %></td>
+            <td><%= data[:user].name %></td>
+            <td>
+              <div class="flex-box">
+                <% data[:answers].each do |answer| %>
+                  <% if answer.correct? %>
+                    <div class="flex-item correct"></div>
+                  <% else %>
+                    <div class="flex-item incorrect"></div>
+                  <% end %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
