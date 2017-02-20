@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20170211020431) do
   end
 
   create_table "questions", force: :cascade do |t|
+    t.string   "title",       null: false
     t.string   "description", null: false
     t.float    "score",       null: false
     t.integer  "exercise_id"

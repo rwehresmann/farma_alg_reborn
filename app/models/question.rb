@@ -5,7 +5,7 @@ class Question < ApplicationRecord
 
   before_destroy :destroy_dependencies
 
-  validates_presence_of :description, :score
+  validates_presence_of :title, :description, :score
 
   belongs_to :exercise
   has_many :test_cases

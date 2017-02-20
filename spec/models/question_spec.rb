@@ -8,6 +8,11 @@ RSpec.describe Question, type: :model do
       expect(question).to be_valid
     end
 
+    it "is invalid with empty title" do
+      question.title = nil
+      expect(question).to_not be_valid
+    end
+
     it "is invalid whit empty score" do
       question.score = nil
       expect(question).to_not be_valid
