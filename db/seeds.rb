@@ -10,6 +10,18 @@ User.find_or_create_by!(name: "Marty McFly", teacher: false, email: "marty@mail.
   user.password = "foobar"
 end
 
+User.find_or_create_by!(name: "Genji", teacher: false, email: "genji@mail.com") do |user|
+  user.password = "foobar"
+end
+
+User.find_or_create_by!(name: "Hanzo", teacher: false, email: "hanzo@mail.com") do |user|
+  user.password = "foobar"
+end
+
+User.find_or_create_by!(name: "Roadhog", teacher: false, email: "roadhog@mail.com") do |user|
+  user.password = "foobar"
+end
+
 # Create exercises.
 User.all.each do |user|
   2.times do |i|
@@ -47,5 +59,27 @@ end
 Team.all.each do |team|
   Exercise.all.each do |exercise|
     team.exercises << exercise if !team.exercises.include?(exercise)
+  end
+end
+
+# Add users to teams and create some user scores.
+User.where(teacher: false).each do |user|
+  Team.all.each do |team|
+    unless team.enrolled?(user)
+      team.enroll(user)
+      UserScore.where(user: user, team: team).update(score: rand(1..100))
+    end
+  end
+end
+
+User.all.each do |user|
+  user.teams.each do |team|
+    team.exercises.each do |exercise|
+      exercise.questions.each do |question|
+        correct = [true, false].sample
+        FactoryGirl.create(:answer, question: question, team: team,
+                           user: user, correct: correct)
+      end
+    end
   end
 end
