@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170211020431) do
+ActiveRecord::Schema.define(version: 20170221191725) do
 
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
@@ -139,6 +139,16 @@ ActiveRecord::Schema.define(version: 20170211020431) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["question_id"], name: "index_test_cases_on_question_id"
+  end
+
+  create_table "user_connections", force: :cascade do |t|
+    t.integer  "user_1_id"
+    t.integer  "user_2_id"
+    t.float    "similarity", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_1_id"], name: "index_user_connections_on_user_1_id"
+    t.index ["user_2_id"], name: "index_user_connections_on_user_2_id"
   end
 
   create_table "user_scores", force: :cascade do |t|
