@@ -168,7 +168,7 @@ describe SimilarityMachine do
         create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_1)
         answer = create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_2)
 
-        ComputeSimilarityJob.perform_now(answer)
+        ComputeAnswerSimilarityJob.perform_now(answer)
 
         users_similarity(user_1, user_2, team)
       end
@@ -191,7 +191,7 @@ describe SimilarityMachine do
         create(:answer, :params, :whit_custom_callbacks, question: question, team: team, user: user_1)
         answer = create(:answer, :whit_custom_callbacks, question: question, team: team, user: user_2)
 
-        ComputeSimilarityJob.perform_now(answer)
+        ComputeAnswerSimilarityJob.perform_now(answer)
 
         users_similarity(user_1, user_2, team)
       end
@@ -242,7 +242,7 @@ describe SimilarityMachine do
     before do
       users.each { |user| create_pair(:answer, user: user,
                                          question: question, team: team) }
-      answers = Answer.all_team_answers_to_question(team, question).to_a
+      answers = Answer.by_team(team).by_question(question).to_a
       AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
       AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
     end
@@ -265,7 +265,7 @@ describe SimilarityMachine do
       end
 
       2.times do |i|
-        answers = Answer.all_team_answers_to_question(team, questions[i]).to_a
+        answers = Answer.by_team(team).by_question(questions[i]).to_a
         AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
         AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
       end
@@ -311,7 +311,7 @@ describe SimilarityMachine do
         end
 
         2.times do |i|
-          answers = Answer.all_team_answers_to_question(team, questions[i]).to_a
+          answers = Answer.by_team(team).by_question(questions[i]).to_a
           AnswerConnection.create_simetrical_record(answers.first, answers.last, i)
           AnswerConnection.create_simetrical_record(answers[1], answers[2], i)
         end
@@ -338,7 +338,7 @@ describe SimilarityMachine do
       users.each { |user| create_pair(:answer, user: user, question: question,
                                       team: team) }
 
-      answers = Answer.all_team_answers_to_question(team, question).to_a
+      answers = Answer.by_team(team).by_question(question).to_a
       answers.count.times do |i|
         answer_1 = answers.shift
         answers.each do |answer_2|
