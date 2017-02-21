@@ -1,6 +1,8 @@
 require 'utils/similarity_machine'
 
-class ComputeUsersSimilarityJob < ApplicationJob
+class ComputeUserSimilarityJob < ApplicationJob
+  include SimilarityMachine
+
   queue_as :default
 
   def perform
@@ -12,11 +14,12 @@ class ComputeUsersSimilarityJob < ApplicationJob
     private
 
     def compare_team_users(team)
-      users = team.users
+      users = team.users.to_a
       users.count.times do
         user_1 = users.shift
         users.each do |user_2|
-          users_similarity(user_1, user_2, team)
+          similarity = users_similarity(user_1, user_2, team)
+          UserConnection.create_simetrical_record(user_1, user_2, similarity)
         end
       end
     end
