@@ -109,4 +109,14 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe ".to_compare_similarity" do
+    let(:answer) { create(:answer) }
+    let(:expected) { [create(:answer, question: answer.question,
+                            team: answer.team)]  }
+
+    it "returns all answers except the specified answer" do
+      expect(described_class.to_compare_similarity(answer)).to eq(expected)
+    end
+  end
 end

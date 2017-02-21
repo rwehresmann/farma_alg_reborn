@@ -35,10 +35,9 @@ class Answer < ApplicationRecord
     where(question: question)
   end
 
-  def self.all_team_answers_to_question(team, question, options = {})
-    query = "team_id = ? AND question_id = ? "
-    return Answer.where(query.concat("AND id NOT IN (?)"), team, question, options[:except]) if options[:except]
-    Answer.where(query, team, question)
+  # Return the answers which the specified answer should be compared.
+  scope :to_compare_similarity, -> (answer) do
+    by_team(answer.team).by_question(answer.question).where.not(id: answer)
   end
 
     private
@@ -74,7 +73,7 @@ class Answer < ApplicationRecord
                                      output: result[:output])
       end
 
-      ComputeSimilarityJob.perform_later(self)
+      ComputeAnswerSimilarityJob.perform_later(self)
     end
 
     # According the results from each test case, check if the answer is correct.
