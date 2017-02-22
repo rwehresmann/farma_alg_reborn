@@ -55,18 +55,29 @@
   width: auto;
 
   .flex-item {
-    width: 20px;
-    height: 20px;
+    height: 25px;
     text-align: center;
-    margin: 1px;
-    padding: 2px;
+    margin: 1.5px;
+    padding: 2px 4px 2px 4px;
+    border-radius: 5px
   }
 }
 
 .correct {
-  background: green;
+  background: rgba(255, 0, 0, 0.5);
 }
 
 .incorrect {
-  background: red;
+  background: rgba(0, 255, 0, 0.5);
+}
+
+.tooltip-inner {
+    max-width: 100em;
+    word-break: break-all;
+    text-align: left;
+    //white-space: nowrap;
+}
+
+dt {
+  font-size: 14px;
 }

@@ -27,4 +27,23 @@ module TeamsHelper
       raw "<i class='fa fa-arrow-circle-up'></i>"
     end
   end
+
+  # Return the class to put in answer div.
+  def answer_class(answer)
+    return "correct" if answer.correct?
+    "incorrect"
+  end
+
+  # Answer information to display in tootipe of each answer div.
+  def answer_info(answer)
+    result = answer.correct? ? "Correta" : "Incorreta"
+    "<dl>
+      <dt>Questão</dt>
+      <dd>#{answer.question.title}<br></br></dd>
+      <dt>Exercício</dt>
+      <dd>#{answer.question.exercise.title}<br></br></dd>
+      <dt>Status da resposta</dt>
+      <dd>#{result}</dd>
+    </dl>"
+  end
 end

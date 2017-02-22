@@ -23,11 +23,9 @@
             <td>
               <div class="flex-box">
                 <% data[:answers].each do |answer| %>
-                  <% if answer.correct? %>
-                    <div class="flex-item correct"></div>
-                  <% else %>
-                    <div class="flex-item incorrect"></div>
-                  <% end %>
+                  <div class="flex-item <%= answer_class(answer) %>" data-toggle="tooltip" data-placement="right" data-html="true" title="<%= answer_info(answer) %>">
+                    <%= answer.question.title %>
+                  </div>
                 <% end %>
               </div>
             </td>
@@ -38,3 +36,7 @@
   </div>
   <!-- /.box-body -->
 </div>
+
+<script>
+
+</script>
