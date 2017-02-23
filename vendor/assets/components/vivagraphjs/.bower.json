@@ -1,0 +1,38 @@
+{
+  "name": "vivagraphjs",
+  "homepage": "https://github.com/anvaka/VivaGraphJS",
+  "authors": [
+    "anvaka <anvaka@gmail.com>"
+  ],
+  "description": "Graph drawing library",
+  "main": "dist/vivagraph.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "graph",
+    "drawing",
+    "vivagraph"
+  ],
+  "license": "BSD-3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "0.8.2",
+  "_release": "0.8.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.8.2",
+    "commit": "d9ef11bbb4e2a8c3bcfea07e75c70d40a26d5fd7"
+  },
+  "_source": "https://github.com/anvaka/VivaGraphJS.git",
+  "_target": "^0.8.2",
+  "_originalSource": "vivagraph",
+  "_direct": true
+}
