@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe ComputeUserSimilarityJob, type: :job do
   let(:team) { create(:team) }
 
-  before { 2.times { team.enroll(create(:user)) } }
+  before do
+    2.times { team.enroll(create(:user)) }
+    team.users.each { |user| create(:answer, team: team, user: user) }
+  end
 
   subject(:job) { described_class.perform_later }
 
@@ -12,7 +15,7 @@ RSpec.describe ComputeUserSimilarityJob, type: :job do
   end
 
   it 'executes perform' do
-    expect(UserConnection).to receive(:create_simetrical_record)
+    expect(UserConnection).to receive(:create!)
     perform_enqueued_jobs { job }
   end
 end

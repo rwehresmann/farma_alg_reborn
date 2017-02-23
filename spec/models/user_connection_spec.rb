@@ -32,18 +32,4 @@ RSpec.describe UserConnection, type: :model do
       expect(result).to eq(100)
     end
   end
-
-  describe ".create_simetrical_record" do
-    let(:user_1) { create(:user) }
-    let(:user_2) { create(:user) }
-    let(:result_1) { UserConnection.similarity(user_1, user_2) }
-    let(:result_2) { UserConnection.similarity(user_2, user_1) }
-
-    before { UserConnection.create_simetrical_record(user_1, user_2, 100) }
-
-    it "creates a simetrical record" do
-      expect(result_1).to eq(100)
-      expect(result_2).to eq(100)
-    end
-  end
 end
