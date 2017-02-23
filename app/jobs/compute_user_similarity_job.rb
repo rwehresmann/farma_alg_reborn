@@ -3,7 +3,7 @@ require 'utils/similarity_machine'
 class ComputeUserSimilarityJob < ApplicationJob
   include SimilarityMachine
 
-  queue_as :default
+  queue_as :users_similarity
 
   def perform
     Team.active_teams.each do |team|
@@ -19,7 +19,8 @@ class ComputeUserSimilarityJob < ApplicationJob
         user_1 = users.shift
         users.each do |user_2|
           similarity = users_similarity(user_1, user_2, team)
-          UserConnection.create_simetrical_record(user_1, user_2, similarity)
+          UserConnection.create!(user_1: user_1, user_2: user_2,
+                                similarity: similarity)
         end
       end
     end
