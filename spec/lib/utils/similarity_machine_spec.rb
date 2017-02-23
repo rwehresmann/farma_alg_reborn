@@ -243,8 +243,10 @@ describe SimilarityMachine do
       users.each { |user| create_pair(:answer, user: user,
                                          question: question, team: team) }
       answers = Answer.by_team(team).by_question(question).to_a
-      AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
-      AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
+      AnswerConnection.create(answer_1: answers.first, answer_2: answers.last,
+                              similarity: 100)
+      AnswerConnection.create(answer_1: answers[1], answer_2: answers[2],
+                              similarity: 50)
     end
 
     it "returns the right similarity" do
@@ -266,8 +268,10 @@ describe SimilarityMachine do
 
       2.times do |i|
         answers = Answer.by_team(team).by_question(questions[i]).to_a
-        AnswerConnection.create_simetrical_record(answers.first, answers.last, 100)
-        AnswerConnection.create_simetrical_record(answers[1], answers[2], 50)
+        AnswerConnection.create(answer_1: answers.first, answer_2: answers.last,
+                                similarity: 100)
+        AnswerConnection.create(answer_1: answers[1], answer_2: answers[2],
+                                similarity: 50)
       end
     end
 
@@ -305,15 +309,15 @@ describe SimilarityMachine do
     context "when the users have common questions answered" do
       before do
         users.each do |user|
-          questions.each do |question|
+          questions.each.inject(1) do |similarity, question|
             create_pair(:answer, user: user, question: question, team: team)
           end
         end
 
         2.times do |i|
           answers = Answer.by_team(team).by_question(questions[i]).to_a
-          AnswerConnection.create_simetrical_record(answers.first, answers.last, i)
-          AnswerConnection.create_simetrical_record(answers[1], answers[2], i)
+          AnswerConnection.create(answer_1: answers.first, answer_2: answers.last,
+                                  similarity: i)
         end
       end
 
@@ -342,7 +346,8 @@ describe SimilarityMachine do
       answers.count.times do |i|
         answer_1 = answers.shift
         answers.each do |answer_2|
-          AnswerConnection.create_simetrical_record(answer_1, answer_2, 100 - i)
+          AnswerConnection.create(answer_1: answer_1, answer_2: answer_2,
+                                  similarity: (100 - i))
         end
       end
     end

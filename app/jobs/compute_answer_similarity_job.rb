@@ -11,7 +11,8 @@ class ComputeAnswerSimilarityJob < ApplicationJob
     to_compare = Answer.to_compare_similarity(answer_1)
     to_compare.each do |answer_2|
       similarity = answers_similarity(answer_1, answer_2)
-      AnswerConnection.create_simetrical_record(answer_1, answer_2, similarity)
+      AnswerConnection.create(answer_1: answer_1, answer_2: answer_2,
+                              similarity: similarity)
     end
   end
 end

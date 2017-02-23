@@ -13,7 +13,7 @@ RSpec.describe ComputeAnswerSimilarityJob, type: :job do
   end
 
   it 'executes perform' do
-    expect(AnswerConnection).to receive(:create_simetrical_record)
+    expect(AnswerConnection).to receive(:create)
     perform_enqueued_jobs { job }
   end
 end
