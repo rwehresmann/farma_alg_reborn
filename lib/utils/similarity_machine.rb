@@ -77,6 +77,8 @@ module SimilarityMachine
   # Calculate the similarity between two users of the same team.
   def users_similarity(user_1, user_2, team)
     questions = common_questions_answered([user_1, user_2], team)
+    return if questions.empty?
+    
     similarities = questions_similarity(questions, user_1, user_2, team)
     users_formula(similarities, questions.count)
   end
@@ -88,6 +90,7 @@ module SimilarityMachine
     questions.each do |question|
       similarities << question_similarity(question, user_1, user_2, team)
     end
+
     similarities.compact!
     similarities.avg
   end
@@ -105,6 +108,7 @@ module SimilarityMachine
         similarities[question] += similarity unless similarity.nil?
       end
     end
+
     most_representative(similarities)
   end
 
@@ -138,7 +142,6 @@ module SimilarityMachine
       # If the similarity between the two answers isn't already computed, returns
       # nil. So 'compact!' must be called to remove the nils.
       similarities.compact!
-
       users_question_formula(similarities)
     end
 
