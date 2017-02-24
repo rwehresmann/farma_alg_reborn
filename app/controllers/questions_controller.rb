@@ -77,14 +77,16 @@ class QuestionsController < ApplicationController
     # sence the option of create a dependency whit the question itself).
     def find_exercise_questions
       if @exercise.nil?
-        @questions = Question.where("exercise_id = ? AND id != ?", @question.exercise, @question.id)
+        @questions = Question.where("exercise_id = ? AND id != ?",
+                                    @question.exercise, @question.id)
       else
         @questions = Question.where(exercise: @exercise)
       end
     end
 
     def question_params
-      params.require(:question).permit(:title, :description, :exercise_id, :score)
+      params.require(:question).permit(:title, :description, :exercise_id,
+                                       :registered_score)
     end
 
     def find_question

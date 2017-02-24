@@ -13,14 +13,28 @@ RSpec.describe Question, type: :model do
       expect(question).to_not be_valid
     end
 
-    it "is invalid whit empty score" do
-      question.score = nil
+    it "is invalid with empty registered score" do
+      question.registered_score = nil
       expect(question).to_not be_valid
     end
 
-    it "is invalid whit empty description" do
+    it "is invalid with empty description" do
       question.description = nil
       expect(question).to_not be_valid
+    end
+
+    it "is invalid with empty operation" do
+      question.operation = nil
+      expect(question).to_not be_valid
+    end
+
+    it "is valid when operation is 'challenge'" do
+      question.operation = "challenge"
+      expect(question).to be_valid
+    end
+
+    it "is a task by default" do
+      expect(question.operation).to eq("task")
     end
 
     context "when the question is deleted" do
@@ -60,6 +74,26 @@ RSpec.describe Question, type: :model do
     end
   end
 
+  describe "Callbacks -->" do
+    describe '#set_mutable_score' do
+      context "when questions is a challenge" do
+        let(:question) { create(:question, :challenge) }
+
+        it "doesn't set mutable score" do
+          expect(question.mutable_score).to be_nil
+        end
+      end
+
+      context "when question is a task" do
+        let(:question) { create(:question) }
+
+        it "sets mutable score with registered score" do
+          expect(question.mutable_score).to eq(question.registered_score)
+        end
+      end
+    end
+  end
+
   describe '#test_all' do
     let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
     let(:results) do
@@ -82,7 +116,7 @@ RSpec.describe Question, type: :model do
     before { QuestionDependency.create_symmetrical_record(questions.first,
                                                           questions.last, "OR") }
 
-    it "returns the dependency operator" do
+    it "returns dependency operator" do
       expect(questions.first.dependency_with(questions.last)).to eq("OR")
     end
   end

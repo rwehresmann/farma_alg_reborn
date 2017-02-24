@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "Create a quetsion", type: :feature do
   let(:question) { build(:question) }
+
   before do
     login_as create(:user, :teacher)
     exercise = create(:exercise)
@@ -10,7 +11,7 @@ describe "Create a quetsion", type: :feature do
 
   context "whit valid attributes" do
     subject do
-      fill_in "question_score", with: question.score
+      fill_in "question_registered_score", with: question.registered_score
       fill_in "question_title", with: question.title
       fill_in "question_description", with: question.description
       click_on "Criar"

@@ -11,18 +11,23 @@
           <%= render 'shared/error_messages', object: f.object %>
 
           <div class="form-group">
-            <%= f.label "Pontuação" %>
-            <%= f.number_field :score, min: 0 %>
-          </div>
-
-          <div class="form-group">
             <%= f.label "Título" %>
-            <%= f.text_area :title, class: "form-control" %>
+            <%= f.text_field :title, class: "form-control" %>
           </div>
 
           <div class="form-group">
             <%= f.label "Descrição" %>
             <%= f.text_area :description, class: "form-control" %>
+          </div>
+
+          <div class="form-group" style="width: 20%">
+            <%= f.label "Pontuação" %>
+            <%= f.number_field :registered_score, min: 1, class: "form-control" %>
+          </div>
+
+          <div class="form-group" style="width: 20%">
+            <%= f.label "Pontuação variável" %>
+            <%= f.number_field :mutable_score, disabled: true, class: "form-control" %>
           </div>
 
           <div class="box-body">

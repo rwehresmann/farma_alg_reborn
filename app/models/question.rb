@@ -4,8 +4,11 @@ class Question < ApplicationRecord
   include Compilers
 
   before_destroy :destroy_dependencies
+  before_create :set_mutable_score
+  before_create :normalize_operation
 
-  validates_presence_of :title, :description, :score
+  validates_presence_of :title, :description, :registered_score
+  validates_inclusion_of :operation, in: ["challenge", "task"]
 
   belongs_to :exercise
   has_many :test_cases
@@ -37,5 +40,17 @@ class Question < ApplicationRecord
     # Destroy all dependencies (the symmetrical pair).
     def destroy_dependencies
       question_dependencies.each { |dep| dep.destroy_symmetrical_record }
+    end
+
+    def task?
+      operation == "task"
+    end
+
+    def set_mutable_score
+      self.mutable_score = registered_score if task?
+    end
+
+    def normalize_operation
+      self.operation.downcase!
     end
 end

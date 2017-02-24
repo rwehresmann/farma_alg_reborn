@@ -104,12 +104,14 @@ ActiveRecord::Schema.define(version: 20170221191725) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.string   "title",       null: false
-    t.string   "description", null: false
-    t.float    "score",       null: false
+    t.string   "title",                             null: false
+    t.string   "description",                       null: false
+    t.string   "operation",        default: "task", null: false
+    t.float    "registered_score",                  null: false
+    t.float    "mutable_score"
     t.integer  "exercise_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.index ["exercise_id"], name: "index_questions_on_exercise_id"
   end
 

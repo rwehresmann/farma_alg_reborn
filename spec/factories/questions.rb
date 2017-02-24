@@ -3,7 +3,12 @@ FactoryGirl.define do
     title "question title"
     description "question description"
     exercise
-    score 10
+    registered_score 10
+    operation "task"
+
+    trait :challenge do
+      operation "challenge"
+    end
 
     transient do
       test_cases_count 0
