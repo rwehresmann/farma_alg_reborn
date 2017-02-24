@@ -59,8 +59,9 @@ class Answer < ApplicationRecord
         # The source code is already compiled, so 'compile: false'.
         @results = question.test_all(filename, "pas", content, compile: false)
         self.correct = is_correct?(@results)
+        score = question.task? ? question.registered_score : question.mutable_score
         EarnedScore.create!(user: user, question: question, team: team,
-                            score: question.score) if correct?
+                            score: score) if correct?
       end
     end
 

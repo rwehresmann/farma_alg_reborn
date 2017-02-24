@@ -28,8 +28,10 @@
                                                    base_score: @weekly_base_score } %>
         </div>
       </div>
-      <br></br>
-      <%= render partial: 'incentive_ranking' %>
+      <% if @team.enrolled?(current_user) %>
+        <br></br>
+        <%= render partial: 'incentive_ranking' %>
+      <% end %>
     </div>
 
     <div class="tab-pane" id="exercise-lists">

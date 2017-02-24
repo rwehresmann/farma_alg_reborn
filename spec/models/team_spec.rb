@@ -62,6 +62,15 @@ RSpec.describe Team, type: :model do
         expect(team.enrolled?(user)).to be_falsey
       end
     end
+
+    context "when user is the team owner" do
+      let(:user) { create(:user, :teacher) }
+      let(:team) { create(:team, owner: user) }
+
+      it "is false" do
+        expect(team.enrolled?(user)).to be_falsey
+      end
+    end
   end
 
   describe '#unenroll' do

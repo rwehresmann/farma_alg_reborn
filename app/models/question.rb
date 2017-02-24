@@ -35,15 +35,15 @@ class Question < ApplicationRecord
     QuestionDependency.where(question_1: self, question_2: question).pluck(:operator).first
   end
 
+  def task?
+    operation == "task"
+  end
+
     private
 
     # Destroy all dependencies (the symmetrical pair).
     def destroy_dependencies
       question_dependencies.each { |dep| dep.destroy_symmetrical_record }
-    end
-
-    def task?
-      operation == "task"
     end
 
     def set_mutable_score

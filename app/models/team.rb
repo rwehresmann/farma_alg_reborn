@@ -17,7 +17,7 @@ class Team < ApplicationRecord
   # Check if the user is enrolled in the team (if is the owner, it's considered
   # automatically enrolled).
   def enrolled?(user)
-    return true if user == owner
+    return false if user == owner
     users.include?(user)
   end
 
