@@ -40,4 +40,41 @@ RSpec.describe AnswerConnection, type: :model do
       end
     end
   end
+
+  describe ".by_threshold" do
+    let(:connection_1) { create(:answer_connection, similarity: 100) }
+    let(:connection_2) { create(:answer_connection, similarity: 90) }
+    let(:connection_3) { create(:answer_connection, similarity: 80) }
+
+    context "when answers are specified" do
+      it "returns the connections that belongs to these answers" do
+        answers = (connection_1.answers + connection_2.answers)
+        received = described_class.by_threshold(100, answers).to_a
+        expect(received).to eq([connection_1])
+      end
+    end
+
+    context "when answers aren't specified" do
+      it "searches in all connections" do
+        received = described_class.by_threshold(80)
+        expect(received).to eq([connection_1, connection_2, connection_3])
+      end
+    end
+
+    context "when doesn't exists connections bigger or equal the threshold" do
+      it "returns an empty result" do
+        received = described_class.by_threshold(101)
+        expect(received.empty?).to be_truthy
+      end
+    end
+  end
+
+  describe '#answers' do
+    let(:connection) { create(:answer_connection) }
+
+    it "returns the answers from the connection" do
+      expected = [connection.answer_1, connection.answer_2]
+      expect(connection.answers).to eq(expected)
+    end
+  end
 end
