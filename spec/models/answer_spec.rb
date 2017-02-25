@@ -42,7 +42,7 @@ RSpec.describe Answer, type: :model do
   end
 
   describe "Callbacks -->" do
-    describe '#before_create' do
+    describe '#check_answer' do
       let!(:question) { create(:question) }
 
       context "when is correct answered" do
@@ -73,6 +73,48 @@ RSpec.describe Answer, type: :model do
           expect(answer.correct).to be_falsey
           expect(answer.compilation_error).to be_truthy
           expect(answer.compiler_output).to_not be_nil
+        end
+      end
+    end
+
+    describe '#score_to_earn' do
+      context "when question is a challenge" do
+        let(:answer) { build(:answer, question: create(:question, :challenge)) }
+        let(:received) { answer.send(:score_to_earn) }
+
+        it "returns the question score" do
+          expect(received).to eq(answer.question.score)
+        end
+      end
+
+      context "when question is a task" do
+        let(:team) { create(:team) }
+        let(:question) { create(:question) }
+        let(:answer) { build(:answer, question: question, team: team) }
+        let(:received) { answer.send(:score_to_earn) }
+
+        context "when the limit to start variation is reached" do
+          before do
+            Answer::LIMIT_TO_START_VARIATION.times do
+              create_right_answer_to_question(question, team: team)
+            end
+          end
+
+          it "returns the score after applied the variation" do
+            expect(received).not_to eql(answer.question.score)
+          end
+        end
+
+        context "when the limit to start variation isn't reached" do
+          before do
+            (Answer::LIMIT_TO_START_VARIATION - 1).times do
+              create_right_answer_to_question(question, team: team)
+            end
+          end
+
+          it "returns the original question score" do
+            expect(received).to eql(answer.question.score)
+          end
         end
       end
     end

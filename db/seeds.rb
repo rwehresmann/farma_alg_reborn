@@ -35,7 +35,7 @@ Exercise.all.each do |exercise|
   4.times do |i|
     exercise.questions.find_or_create_by!(title: "Question #{i}",
                                           description: "Question #{i} from exercise #{exercise.title}",
-                                          registered_score: 10, operation: "task")
+                                          score: 10, operation: "task")
   end
 end
 

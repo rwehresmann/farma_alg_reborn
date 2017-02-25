@@ -21,22 +21,28 @@ module Helpers
       create(:question, exercise: exercise)
     end
 
-    def create_right_answer_to_question(question, options = { user: nil, callbacks: false })
+    def create_right_answer_to_question(question, options = { user: nil, team: nil, callbacks: false })
       user = get_user(options[:user])
+      team = get_team(options[:team])
+
       if options[:callbacks]
         create(:test_case, :hello_world, question: question)
-        return create(:answer, :whit_custom_callbacks, question: question, user: user)
+        return create(:answer, :whit_custom_callbacks, question: question,
+                      user: user, team: team)
       end
-      create(:answer, :correct, question: question, user: user)
+      create(:answer, :correct, question: question, user: user, team: team)
     end
 
-    def create_wrong_answer_to_question(question, options = { user: nil, callbacks: false })
+    def create_wrong_answer_to_question(question, options = { user: nil, team: nil, callbacks: false })
       user = get_user(options[:user])
+      team = get_team(options[:team])
+
       if options[:callbacks]
         create(:test_case, question: question)
-        return create(:answer, :whit_custom_callbacks, question: question, user: user)
+        return create(:answer, :whit_custom_callbacks, question: question,
+                      user: user, team: team)
       end
-      create(:answer, question: question, user: user)
+      create(:answer, question: question, user: user, team: team)
     end
 
     def create_answer_whit_compilation_error_to_question(question, options = { user: nil, callbacks: false })
@@ -52,6 +58,11 @@ module Helpers
     def get_user(user = nil)
       return user if user
       create(:user)
+    end
+
+    def get_team(team = nil)
+      return team if team
+      create(:team)
     end
   end
 end

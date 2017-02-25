@@ -4,6 +4,12 @@ class Answer < ApplicationRecord
   include ApplicationHelper
   include Compilers
 
+  # The key is the difficult level, and the value is the percentage
+  # of variation.
+  SCORE_VARIATION = { 0 => -0.25, 1 => -0.25, 2 => -0.15, 3 => 0,
+                      4 => 0.15, 5 => 0.25 }
+  LIMIT_TO_START_VARIATION = 10
+
   attr_reader :results
 
   before_create :check_answer
@@ -59,9 +65,11 @@ class Answer < ApplicationRecord
         # The source code is already compiled, so 'compile: false'.
         @results = question.test_all(filename, "pas", content, compile: false)
         self.correct = is_correct?(@results)
-        score = question.task? ? question.registered_score : question.mutable_score
-        EarnedScore.create!(user: user, question: question, team: team,
-                            score: score) if correct?
+        if correct?
+          score = score_to_earn
+          EarnedScore.create!(user: user, question: question, team: team,
+                              score: score)
+        end
       end
     end
 
@@ -81,5 +89,33 @@ class Answer < ApplicationRecord
     def is_correct?(results)
       results.each { |result| return false if result[:status] == :error }
       true
+    end
+
+    # Based on the operation of the question answered, calculate the currently
+    # score to earn.
+    def score_to_earn
+      if question.operation == "challenge"
+        question.score
+      else
+        answers = Answer.by_team(team).by_question(question)
+        return question.score if answers.count < LIMIT_TO_START_VARIATION
+        question_level = difficult_level(answers)
+        score_variation = SCORE_VARIATION[question_level]
+        question.score * score_variation
+      end
+    end
+
+    # Difficult level formula.
+    def difficult_level(answers)
+      correct = answers.where(correct: true)
+      incorrect = answers.where(correct: false)
+      denominator = (correct.count * 0.1 + incorrect.count * 0.2)
+      normalize_difficult_level(answers.count.fdiv(denominator).ceil)
+    end
+
+    # Difficult level formula returns a number in the range 5..10. The desired
+    # range is 0..5, so we normalize the result subtracting 5.
+    def normalize_difficult_level(level)
+      level - 5
     end
 end
