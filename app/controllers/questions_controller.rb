@@ -86,7 +86,7 @@ class QuestionsController < ApplicationController
 
     def question_params
       params.require(:question).permit(:title, :description, :exercise_id,
-                                       :registered_score)
+                                       :score)
     end
 
     def find_question

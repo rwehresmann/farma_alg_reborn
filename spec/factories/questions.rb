@@ -3,7 +3,7 @@ FactoryGirl.define do
     title "question title"
     description "question description"
     exercise
-    registered_score 10
+    score 10
     operation "task"
 
     trait :challenge do

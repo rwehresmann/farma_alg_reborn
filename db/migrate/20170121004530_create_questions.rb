@@ -4,8 +4,7 @@ class CreateQuestions < ActiveRecord::Migration[5.0]
       t.string :title, null: false
       t.string :description, null: false
       t.string :operation, null: false, default: "task"
-      t.float :registered_score, null: false
-      t.float :mutable_score
+      t.float :score, null: false
       t.references :exercise
 
       t.timestamps null: false

@@ -22,12 +22,7 @@
 
           <div class="form-group" style="width: 20%">
             <%= f.label "Pontuação" %>
-            <%= f.number_field :registered_score, min: 1, class: "form-control" %>
-          </div>
-
-          <div class="form-group" style="width: 20%">
-            <%= f.label "Pontuação variável" %>
-            <%= f.number_field :mutable_score, disabled: true, class: "form-control" %>
+            <%= f.number_field :score, min: 1, class: "form-control" %>
           </div>
 
           <div class="box-body">

@@ -13,8 +13,8 @@ RSpec.describe Question, type: :model do
       expect(question).to_not be_valid
     end
 
-    it "is invalid with empty registered score" do
-      question.registered_score = nil
+    it "is invalid with empty score" do
+      question.score = nil
       expect(question).to_not be_valid
     end
 
@@ -71,26 +71,6 @@ RSpec.describe Question, type: :model do
 
     it "has many dependencies" do
       expect(relationship_type(Question, :dependencies)).to eq(:has_many)
-    end
-  end
-
-  describe "Callbacks -->" do
-    describe '#set_mutable_score' do
-      context "when questions is a challenge" do
-        let(:question) { create(:question, :challenge) }
-
-        it "doesn't set mutable score" do
-          expect(question.mutable_score).to be_nil
-        end
-      end
-
-      context "when question is a task" do
-        let(:question) { create(:question) }
-
-        it "sets mutable score with registered score" do
-          expect(question.mutable_score).to eq(question.registered_score)
-        end
-      end
     end
   end
 
