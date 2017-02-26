@@ -161,4 +161,16 @@ RSpec.describe Answer, type: :model do
       expect(described_class.to_compare_similarity(answer)).to eq(expected)
     end
   end
+
+  describe ".created_last" do
+    before do
+      today = Time.now
+      2.times { |i| create(:answer, created_at: today + i.day) }
+    end
+
+    it "returns data ordered by time creation" do
+      received = Answer.created_last
+      expect(received.first.created_at > received.last.created_at).to be_truthy
+    end
+  end
 end

@@ -46,6 +46,10 @@ class Answer < ApplicationRecord
     by_team(answer.team).by_question(answer.question).where.not(id: answer)
   end
 
+  scope :created_last, -> () do
+    order(created_at: :desc)
+  end
+
     private
 
     # Compile the source code, set compiler_output and compilation_erro flag,

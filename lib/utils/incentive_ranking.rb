@@ -9,7 +9,8 @@ module IncentiveRanking
     def build(user, team, limits = {})
       ranking = rank(user, team, limits)
       ranking.each.inject([]) do |array, user_score|
-        answers = Answer.by_team(team).by_user(user_score.user).limit(limits[:answers])
+        answers = Answer.by_team(team).by_user(user_score.user)
+                  .created_last.limit(limits[:answers])
         array << { user: user_score.user, score: user_score.score, answers: answers }
       end
     end
