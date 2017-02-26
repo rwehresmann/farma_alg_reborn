@@ -247,7 +247,7 @@ describe IncentiveRanking do
 
       before do
         4.times { team.enroll(create(:user)) }
-        User.all.each { |user| create_pair(:answer, user: selected_user, team: team) }
+        User.all.each { |user| create_pair(:answer, user: user, team: team) }
         UserScore.all.each.inject(0) do |score, user_score|
           user_score.update_attributes(score: score)
           score += 1
@@ -260,14 +260,12 @@ describe IncentiveRanking do
         ranking.each do |object|
           expected = records.where(user: object[:user]).first
           expect(object[:score]).to eq(expected.score)
-          expect(object[:answers].count).to eq(limits[:answers])
-          expect(object[:answers].first.user).to eq(selected_user)
-          expect(object[:answers].first.team).to eq(team)
+          expect(object[:answers].count <= limits[:answers]).to be_truthy
         end
 
         # Check if is ordered by score.
         (records.count - 2).times do |idx|
-          expect(records[idx][:score] >= records[idx + 1][:score] )
+          expect(records[idx][:score] > records[idx + 1][:score] )
         end
       end
     end
