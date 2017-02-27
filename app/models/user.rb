@@ -46,4 +46,8 @@ class User < ApplicationRecord
   def incentive_ranking(team, limits = {})
     IncentiveRanking.build(self, team, limits)
   end
+
+  def owner?(team)
+    teams_created.include?(team)
+  end
 end

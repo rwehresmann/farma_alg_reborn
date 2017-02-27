@@ -158,4 +158,24 @@ RSpec.describe User, type: :model do
       expect(@questions_answered).to eq(@questions)
     end
   end
+
+  describe '#owner?' do
+    let(:user) { create(:user) }
+
+    context "when is the owner of the team" do
+      let(:team) { create(:team, owner: user) }
+
+      it "returns true" do
+        expect(user.owner?(team)).to be_truthy
+      end
+    end
+
+    context "when isn't the owner of the team" do
+      let(:team) { create(:team) }
+
+      it "returns false" do
+        expect(user.owner?(team)).to be_falsey
+      end
+    end
+  end
 end
