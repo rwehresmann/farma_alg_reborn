@@ -5,7 +5,7 @@ crumb :exercises do
 end
 
 crumb :exercise do |exercise|
-  link "Exercício", exercise
+  link exercise.title, exercise
   parent :exercises
 end
 
@@ -27,7 +27,7 @@ crumb :questions do |exercise|
 end
 
 crumb :question do |question|
-  link "Questão", question
+  link question.title, question
   parent :questions, question.exercise
 end
 
@@ -49,7 +49,7 @@ crumb :test_cases do |question|
 end
 
 crumb :test_case do |test_case|
-  link "Caso de teste", test_case
+  link test_case.title, test_case
   parent :test_cases, test_case.question
 end
 
@@ -70,7 +70,7 @@ crumb :teams do
 end
 
 crumb :team do |team|
-  link "Turma", team
+  link team.name, team
   parent :teams
 end
 
