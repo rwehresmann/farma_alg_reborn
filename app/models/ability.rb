@@ -5,13 +5,30 @@ class Ability
     return if user.nil?
 
     if user.teacher?
-      can :manage, [Exercise, Question, TestCase]
-      can :manage, Team do |team|
-        team.owner == user
+      can :read, [Exercise, Question, TestCase]
+      can :create, [Exercise, Question, TestCase, Team]
+
+      can :manage, Exercise do |exercise|
+        exercise.user == user
       end
 
-      can :create, Team
+      can :manage, Question do |question|
+        question.exercise.user == user
+      end
+
+      can :manage, TestCase do |test_case|
+        test_case.question.exercise.user == user
+      end
+
+      can [:update, :delete], Team do |team|
+        team.owner == user
+      end
     else
+      can :read, [Exercise, Question]
+    end
+
+    can :read, Team do |team|
+      team.enrolled?(user) || team.owner == user
     end
 
     can [:enroll], Team do |team|
@@ -21,7 +38,5 @@ class Ability
     can [:unenroll], Team do |team|
       team.enrolled?(user)
     end
-
-    can :read, Team
   end
 end

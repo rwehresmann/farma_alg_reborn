@@ -7,37 +7,44 @@ describe "User" do
 
     context "when is a teacher -->" do
       let(:user) { create(:user, :teacher) }
+      let(:common_abilities) { [:create, :read] }
 
-      it { should be_able_to(:manage, Exercise) }
+      it { should be_able_to(common_abilities, Exercise) }
+      it { should be_able_to(common_abilities, Question) }
+      it { should be_able_to(common_abilities, TestCase) }
+      it { should be_able_to(:create, Team) }
 
-      it { should be_able_to(:manage, Question) }
-      it { should be_able_to(:manage, TestCase) }
-
-
-      context "when is owner of the team" do
+      context "when access his created objects" do
+        let(:exercise) { create(:exercise, user: user) }
+        let(:question) { create(:question, exercise: exercise) }
+        let(:test_case) { create(:test_case, question: question) }
         let(:team) { create(:team, owner: user) }
 
-        it { should be_able_to(:manage, Team) }
-
+        it { should be_able_to(:manage, exercise) }
+        it { should be_able_to(:manage, question) }
+        it { should be_able_to(:manage, test_case) }
+        it { should be_able_to(:delete, team) }
+        it { should be_able_to(:delete, team) }
       end
 
-      context "when isn't the owner of a team -->" do
+      context "when access objects that he doesn't created -->" do
+        let(:exercise) { create(:exercise) }
+        let(:question) { create(:question) }
+        let(:test_case) { create(:test_case) }
         let(:team) { create(:team) }
+        let(:proibited_abilities) { [:update, :delete] }
 
-        it { should_not be_able_to(:manage, team) }
-        it { should be_able_to(:create, team) }
-        it { should be_able_to(:read, team) }
+        it { should_not be_able_to(proibited_abilities, exercise) }
+        it { should_not be_able_to(proibited_abilities, question) }
+        it { should_not be_able_to(proibited_abilities, test_case) }
+        it { should_not be_able_to([:update, :delete, :unenroll, :read], team) }
 
-        context "when unenrolled in the team" do
-          it { should be_able_to(:enroll, team) }
-          it { should_not be_able_to(:unenroll, team) }
-        end
-
-        context "when enrolled in the team" do
+        context "when is enrolled in a team" do
           before { team.enroll(user) }
 
-          it { should_not be_able_to(:enroll, team) }
           it { should be_able_to(:unenroll, team) }
+          it { should be_able_to(:read, team) }
+          it { should_not be_able_to(:enroll, team) }
         end
       end
     end
