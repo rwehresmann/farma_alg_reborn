@@ -1,0 +1,35 @@
+<table class="table table-bordered">
+  <% if current_user.owner?(@team) %>
+    <tbody>
+      <tr>
+        <th style="width: 10px">#</th>
+        <th>Exercício</th>
+      </tr>
+      <% @exercises.each_with_index do |exercise, index| %>
+        <tr>
+          <td><%= index %>.</td>
+          <td><%= link_to exercise.title, exercises_url(exercise) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  <% else %>
+    <tbody>
+      <tr>
+        <th style="width: 10px">#</th>
+        <th>Exercício</th>
+        <th>Progresso</th>
+      </tr>
+      <% @exercises.each_with_index do |exercise, index| %>
+        <tr>
+          <td><%= index %>.</td>
+          <td><%= link_to exercise.title, list_exercise_url(exercise) %></td>
+          <td>
+            <div class="progress progress-xs">
+              <div class="progress-bar progress-bar-alert" style="<%= progress(exercise) %>"></div>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  <% end %>
+</table>

@@ -6,8 +6,8 @@
     </div><!-- /.box-header -->
 
     <div class="box-footer">
-      <% if team.enrolled?(current_user) %>
-        <% if current_user != team.owner %>
+      <% if team.enrolled?(current_user) || current_user == team.owner %>
+        <% if can? :unenroll, team %>
           <%= link_to "Cancelar matrícula", unenroll_team_path(team), method: :post %>
         <% end %>
 
