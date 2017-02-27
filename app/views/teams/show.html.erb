@@ -39,9 +39,22 @@
         <%= render 'exercises_table' %>
       </div>
     </div>
-    
+
     <div class="tab-pane" id="enroled-students">
-      lala
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th style="width: 10px">#</th>
+            <th>Usuário</th>
+          </tr>
+          <% @enrolled_users.each_with_index do |user, index| %>
+            <tr>
+              <td><%= index %>.</td>
+              <td><%= user.name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

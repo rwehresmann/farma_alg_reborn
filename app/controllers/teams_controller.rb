@@ -33,6 +33,7 @@ class TeamsController < ApplicationController
     set_general_ranking_data(records)
     set_weekly_ranking_data(records)
     set_incentive_ranking_data if @team.enrolled?(current_user)
+    @enrolled_users = @team.users 
   end
 
   def edit
