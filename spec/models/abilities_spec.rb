@@ -7,11 +7,13 @@ describe "User" do
 
     context "when is a teacher -->" do
       let(:user) { create(:user, :teacher) }
-      let(:common_abilities) { [:create, :read] }
 
-      it { should be_able_to(common_abilities, Exercise) }
-      it { should be_able_to(common_abilities, Question) }
-      it { should be_able_to(common_abilities, TestCase) }
+      it { should be_able_to(:create, Exercise) }
+      it { should be_able_to(:read, Exercise) }
+      it { should be_able_to(:create, Question) }
+      it { should be_able_to(:read, Question) }
+      it { should be_able_to(:create, TestCase) }
+      it { should be_able_to(:read, TestCase) }
       it { should be_able_to(:create, Team) }
 
       context "when access his created objects" do
@@ -20,10 +22,12 @@ describe "User" do
         let(:test_case) { create(:test_case, question: question) }
         let(:team) { create(:team, owner: user) }
 
-        it { should be_able_to(:manage, exercise) }
-        it { should be_able_to(:manage, question) }
-        it { should be_able_to(:manage, test_case) }
-        it { should be_able_to(:delete, team) }
+        it { should be_able_to(:delete, exercise) }
+        it { should be_able_to(:update, exercise) }
+        it { should be_able_to(:delete, question) }
+        it { should be_able_to(:update, question) }
+        it { should be_able_to(:delete, test_case) }
+        it { should be_able_to(:update, test_case) }
         it { should be_able_to(:delete, team) }
       end
 

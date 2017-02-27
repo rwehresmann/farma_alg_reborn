@@ -8,15 +8,15 @@ class Ability
       can :read, [Exercise, Question, TestCase]
       can :create, [Exercise, Question, TestCase, Team]
 
-      can :manage, Exercise do |exercise|
+      can [:update, :delete], Exercise do |exercise|
         exercise.user == user
       end
 
-      can :manage, Question do |question|
+      can [:update, :delete], Question do |question|
         question.exercise.user == user
       end
 
-      can :manage, TestCase do |test_case|
+      can [:update, :delete], TestCase do |test_case|
         test_case.question.exercise.user == user
       end
 
