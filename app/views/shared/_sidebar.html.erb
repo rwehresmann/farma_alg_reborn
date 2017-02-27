@@ -4,16 +4,19 @@
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
       <li class="header">Menu de operações</li>
-       <li>
-         <%= link_to exercises_path do %>
-           <i class="fa fa-pencil-square-o"></i>
-           <span>Meus exercícios</span>
-         <% end %>
-       </li>
+       <% if current_user.teacher? %>
+         <li>
+           <%= link_to exercises_path do %>
+             <i class="fa fa-pencil-square-o"></i>
+             <span>Meus exercícios</span>
+           <% end %>
+         </li>
+      <% end %>
+
        <li>
          <%= link_to teams_path do %>
            <i class="fa fa-users"></i>
-           <span>Minhas turmas</span>
+           <span>Turmas</span>
          <% end %>
        </li>
       <li class="treeview">
