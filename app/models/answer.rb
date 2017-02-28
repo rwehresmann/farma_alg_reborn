@@ -10,10 +10,13 @@ class Answer < ApplicationRecord
                       4 => 0.15, 5 => 0.25 }
   LIMIT_TO_START_VARIATION = 10
 
+  # @results is a variable who store the test case results before save the
+  # answer instance. We store these results there to avoid reprocess
+  # these results again, because they're used in an after create callback again.
   attr_reader :results
 
   before_create :check_answer
-  after_create :save_results
+  after_create :save_test_cases_results, if: :results_present?
 
   validates_presence_of :content
   validates_inclusion_of :correct, in: [true, false]
@@ -63,12 +66,11 @@ class Answer < ApplicationRecord
       if has_error?
         self.compilation_error = true
         self.correct = false
-        @results = []
       else
         self.compilation_error = false
         # The source code is already compiled, so 'compile: false'.
         @results = question.test_all(filename, "pas", content, compile: false)
-        self.correct = is_correct?(@results)
+        self.correct = is_correct?
         if correct?
           score = score_to_earn
           EarnedScore.create!(user: user, question: question, team: team,
@@ -79,7 +81,8 @@ class Answer < ApplicationRecord
 
     # Save the result accoring the result of each test case (@results is filled
     # from set_correct method), and enqueue the answer to compute similarities.
-    def save_results
+    def save_test_cases_results
+      return if @results.nil?
       @results.each do |result|
         AnswerTestCaseResult.create!(answer: self,
                                      test_case: result[:test_case],
@@ -90,8 +93,8 @@ class Answer < ApplicationRecord
     end
 
     # According the results from each test case, check if the answer is correct.
-    def is_correct?(results)
-      results.each { |result| return false if result[:status] == :error }
+    def is_correct?
+      @results.each { |result| return false if result[:status] == :error }
       true
     end
 
@@ -121,5 +124,10 @@ class Answer < ApplicationRecord
     # range is 0..5, so we normalize the result subtracting 5.
     def normalize_difficult_level(level)
       level - 5
+    end
+
+    # Check if @results is defined
+    def results_present?
+      !@results.nil?
     end
 end
