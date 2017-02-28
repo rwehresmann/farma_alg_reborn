@@ -11,14 +11,12 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
-    @results = @question.test_all(plain_current_datetime, "pas", params[:content])
-    @answer.correct = correct?(@results)
-    if @answer.save
-      if @answer.correct?
-        flash.now[:success] = "Resposta correta!"
-      else
-        flash.now[:danger] = "Resposta incorreta!"
-      end
+
+    # If content is empty the form submition is invalid and we doesn't need
+    # to save the try.
+    if params[:answer][:content]
+      @answer.save
+      @results = @answer.results
     end
 
     respond_to { |format| format.js }
