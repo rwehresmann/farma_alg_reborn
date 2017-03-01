@@ -19,7 +19,7 @@
             <tr>
           <% end %>
             <td><%= incentive_ranking_position(index, @current_user_index) %></td>
-            <td><%= data[:user].name %></td>
+            <td><%= name_to_display(data[:user], @team) %></td>
             <td>
               <div class="flex-box">
                 <% data[:answers].each do |answer| %>

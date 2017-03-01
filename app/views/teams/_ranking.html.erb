@@ -20,7 +20,7 @@
             <tr>
           <% end %>
             <td><%= position(index) %></td>
-            <td><%= data[:user].name %></td>
+            <td><%= name_to_display(data[:user], @team) %></td>
             <td>
               <div class="progress progress-xs">
                 <div class="progress-bar progress-bar-info"
