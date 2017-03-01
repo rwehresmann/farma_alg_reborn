@@ -8,27 +8,29 @@ class Ability
       can :read, [Exercise, Question, TestCase]
       can :create, [Exercise, Question, TestCase, Team]
 
-      can [:update, :delete], Exercise do |exercise|
+      can [:update, :destroy], Exercise do |exercise|
         exercise.user == user
       end
 
-      can [:update, :delete], Question do |question|
+      can [:update, :destroy], Question do |question|
         question.exercise.user == user
       end
 
-      can [:update, :delete], TestCase do |test_case|
+      can [:update, :destroy], TestCase do |test_case|
         test_case.question.exercise.user == user
       end
 
-      can [:update, :delete], Team do |team|
-        team.owner == user
+      can [:update, :destroy], Team do |team|
+        user.owner?(team)
       end
-    else
-      can :read, [Exercise, Question]
     end
 
     can :read, Team do |team|
       team.enrolled?(user) || team.owner == user
+    end
+
+    can :list, Exercise do |exercise|
+      exercise.team.enrolled?(user)
     end
 
     can [:enroll], Team do |team|
