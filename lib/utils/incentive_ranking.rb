@@ -22,7 +22,7 @@ module IncentiveRanking
       selected_index = user_index(team_records, user)
 
       DIRECTIONS_ORDER.each do |direction|
-        return if team_records.count == 1
+        break if team_records.count == 1
         half = desired_records(team_records, selected_index, direction, limits[direction])
         ranking = join_records(ranking, half, direction) unless half.nil?
       end
