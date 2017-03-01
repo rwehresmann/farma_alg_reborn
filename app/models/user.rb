@@ -5,12 +5,14 @@ class User < ApplicationRecord
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
+  before_validation :generate_anonymous_id
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  validates_presence_of :name
+  validates_presence_of :name, :anonymous_id
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
   validates_inclusion_of :teacher, in: [true, false]
@@ -50,4 +52,10 @@ class User < ApplicationRecord
   def owner?(team)
     teams_created.include?(team)
   end
+
+  private
+
+    def generate_anonymous_id
+      self.anonymous_id = SecureRandom.hex(4)
+    end
 end

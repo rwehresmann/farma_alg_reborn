@@ -23,6 +23,12 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
+    it "is invalid with empty anonymous id" do
+      skip_before_validation_callback(user)
+      user.anonymous_id = ""
+      expect(user).to_not be_valid
+    end
+
     it "is valid with valid email addresses" do
       valid_addresses = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org
                        first.last@foo.jp alice+bob@baz.cn]
@@ -178,4 +184,30 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "generate_anonymous_id" do
+    let(:user) { build(:user) }
+
+    it "generates an anonymous id to the user" do
+      user.send(:generate_anonymous_id)
+      expect(user.anonymous_id).to_not be_nil
+    end
+  end
+
+  describe "Callbacks -->" do
+    let(:user) { build(:user) }
+
+    it "triggers generate_anonymous_id" do
+      expect(user).to receive(:generate_anonymous_id)
+      user.save
+    end
+  end
+
+    private
+
+    def skip_before_validation_callback(user)
+      class << user
+        def generate_anonymous_id; end
+      end
+    end
 end

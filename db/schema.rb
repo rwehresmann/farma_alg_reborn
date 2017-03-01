@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221191725) do
+ActiveRecord::Schema.define(version: 20170228201615) do
 
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 20170221191725) do
     t.string   "name"
     t.boolean  "teacher",                default: false, null: false
     t.boolean  "admin",                  default: false, null: false
+    t.string   "anonymous_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
