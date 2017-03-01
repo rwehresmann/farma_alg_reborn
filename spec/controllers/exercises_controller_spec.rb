@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe ExercisesController, type: :controller do
+  let(:teacher) { create(:user, :teacher) }
+
   describe "GET #index" do
     subject { get :index }
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -29,7 +31,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -52,7 +54,7 @@ RSpec.describe ExercisesController, type: :controller do
              params: { exercise: attributes_for(:exercise) } }
 
     context "when logged-in -->" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       context "whit valid attributes" do
         it "creates a new object" do
@@ -87,11 +89,11 @@ RSpec.describe ExercisesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    let!(:exercise) { create(:exercise) }
+    let!(:exercise) { create(:exercise, user: teacher) }
     subject { delete :destroy, params: { id: exercise } }
 
     context "when logged-in" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       it "deletes the object" do
         expect { subject }.to change(Exercise, :count).by(-1)
@@ -113,7 +115,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -132,7 +134,8 @@ RSpec.describe ExercisesController, type: :controller do
   end
 
   describe "GET #edit" do
-    let(:exercise) { create(:exercise) }
+    let(:exercise) { create(:exercise, user: teacher) }
+
     subject { get :edit,
               params: {
               id: exercise,
@@ -140,7 +143,7 @@ RSpec.describe ExercisesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -160,8 +163,8 @@ RSpec.describe ExercisesController, type: :controller do
 
   describe "PUT #update" do
     context "when logged-in -->" do
-      before { sign_in create(:user, :teacher) }
-      let(:exercise) { create(:exercise) }
+      before { sign_in teacher }
+      let(:exercise) { create(:exercise, user: teacher) }
 
       context "whit valid attributes" do
         subject { put :update, params: { id: exercise,

@@ -110,7 +110,9 @@ RSpec.describe TeamsController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        user = create(:user)
+        team.enroll(user)
+        sign_in user
         subject
       end
 

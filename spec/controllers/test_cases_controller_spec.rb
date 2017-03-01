@@ -1,14 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe TestCasesController, type: :controller do
+  let(:teacher) { create(:user, :teacher) }
+  let(:exercise) { create(:exercise, user: teacher) }
+  let(:question) { create(:question, exercise: exercise) }
 
   describe "GET #index" do
-    let(:question) { create(:question) }
     subject { get :index, params: { question_id: question } }
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -27,12 +29,11 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "GET #new" do
-    let(:question) { create(:question) }
     subject { get :new, params: { question_id: question } }
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -51,13 +52,12 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "POST #create" do
-    let(:question) { create(:question) }
     subject(:post_with_valid_attributes) { post :create,
              params: { test_case: attributes_for(:test_case),
                        question_id: question } }
 
     context "when logged-in -->" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       context "whit valid attributes" do
         it "creates a new object" do
@@ -88,12 +88,12 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "GET #show" do
-    let(:test_case) { create(:test_case) }
+    let(:test_case) { create(:test_case, question: question) }
     subject { get :show, params: { id: test_case } }
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -112,7 +112,7 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "GET #edit" do
-    let(:test_case) { create(:test_case) }
+    let(:test_case) { create(:test_case, question: question) }
     subject { get :edit,
               params: {
               id: test_case,
@@ -120,7 +120,7 @@ RSpec.describe TestCasesController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user, :teacher)
+        sign_in teacher
         subject
       end
 
@@ -139,10 +139,10 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:test_case) { create(:test_case) }
+    let(:test_case) { create(:test_case, question: question) }
 
     context "when logged-in -->" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       context "whit valid attributes" do
         subject { put :update, params: {
@@ -178,11 +178,11 @@ RSpec.describe TestCasesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    let!(:test_case) { create(:test_case) }
+    let!(:test_case) { create(:test_case, question: question) }
     subject { delete :destroy, params: { id: test_case } }
 
     context "when logged-in" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       it "deletes the object" do
         expect { subject }.to change(TestCase, :count).by(-1)
@@ -205,7 +205,7 @@ RSpec.describe TestCasesController, type: :controller do
               params: { id: test_case.id, source_code: source_code } }
 
     context "when logged-in" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       it "resturns OK status" do
         expect(response.status).to eq(200)
@@ -220,7 +220,7 @@ RSpec.describe TestCasesController, type: :controller do
               params: { question_id: question.id, source_code: source_code } }
 
     context "when logged-in" do
-      before { sign_in create(:user, :teacher) }
+      before { sign_in teacher }
 
       it "returns OK status" do
         expect(response.status).to eq(200)
