@@ -29,35 +29,4 @@ RSpec.describe QuestionDependency, type: :model do
       expect(relationship_type(QuestionDependency, :question_2)).to eq(:belongs_to)
     end
   end
-
-  describe ".create_symmetrical_record" do
-    let(:exercise) { create(:exercise) }
-    let(:questions) { create_pair(:question, exercise: exercise) }
-    subject { QuestionDependency.create_symmetrical_record(questions.first,
-                                                           questions.last,
-                                                           QuestionDependency::DEPENDENCIES.first) }
-
-    it "creates a symmetrical association" do
-      expect { subject }.to change(QuestionDependency, :count).by(2)
-      expect(questions.first.dependencies.count).to eq(1)
-      expect(questions.first.dependencies.include?(questions.last)).to be_truthy
-      expect(questions.last.dependencies.count).to eq(1)
-      expect(questions.last.dependencies.include?(questions.first)).to be_truthy
-    end
-  end
-
-  describe "#destroy_symmetrical_record" do
-    let(:exercise) { create(:exercise) }
-    let(:questions) { create_pair(:question, exercise: exercise) }
-    before { QuestionDependency.create_symmetrical_record(questions.first,
-                                                           questions.last,
-                                                           QuestionDependency::DEPENDENCIES.first) }
-    subject { QuestionDependency.first.destroy_symmetrical_record }
-
-    it "destroys the symmetrical record" do
-     expect { subject }.to change(QuestionDependency, :count).by(-2)
-     expect(questions.first.dependencies.count).to eq(0)
-     expect(questions.last.dependencies.count).to eq(0)
-   end
-  end
 end

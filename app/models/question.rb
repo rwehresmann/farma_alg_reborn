@@ -56,7 +56,7 @@ class Question < ApplicationRecord
 
     # Destroy all dependencies (the symmetrical pair).
     def destroy_dependencies
-      question_dependencies.each { |dep| dep.destroy_symmetrical_record }
+      question_dependencies.each { |dep| dep.destroy }
     end
 
     def normalize_operation

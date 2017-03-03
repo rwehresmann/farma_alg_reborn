@@ -20,8 +20,8 @@ class QuestionsController < ApplicationController
     if @question.save
       @questions.each do |question|
         operator = dependency_operator(question)
-        QuestionDependency.create_symmetrical_record(@question, question,
-                                              operator) unless operator.empty?
+        QuestionDependency.create!(question_1: @question, question_2: question,
+                                   operator: operator) unless operator.empty?
       end
 
       flash[:success] = "Questão criada e adicionada ao exercício!"
@@ -44,11 +44,12 @@ class QuestionsController < ApplicationController
         operator = dependency_operator(question)
         # If dependency doesn't exists.
         if dependency.nil?
-          QuestionDependency.create_symmetrical_record(@question, question, operator) unless operator.empty?
+          QuestionDependency.create!(question_1: @question, question_2: question,
+                                     operator: operator) unless operator.empty?
         else
           # The ""(empty) option points that the dependency must be removed.
           if operator.empty?
-            dependency.destroy_symmetrical_record
+            dependency.destroy
           else
             # Update only if the operator changed
             dependency.update_attributes(operator: operator) if operator != dependency.operator

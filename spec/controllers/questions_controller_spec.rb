@@ -81,7 +81,7 @@ RSpec.describe QuestionsController, type: :controller do
           end
 
           it "creates the question dependencies" do
-            expect { post_with_valid_attributes }.to change(QuestionDependency, :count).by(2)
+            expect { post_with_valid_attributes }.to change(QuestionDependency, :count).by(1)
           end
         end
       end
@@ -180,20 +180,20 @@ RSpec.describe QuestionsController, type: :controller do
 
         context "when dependency is marked to be deleted" do
           before do
-            QuestionDependency.create_symmetrical_record(questions.first,
-                                                         questions.last, "OR")
+            QuestionDependency.create!(question_1: questions.first,
+                                       question_2: questions.last, operator: "OR")
             params[:"question-#{questions.last.id}"] = ""
           end
 
           it "deletes the dependency" do
-            expect { subject }.to change(QuestionDependency, :count).by(-2)
+            expect { subject }.to change(QuestionDependency, :count).by(-1)
           end
         end
 
         context "when dependency is marked to be changed" do
           before do
-            QuestionDependency.create_symmetrical_record(questions.first,
-                                                         questions.last, "OR")
+            QuestionDependency.create!(question_1: questions.first,
+                                       question_2: questions.last, operator: "OR")
             params[:"question-#{questions.last.id}"] = "AND"
             subject
           end
@@ -207,7 +207,7 @@ RSpec.describe QuestionsController, type: :controller do
           before { params[:"question-#{questions.last.id}"] = "AND" }
 
           it "created the dependency" do
-            expect { subject }.to change(QuestionDependency, :count).by(2)
+            expect { subject }.to change(QuestionDependency, :count).by(1)
           end
         end
       end
@@ -238,8 +238,8 @@ RSpec.describe QuestionsController, type: :controller do
     let(:questions) { create_pair(:question, exercise: exercise) }
 
     before do
-      QuestionDependency.create_symmetrical_record(questions.first,
-                                                   questions.last, "OR")
+      QuestionDependency.create!(question_1: questions.first,
+                                 question_2: questions.last, operator: "OR")
     end
 
     subject { delete :destroy, params: { id: questions.first } }
@@ -252,7 +252,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it "deletes the question dependencies" do
-        expect { subject }.to change(QuestionDependency, :count).by(-2)
+        expect { subject }.to change(QuestionDependency, :count).by(-1)
       end
     end
 
