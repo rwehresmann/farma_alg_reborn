@@ -10,11 +10,6 @@ class Answer < ApplicationRecord
                       4 => 0.15, 5 => 0.25 }
   LIMIT_TO_START_VARIATION = 10
 
-  # @results is a variable who store the test case results before save the
-  # answer instance. We store these results there to avoid reprocess
-  # these results again, because they're used in an after create callback again.
-  attr_reader :results
-
   before_create :check_answer
   after_create :save_test_cases_results, if: :results_present?
 
@@ -44,13 +39,25 @@ class Answer < ApplicationRecord
     where(question: question)
   end
 
+  scope :correct_status, -> (correct = nil) do
+    return if correct.nil?
+    where(correct: correct)
+  end
+
   # Return the answers which the specified answer should be compared.
   scope :to_compare_similarity, -> (answer) do
     by_team(answer.team).by_question(answer.question).where.not(id: answer)
   end
 
-  scope :created_last, -> () do
+  scope :created_last, -> do
     order(created_at: :desc)
+  end
+
+  # @results is a variable who store the test case results before save the
+  # answer instance. We store these results there to avoid reprocess
+  # these results again, because they're used in an after create callback again.
+  def results
+    @results ||= []
   end
 
     private

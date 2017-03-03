@@ -173,4 +173,27 @@ RSpec.describe Answer, type: :model do
       expect(received.first.created_at > received.last.created_at).to be_truthy
     end
   end
+
+  describe ".correct_status" do
+    let(:answers) { Answer.all }
+
+    before do
+      create(:answer)
+      create(:answer, :correct)
+    end
+
+    context "when no status is passed" do
+      it "returns all answers" do
+        expect(Answer.correct_status).to eq(answers)
+      end
+    end
+
+    context "when status is passed" do
+      it "returns the correct data" do
+        [true, false].each do |status|
+          expect(Answer.correct_status(status)).to eq(answers.where(correct: status))
+        end
+      end
+    end
+  end
 end
