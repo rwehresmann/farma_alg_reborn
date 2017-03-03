@@ -15,7 +15,7 @@ describe "User" do
       it { should be_able_to(:create, TestCase) }
       it { should be_able_to(:read, TestCase) }
       it { should be_able_to(:create, Team) }
-      it { should be_able_to(:list, Exercise) }
+      it { should be_able_to(:list_questions, Team) }
 
       context "when access his created objects" do
         let(:exercise) { create(:exercise, user: user) }
@@ -57,8 +57,6 @@ describe "User" do
     context "when is a student -->" do
       let(:user) { create(:user) }
 
-      it { should be_able_to(:list, Exercise) }
-
       it { should_not be_able_to(:update, Exercise) }
       it { should_not be_able_to(:destroy, Exercise) }
       it { should_not be_able_to(:update, Question) }
@@ -70,8 +68,10 @@ describe "User" do
 
       context "when unenrolled in the team" do
         let(:team) { create(:team) }
+
         it { should be_able_to(:enroll, team) }
         it { should_not be_able_to(:unenroll, team) }
+        it { should_not be_able_to(:list_questions, team) }
       end
 
       context "when enrolled in the team" do
@@ -80,6 +80,7 @@ describe "User" do
 
         it { should_not be_able_to(:enroll, team) }
         it { should be_able_to(:unenroll, team) }
+        it { should be_able_to(:list_questions, team) }
       end
     end
   end

@@ -29,8 +29,8 @@ class Ability
       team.enrolled?(user) || team.owner == user
     end
 
-    can :list, Exercise do |exercise|
-      exercise.team.enrolled?(user)
+    can :list_questions, Team do |team|
+      team.enrolled?(user)
     end
 
     can [:enroll], Team do |team|
