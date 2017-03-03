@@ -185,12 +185,144 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "generate_anonymous_id" do
+  describe "#generate_anonymous_id" do
     let(:user) { build(:user) }
 
     it "generates an anonymous id to the user" do
       user.send(:generate_anonymous_id)
       expect(user.anonymous_id).to_not be_nil
+    end
+  end
+
+  describe 'or_dependencies_completed?' do
+    let(:user) { create(:user) }
+    let(:exercise) { create(:exercise) }
+    let(:team) { create(:team, users: [user], exercises: [exercise]) }
+
+    context "when they're empty" do
+      let(:question) { create(:question, exercise: exercise) }
+
+      it "returns true" do
+        received = user.send(:or_dependencies_completed?, question, team)
+        expect(received).to be_truthy
+      end
+    end
+
+    context "when completed" do
+      let(:questions) { create_pair(:question, exercise: exercise) }
+
+      before do
+        QuestionDependency.create_symmetrical_record(questions[0],
+                                                     questions[1], "OR")
+        create(:answer, :correct, question: questions[1], team: team, user: user)
+      end
+
+      it "returns true" do
+        received = user.send(:or_dependencies_completed?, questions[0], team)
+        expect(received).to be_truthy
+      end
+    end
+
+    context "when aren't completed" do
+      let(:questions) { create_pair(:question, exercise: exercise) }
+
+      before do
+        QuestionDependency.create_symmetrical_record(questions[0],
+                                                     questions[1], "OR")
+        create(:answer, question: questions[1], team: team)
+      end
+
+      it "returns false" do
+        received = user.send(:or_dependencies_completed?, questions[1], team)
+        expect(received).to be_falsey
+      end
+    end
+  end
+
+  describe 'and_dependencies_completed?' do
+    let(:user) { create(:user) }
+    let(:exercise) { create(:exercise) }
+    let(:team) { create(:team, users: [user], exercises: [exercise]) }
+
+    context "when they're empty" do
+      let(:question) { create(:question, exercise: exercise) }
+
+      it "returns true" do
+        received = user.send(:and_dependencies_completed?, question, team)
+        expect(received).to be_truthy
+      end
+    end
+
+    context "when completed" do
+      let(:question_target) { create(:question, exercise: exercise) }
+      let(:questions) { create_pair(:question, exercise: exercise) }
+
+      before do
+        QuestionDependency.create_symmetrical_record(question_target,
+                                                     questions[0], "AND")
+        QuestionDependency.create_symmetrical_record(question_target,
+                                                     questions[1], "AND")
+        questions.each { |question| create(:answer, :correct, user: user,
+                                          question: question, team: team) }
+      end
+
+      it "returns true" do
+        received = user.send(:and_dependencies_completed?, question_target, team)
+        expect(received).to be_truthy
+      end
+    end
+
+    context "when aren't completed" do
+      let(:question_target) { create(:question, exercise: exercise) }
+      let(:questions) { create_pair(:question, exercise: exercise) }
+
+      before do
+        QuestionDependency.create_symmetrical_record(question_target,
+                                                     questions[0], "AND")
+        QuestionDependency.create_symmetrical_record(question_target,
+                                                     questions[1], "AND")
+        create(:answer, :correct, question: questions[0], team: team)
+      end
+
+      it "returns false" do
+        received = user.send(:and_dependencies_completed?, question_target, team)
+        expect(received).to be_falsey
+      end
+    end
+  end
+
+  describe '#able_to_answer?' do
+    let(:user) { create(:user) }
+    let(:exercise) { create(:exercise) }
+    let(:team) { create(:team, users: [user], exercises: [exercise]) }
+    let(:question) { create(:question, exercise: exercise) }
+
+    subject { user.able_to_answer?(question, team) }
+
+    context "when all methods to check dependencies return true" do
+      before do
+        class << user
+          def or_dependencies_completed?(a, b); true end
+          def and_dependencies_completed?(a, b); true end
+        end
+      end
+
+      it "returns true" do
+        expect(subject).to be_truthy
+      end
+    end
+
+    context "when at least one of the methods to check dependencies returns false" do
+      before do
+        class << user
+          def or_dependencies_completed?(a, b); false end
+          def and_dependencies_completed?(a, b); true end
+        end
+      end
+
+      it "returns false" do
+        expect(subject).to be_falsey
+      end
     end
   end
 
