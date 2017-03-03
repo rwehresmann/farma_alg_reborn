@@ -27,15 +27,29 @@ class Question < ApplicationRecord
       test_result = test_case.test(file_name, file_ext, source_code, compile: false)
       results << { test_case: test_case, status: test_result[:status], output: test_result[:output] }
     end
+
     results
   end
 
+  # Check what is the dependency operator between two questions.
   def dependency_with(question)
     QuestionDependency.where(question_1: self, question_2: question).pluck(:operator).first
   end
 
+  # Check if the question is a task.
   def task?
     operation == "task"
+  end
+
+  # Check if the question is answered, according the informed options.
+  def answered?(options = {})
+    !Answer.by_question(self).by_user(options[:user]).by_team(options[:team])
+           .correct_status(options[:correctly]).empty?
+  end
+
+  # Select dependencies according the informed operator.
+  def dependencies_of_operator(operator)
+    question_dependencies.where(operator: operator).map(&:question_2)
   end
 
     private

@@ -100,4 +100,50 @@ RSpec.describe Question, type: :model do
       expect(questions.first.dependency_with(questions.last)).to eq("OR")
     end
   end
+
+  describe '#answered?' do
+    context "when 'user', 'team', and the 'correctly' parameters are informed -->" do
+      let(:team) { create(:team) }
+      let(:user) { create(:user) }
+      let(:exercise) { create(:exercise) }
+      let(:question) { create(:question, exercise: exercise) }
+
+      before { team.exercises << exercise }
+
+      context "when is answered" do
+        before do
+          create(:answer, question: question, user: user, team: team)
+          create(:answer, :correct, question: question, user: user, team: team)
+        end
+
+        it "returns true" do
+          received = question.answered?(user: user, team: team, correctly: true)
+          expect(received).to be_truthy
+        end
+      end
+
+      context "when isn't answered" do
+        before { create(:answer, question: question, user: user, team: team) }
+
+        it "returns false" do
+          received = question.answered?(user: user, team: team, correctly: true)
+          expect(received).to be_falsey
+        end
+      end
+    end
+  end
+
+  describe '#dependencies_of_operator' do
+    let(:exercise) { create(:exercise) }
+    let(:question) { create(:question, exercise: exercise) }
+    let(:another_question) { create(:question, exercise: exercise) }
+
+    before { QuestionDependency.create_symmetrical_record(question,
+                                                          another_question,
+                                                          "OR") }
+
+    it "returns the dependencies with the specified operator" do
+      expect(question.dependencies_of_operator("OR")).to eq([another_question])
+    end
+  end
 end
