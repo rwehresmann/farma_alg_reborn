@@ -33,7 +33,7 @@ class TeamsController < ApplicationController
     set_general_ranking_data(records)
     set_weekly_ranking_data(records)
     set_incentive_ranking_data if @team.enrolled?(current_user)
-    @enrolled_users = @team.users 
+    @enrolled_users = @team.users
   end
 
   def edit
@@ -72,6 +72,11 @@ class TeamsController < ApplicationController
     @team.unenroll(current_user)
     flash[:success] = "Matrícula cancelada!"
     redirect_to teams_url
+  end
+
+  def list_questions
+    @exercise = Exercise.find(params[:exercise_id])
+    @questions = @exercise.questions
   end
 
     private

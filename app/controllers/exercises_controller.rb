@@ -43,10 +43,6 @@ class ExercisesController < ApplicationController
     redirect_to exercises_url
   end
 
-  def list
-    @questions = @exercise.questions
-  end
-
     private
 
     def exercise_params

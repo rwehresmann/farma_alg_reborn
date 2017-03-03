@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
   resources :exercises, shallow: true do
-    member do
-      get :list
-    end
-
     resources :questions do
       member do
         resources :answers, only: [:new, :create]
@@ -26,6 +22,7 @@ Rails.application.routes.draw do
     member do
       post :enroll
       post :unenroll
+      get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'
     end
   end
 
