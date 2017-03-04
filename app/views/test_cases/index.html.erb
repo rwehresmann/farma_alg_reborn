@@ -3,7 +3,10 @@
 <%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),
                                   class: "btn btn-primary pull-right",
                                   style: "margin-left: 10px" %>
-<%= link_to "Testar solução", '#', class: "btn btn-primary pull-right test-open" %>
+<%= link_to '#', class: "btn btn-primary pull-right test-open" do %>
+  <i class="fa fa-coffee" aria-hidden="true"></i>
+  Testar solução
+<% end %>
 <br></br>
 <br></br>
 

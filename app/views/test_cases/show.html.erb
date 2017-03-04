@@ -6,7 +6,13 @@
                        data: { confirm: "Tem certeza que deseja excluir?" } %>
 
 <%= link_to "Editar", edit_test_case_path(@test_case),
-                      class: "btn btn-primary pull-right " %>
+                      class: "btn btn-primary pull-right",
+                      style: "margin-left: 10px" %>
+
+<%= link_to '#', id: 'test-open', class: "btn btn-primary pull-right" do %>
+  <i class="fa fa-coffee" aria-hidden="true"></i> Testar
+<% end %>
+
 <br></br>
 
 <div class="box box-solid box-default">
@@ -23,11 +29,6 @@
     <div style="display: block"><%= @test_case.output %></div>
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <div class="pull-right">
-      <a id="test-open" href="#" class="btn btn-primary pull-right">
-        <i class="fa fa-coffee" aria-hidden="true"></i>
-        Testar
-      </a>
   </div>
 </div>
 
@@ -35,7 +36,8 @@
   $(document).ready(function() {
     // Open test modal.
     $('#test-open').click(function() {
-     <%= render partial: 'show_test_modal.js', locals: { test_url: test_test_case_url(@test_case) } %>
+     <%= render partial: 'show_test_modal.js',
+                locals: { test_url: test_test_case_url(@test_case) } %>
     });
   });
 </script>

@@ -7,8 +7,8 @@
       </div>
       <div class="modal-body">
         <b>Forneça uma solução</b>
-        <textarea id="solution-test" cols="90", rows="10"></textarea>
-        <button id="execute-test" class="btn btn-primary">Testar</button>
+        <div id="editor_div"></div>
+        <button id="execute-test" class="btn btn-primary pull-right" style="margin-top: 5px">Testar</button>
       </div>
       <div class="modal-footer">
         <div id="test-results"></div>
@@ -18,14 +18,23 @@
 </div>
 
 <script type="text/javascript">
+  <%= render 'shared/create_ace_editor.js' %>
+  $('.modal-body').height(450);
+
   $('#execute-test').click(function() {
+    $('#test-results').empty();
+
+    var source_code = editor.getSession().getValue();
+    if (source_code == "") {
+      alert("Seu editor está vazio!");
+      return;
+    }
+
     // Change to "testing layout".
     var text = $(this).text();
     $(this).append(' <i class="fa fa-refresh fa-spin"></i>')
     $(this).attr('disabled', 'true');
-    $('#test-results').empty();
 
-    var source_code = $('#solution-test').val();
     $.ajax({
      type: 'POST',
      url: '<%= test_url %>',
