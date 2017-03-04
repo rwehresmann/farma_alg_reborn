@@ -5,7 +5,7 @@
 
     <div class="form-group">
       <%= f.text_area :content, id: 'editor', class: "form-control" %>
-      <div id="editor_div"><%= @escaped_text %></div>
+      <div id="editor_div"></div>
     </div>
 
     <div class="submit">
@@ -43,10 +43,7 @@
   var textarea = $('#editor');
   textarea.hide();
 
-  // Create and customize ace editor.
-  var editor = ace.edit("editor_div");
-  editor.setTheme("ace/theme/twilight");
-  editor.getSession().setMode("ace/mode/pascal");
+  <%= render 'shared/create_ace_editor.js' %>
 
   // When click put ace editor content in form hidden textarea.
   $('input[name="commit"]').on('click', function() {
