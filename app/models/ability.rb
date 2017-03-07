@@ -20,6 +20,10 @@ class Ability
         test_case.question.exercise.user == user
       end
 
+      can [:test_answer], Question do |question|
+        question.exercise.user == user
+      end
+
       can [:update, :destroy], Team do |team|
         user.owner?(team)
       end

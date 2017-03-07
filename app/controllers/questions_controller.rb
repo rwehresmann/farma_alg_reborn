@@ -32,6 +32,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answer = Answer.new
   end
 
   def edit
@@ -71,6 +72,14 @@ class QuestionsController < ApplicationController
     redirect_to exercise_questions_url(exercise)
   end
 
+  def test_answer
+    @answer = @question.answers.build(answer_params)
+    @answer.check unless @answer.content.empty?
+    @results = @answer.results
+
+    respond_to { |format| format.js { render 'shared/test_answer' } }
+  end
+
     private
 
     # If @exercise is nil, the method is called from 'edit'/'update' action, so
@@ -88,6 +97,10 @@ class QuestionsController < ApplicationController
     def question_params
       params.require(:question).permit(:title, :description, :exercise_id,
                                        :score)
+    end
+
+    def answer_params
+      params.require(:answer).permit(:content)
     end
 
     def find_question

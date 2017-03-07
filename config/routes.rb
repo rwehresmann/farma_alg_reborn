@@ -3,17 +3,10 @@ Rails.application.routes.draw do
     resources :questions do
       member do
         resources :answers, only: [:new, :create]
+        post :test_answer
       end
 
-      resources :test_cases do
-        member do
-          post :test
-        end
-
-        collection do
-          post :test_all
-        end
-      end
+      resources :test_cases
     end
   end
 

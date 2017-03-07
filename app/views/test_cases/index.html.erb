@@ -3,10 +3,6 @@
 <%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),
                                   class: "btn btn-primary pull-right",
                                   style: "margin-left: 10px" %>
-<%= link_to '#', class: "btn btn-primary pull-right test-open" do %>
-  <i class="fa fa-coffee" aria-hidden="true"></i>
-  Testar solução
-<% end %>
 <br></br>
 <br></br>
 
@@ -34,12 +30,3 @@
     </div>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    // Open test modal.
-    $('.test-open').click(function() {
-     <%= render partial: 'show_test_modal.js', locals: { test_url: test_all_question_test_cases_url(@question) } %>
-    });
-  });
-</script>

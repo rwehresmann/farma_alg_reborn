@@ -212,8 +212,8 @@ RSpec.describe User, type: :model do
       let(:questions) { create_pair(:question, exercise: exercise) }
 
       before do
-        QuestionDependency.create_symmetrical_record(questions[0],
-                                                     questions[1], "OR")
+        QuestionDependency.create!(question_1: questions[0],
+                                   question_2: questions[1], operator: "OR")
         create(:answer, :correct, question: questions[1], team: team, user: user)
       end
 
@@ -227,13 +227,13 @@ RSpec.describe User, type: :model do
       let(:questions) { create_pair(:question, exercise: exercise) }
 
       before do
-        QuestionDependency.create_symmetrical_record(questions[0],
-                                                     questions[1], "OR")
+        QuestionDependency.create!(question_1: questions[0],
+                                   question_2: questions[1], operator: "OR")
         create(:answer, question: questions[1], team: team)
       end
 
       it "returns false" do
-        received = user.send(:or_dependencies_completed?, questions[1], team)
+        received = user.send(:or_dependencies_completed?, questions[0], team)
         expect(received).to be_falsey
       end
     end
@@ -258,10 +258,10 @@ RSpec.describe User, type: :model do
       let(:questions) { create_pair(:question, exercise: exercise) }
 
       before do
-        QuestionDependency.create_symmetrical_record(question_target,
-                                                     questions[0], "AND")
-        QuestionDependency.create_symmetrical_record(question_target,
-                                                     questions[1], "AND")
+        QuestionDependency.create!(question_1: question_target,
+                                  question_2: questions[0], operator: "AND")
+        QuestionDependency.create!(question_1: question_target,
+                                   question_2: questions[1], operator: "AND")
         questions.each { |question| create(:answer, :correct, user: user,
                                           question: question, team: team) }
       end
@@ -277,10 +277,10 @@ RSpec.describe User, type: :model do
       let(:questions) { create_pair(:question, exercise: exercise) }
 
       before do
-        QuestionDependency.create_symmetrical_record(question_target,
-                                                     questions[0], "AND")
-        QuestionDependency.create_symmetrical_record(question_target,
-                                                     questions[1], "AND")
+        QuestionDependency.create!(question_1: question_target,
+                                   question_2: questions[0], operator: "AND")
+        QuestionDependency.create!(question_1: question_target,
+                                   question_2: questions[1], operator: "AND")
         create(:answer, :correct, question: questions[0], team: team)
       end
 

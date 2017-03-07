@@ -1,17 +1,7 @@
+<% provide(:url, answers_path(@question)) %>
 
 <div class="col-md-6" style="border-right: 1px solid black">
-  <%= form_for @answer, remote: true do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
-
-    <div class="form-group">
-      <%= f.text_area :content, id: 'editor', class: "form-control" %>
-      <div id="editor_div"></div>
-    </div>
-
-    <div class="submit">
-      <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
-    </div>
-  <% end %>
+  <%= render "shared/answer_form" %>
   <br></br>
   <div id="test-results"></div>
 </div>
@@ -27,27 +17,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  function adjust_screen() {
-    var new_height =  $('.content-wrapper').height()
-                      - $('#test-results').height()
-                      - $('#error_explanation').height();
-    $('.content-wrapper').height(new_height);
-    $('#test-results').empty();
-    $('#error_explanation').remove();
-    $('#answer-result').remove();
-    $('.submit').append('<i class="fa fa-refresh fa-spin"></i>');
-  }
-
-  var textarea = $('#editor');
-  textarea.hide();
-
-  <%= render 'shared/create_ace_editor.js' %>
-
-  // When click put ace editor content in form hidden textarea.
-  $('input[name="commit"]').on('click', function() {
-    textarea.val(editor.getSession().getValue());
-    adjust_screen();
-  });
-</script>

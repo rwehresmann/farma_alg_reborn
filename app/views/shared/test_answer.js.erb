@@ -1,0 +1,46 @@
+// Page height isn't recalculated when nem elements are appended. This method
+// does the job.
+function adjustScreen() {
+  var new_height = $('.content-wrapper').height() + $('#test-results').height()
+                   + $('#error_explanation').height();
+  $('.content-wrapper').height(new_height);
+}
+
+// Add tests cases results in the page.
+function placeTestCasesResults() {
+  // Display each result in the screen.
+  <% @results.each_with_index do |result, index| %>
+    // Div to put the result.
+    var div = $(document.createElement('div'));
+
+    <% if result[:status] == :error %>
+      div.attr('class', 'alert alert-danger text-left');
+      div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
+    <% else %>
+      div.attr('class', 'alert alert-success text-left');
+      div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
+    <% end %>
+
+    $('#test-results').append(div);
+  <% end %>
+}
+
+// Remove form invalid submition message, if present.
+$('#error_explanation').remove();
+
+<% unless @answer.valid? %>
+  $('.fa.fa-refresh.fa-spin').remove();
+  $('#new_answer').prepend('<%= j(render "shared/error_messages", object: @answer) %>');
+<% else %>
+  <% if @answer.compilation_error? %>
+    $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-red"></i> <span>Erro de compilação</span></div>');
+  <% elsif @answer.correct? %>
+    $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-green"></i> <span>Resposta correta</span></div>');
+    placeTestCasesResults();
+  <% else %>
+    $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-red"></i> <span>Resposta incorreta</span></div>');
+    placeTestCasesResults();
+  <% end %>
+<% end %>
+
+adjustScreen();

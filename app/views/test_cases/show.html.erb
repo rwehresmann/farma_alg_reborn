@@ -8,11 +8,6 @@
 <%= link_to "Editar", edit_test_case_path(@test_case),
                       class: "btn btn-primary pull-right",
                       style: "margin-left: 10px" %>
-
-<%= link_to '#', id: 'test-open', class: "btn btn-primary pull-right" do %>
-  <i class="fa fa-coffee" aria-hidden="true"></i> Testar
-<% end %>
-
 <br></br>
 
 <div class="box box-solid box-default">
@@ -31,13 +26,3 @@
   <div class="box-footer">
   </div>
 </div>
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    // Open test modal.
-    $('#test-open').click(function() {
-     <%= render partial: 'show_test_modal.js',
-                locals: { test_url: test_test_case_url(@test_case) } %>
-    });
-  });
-</script>

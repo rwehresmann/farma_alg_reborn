@@ -41,13 +41,14 @@ RSpec.describe Question, type: :model do
       before do
         exercise = create(:exercise)
         questions = create_pair(:question, exercise: exercise)
-        QuestionDependency.create_symmetrical_record(questions[0], questions[1], "OR")
+        QuestionDependency.create!(question_1: questions[0],
+                                   question_2: questions[1], operator: "OR")
       end
 
       subject { Question.first.destroy }
 
       it "destroys the question dependencies associated" do
-        expect { subject }.to change(QuestionDependency, :count).by(-2)
+        expect { subject }.to change(QuestionDependency, :count).by(-1)
       end
     end
   end
@@ -93,8 +94,9 @@ RSpec.describe Question, type: :model do
   describe "#dependency_with" do
     let(:exercise) { create(:exercise) }
     let(:questions) { create_pair(:question, exercise: exercise) }
-    before { QuestionDependency.create_symmetrical_record(questions.first,
-                                                          questions.last, "OR") }
+    before { QuestionDependency.create!(question_1: questions.first,
+                                        question_2: questions.last,
+                                        operator: "OR") }
 
     it "returns dependency operator" do
       expect(questions.first.dependency_with(questions.last)).to eq("OR")
@@ -138,9 +140,9 @@ RSpec.describe Question, type: :model do
     let(:question) { create(:question, exercise: exercise) }
     let(:another_question) { create(:question, exercise: exercise) }
 
-    before { QuestionDependency.create_symmetrical_record(question,
-                                                          another_question,
-                                                          "OR") }
+    before { QuestionDependency.create!(question_1: question,
+                                        question_2: another_question,
+                                        operator: "OR") }
 
     it "returns the dependencies with the specified operator" do
       expect(question.dependencies_of_operator("OR")).to eq([another_question])

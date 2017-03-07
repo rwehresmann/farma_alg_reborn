@@ -63,6 +63,8 @@ describe "User" do
       it { should_not be_able_to(:destroy, Question) }
       it { should_not be_able_to(:update, TestCase) }
       it { should_not be_able_to(:destroy, TestCase) }
+      it { should_not be_able_to(:test, TestCase) }
+      it { should_not be_able_to(:test_all, TestCase) }
       it { should_not be_able_to(:update, Team) }
       it { should_not be_able_to(:destroy, Team) }
 

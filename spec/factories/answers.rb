@@ -8,7 +8,7 @@ FactoryGirl.define do
 
     after(:build) do |answer|
       class << answer
-        def check_answer; end
+        def check; end
         def save_results; end
       end
     end
@@ -16,7 +16,7 @@ FactoryGirl.define do
     trait :whit_custom_callbacks do
       after(:build) do |answer|
         class << answer
-          def check_answer; super; end
+          def check; super; end
           def save_results; super; end
         end
       end

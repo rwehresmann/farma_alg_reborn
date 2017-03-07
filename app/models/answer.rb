@@ -10,7 +10,7 @@ class Answer < ApplicationRecord
                       4 => 0.15, 5 => 0.25 }
   LIMIT_TO_START_VARIATION = 10
 
-  before_create :check_answer
+  before_create :check
   after_create :save_test_cases_results, if: :results_present?
 
   validates_presence_of :content
@@ -60,31 +60,31 @@ class Answer < ApplicationRecord
     @results ||= []
   end
 
-    private
+  # Compile the source code, set compiler_output and compilation_erro flag,
+  # and run the test cases if the answer is compiled succesfully to check if
+  # is right or wrong. We use @results because after the answer is saved,
+  # after create callback call a new method and use the same results.
+  def check
+    filename = plain_current_datetime
+    self.compiler_output = compile(filename, "pas", content)
 
-    # Compile the source code, set compiler_output and compilation_erro flag,
-    # and run the test cases if the answer is compiled succesfully to check if
-    # is right or wrong. We use @results because after the answer is saved,
-    # after create callback call a new method and use the same results.
-    def check_answer
-      filename = plain_current_datetime
-      self.compiler_output = compile(filename, "pas", content)
-
-      if has_error?
-        self.compilation_error = true
-        self.correct = false
-      else
-        self.compilation_error = false
-        # The source code is already compiled, so 'compile: false'.
-        @results = question.test_all(filename, "pas", content, compile: false)
-        self.correct = is_correct?
-        if correct?
-          score = score_to_earn
-          EarnedScore.create!(user: user, question: question, team: team,
-                              score: score)
-        end
+    if has_error?
+      self.compilation_error = true
+      self.correct = false
+    else
+      self.compilation_error = false
+      # The source code is already compiled, so 'compile: false'.
+      @results = question.test_all(filename, "pas", content, compile: false)
+      self.correct = is_correct?
+      if correct?
+        score = score_to_earn
+        EarnedScore.create!(user: user, question: question, team: team,
+                            score: score)
       end
     end
+  end
+
+    private
 
     # Save the result accoring the result of each test case (@results is filled
     # from set_correct method), and enqueue the answer to compute similarities.

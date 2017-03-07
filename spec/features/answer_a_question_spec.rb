@@ -34,13 +34,8 @@ describe "Answer a question", type: :feature, js: true do
     end
   end
 
+  # TODO
   context "whit a wrong answer" do
-    let(:content) { IO.read("spec/support/files/hello_world_compilation_error.pas") }
-
-    it "informs that the answer is wrong" do
-      submit_answer
-      expect(page).to have_css(".alert.alert-danger")
-    end
   end
 
     private

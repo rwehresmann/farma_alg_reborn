@@ -1,0 +1,39 @@
+<%= form_for @answer, url: yield(:url), method: :post, remote: true do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <div class="form-group">
+    <%= f.text_area :content, id: 'editor', class: "form-control" %>
+    <div id="editor_div"></div>
+  </div>
+
+  <div class="submit">
+    <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
+  </div>
+<% end %>
+
+
+<script>
+  function adjust_screen() {
+    var new_height =  $('.content-wrapper').height()
+                      - $('#test-results').height()
+                      - $('#error_explanation').height();
+    $('.content-wrapper').height(new_height);
+    $('#test-results').empty();
+    $('#error_explanation').remove();
+    $('#answer-result').remove();
+    $('.submit').append('<i class="fa fa-refresh fa-spin"></i>');
+  }
+
+  var textarea = $('#editor');
+  textarea.hide();
+
+  var editor = ace.edit("editor_div");
+  editor.setTheme("ace/theme/twilight");
+  editor.getSession().setMode("ace/mode/pascal");
+
+  // When click put ace editor content in form hidden textarea.
+  $('input[name="commit"]').on('click', function() {
+    textarea.val(editor.getSession().getValue());
+    adjust_screen();
+  });
+</script>

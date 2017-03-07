@@ -11,15 +11,10 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.user = current_user
+    @answer.save unless @answer.content.empty?
+    @results = @answer.results
 
-    # If content is empty the form submition is invalid and we doesn't need
-    # to save the try.
-    if params[:answer][:content]
-      @answer.save
-      @results = @answer.results
-    end
-
-    respond_to { |format| format.js }
+    respond_to { |format| format.js { render 'shared/test_answer' } }
   end
 
     private

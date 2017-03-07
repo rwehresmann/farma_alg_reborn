@@ -4,10 +4,11 @@ class TestCasesController < ApplicationController
   load_and_authorize_resource
 
   before_action :authenticate_user!
-  before_action :find_test_case, only: [:show, :edit, :update, :destroy, :test]
-  before_action :find_question, only: [:index, :new, :create, :test_all]
+  before_action :find_test_case, only: [:show, :edit, :update, :destroy]
+  before_action :find_question, only: [:index, :new, :create]
 
   def index
+    @answer = Answer.new
     @test_cases = TestCase.where(question: @question)
   end
 
@@ -47,15 +48,10 @@ class TestCasesController < ApplicationController
     redirect_to question_test_cases_url(question)
   end
 
-  def test
-    result = @test_case.test(plain_current_datetime, "pas", params[:source_code])
-    @output = result[:output]
-    @results = [ { title: @test_case.title, status: result[:status] } ]
-    respond_to { |format| format.js }
-  end
-
   def test_all
-    @results = @question.test_all(plain_current_datetime, "pas", params[:source_code])
+    unless @answer.content.empty?
+      @results = @question.test_all(plain_current_datetime, "pas", params[:source_code])
+    end
     respond_to { |format| format.js }
   end
 
@@ -64,6 +60,8 @@ class TestCasesController < ApplicationController
     def test_case_params
       params.require(:test_case).permit(:title, :description, :input, :output, :question_id)
     end
+
+
 
     def find_test_case
       @test_case = TestCase.find(params[:id])
