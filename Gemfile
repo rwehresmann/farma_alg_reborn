@@ -39,7 +39,7 @@ gem 'amatch'
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'whenever'
 gem 'cancancan', '~> 1.15'
-
+gem 'searchkick', '~> 2.1'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record

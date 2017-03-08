@@ -4,6 +4,8 @@ class Answer < ApplicationRecord
   include ApplicationHelper
   include Compilers
 
+  searchkick
+
   # The key is the difficult level, and the value is the percentage
   # of variation.
   SCORE_VARIATION = { 0 => -0.25, 1 => -0.25, 2 => -0.15, 3 => 0,
