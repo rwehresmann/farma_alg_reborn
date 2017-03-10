@@ -1,0 +1,40 @@
+<script text='text/javascript'>
+  /*
+    In assets directory isn't possible to call rails 'render', so these
+    functions are used  to do this. All render calls should be added to the
+    'switch' control in 'createModal' method.
+  */
+
+
+  // If modal isn't present in the page, create it (even if 'create' flag is
+  // false), else create it (first excluding it from the page) only if 'create'
+  // flag is true.
+  function showModal(modal_name, create = true) {
+    var modal = $('#' + modal_name + '-container');
+
+    if (modal.length) {
+      if (create) {
+        modal.remove();
+        createModal(modal_name);
+      }
+    } else createModal(modal_name);
+
+    $('#' + modal_name + '-modal').modal('show');
+  }
+
+  // Create the modal and append it to by. Render calls should be added to
+  // 'switch' control.
+  function createModal(modal_name) {
+    var div = $(document.createElement('div'))
+    div.attr('id', modal_name + '-container');
+    $('body').append(div);
+
+    switch (modal_name) {
+      case "search":
+        $(div).html("<%= escape_javascript(render 'search_modal') %>");
+        break;
+    }
+
+    $('body').append(div);
+  }
+</script>
