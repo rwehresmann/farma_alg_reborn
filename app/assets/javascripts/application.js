@@ -15,8 +15,11 @@
 // require turbolinks
 //= require AdminLTE/bootstrap/js/bootstrap
 //= require AdminLTE/dist/js/app
+//= require AdminLTE/plugins/daterangepicker/moment.min
+//= require AdminLTE/plugins/daterangepicker/daterangepicker
 //= require simplemde/dist/simplemde.min
 //= require ace-builds/src-min/ace
 //= require ace-builds/src-min/theme-twilight
 //= require ace-builds/src-min/mode-pascal
+//= require vivagraphjs/dist/vivagraph
 //= require_tree .

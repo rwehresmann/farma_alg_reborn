@@ -13,10 +13,17 @@
  *= require AdminLTE/bootstrap/css/bootstrap
  *= require AdminLTE/dist/css/AdminLTE
  *= require AdminLTE/dist/css/skins/skin-blue
+ *= require AdminLTE/plugins/daterangepicker/daterangepicker
  *= require simplemde/dist/simplemde.min
  *= require_tree .
  *= require_self
  */
+
+svg { width: 100%; height: 100%;}
+
+#graph-menu {
+  position: fixed;
+}
 
 #error_explanation {
   color: red;
