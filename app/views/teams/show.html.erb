@@ -10,7 +10,7 @@
       <a href="#enroled-students" data-toggle="tab" aria-expanded="true">Alunos matriculados</a>
     </li>
     <li>
-      <a href="#statistics" data-toggle="tab" aria-expanded="true">Estatísticas</a>
+      <a href="#graph" data-toggle="tab" aria-expanded="true">Grafo de manipulação</a>
     </li>
   </ul>
 
@@ -55,6 +55,12 @@
           <% end %>
         </tbody>
       </table>
+    </div>
+
+    <div class="tab-pane" id="graph">
+      <div class="box-body">
+        <%= render 'graph' %>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,38 @@
+<div id="graph-container" style="height: 600px">
+  <div id="graph-menu" class="btn-group-vertical">
+    <button id="add-nodes" type="button" class="btn btn-secondary"
+            title="Adicionar respostas ao grafo">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button id="pause-resume" type="button" class="btn btn-secondary" title="Stop graph animation">
+      <i class="fa fa-pause"></i>
+    </button>
+    <button id="back-center" type="button" class="btn btn-secondary" title="Back to the graph center">
+      <i class="fa fa-crosshairs"></i>
+    </button>
+    <button id="new_graph" type="button" class="btn btn-secondary" title="Generate new graph">
+      <i class="fa fa-asterisk"></i>
+    </button>
+  </div>
+</div>
+
+<script text="text/javascript">
+  initialize_graph();
+
+  $('#pause-resume').click(function() {
+     if ($('#pause-resume i').attr('class') == "fa fa-pause") {
+       pause();
+       $('#pause-resume i').attr('class', 'fa fa-play');
+       $('#pause-resume i').attr('title', 'Resume graph animation');
+     }
+     else {
+       resume();
+       $('#pause-resume i').attr('class', 'fa fa-pause');
+       $('#pause-resume i').attr('title', "Stop graph animation");
+     }
+   });
+
+   $('#add-nodes').click(function() {
+     showModal("search", false);
+   });
+</script>

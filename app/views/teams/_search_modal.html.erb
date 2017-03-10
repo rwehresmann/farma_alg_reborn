@@ -1,0 +1,40 @@
+
+<div class="modal" id="search-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br></br>
+
+          <%= form_tag search_answers_team_url(@team), remote: true, class: "form-inline" do %>
+            <div class="input-group margin", style="width: 100%">
+              <span class="input-group-btn">
+                <a class="btn btn-default btn-flat" data-toggle="collapse" data-target="#filters">
+                  <i class="fa fa-filter"></i> Filtros
+                </a>
+              </span>
+
+              <%= text_field_tag :key_words, nil, class: "form-control" %>
+
+              <span class="input-group-btn">
+                <%= submit_tag 'Buscar', class: "form-control btn btn-flat btn-primary" %>
+              </span>
+            </div>
+            <div id="filters" class="collapse">
+              <br></br>
+              <%= render "filters" %>
+            </div>
+          <% end %>
+      </div>
+      <div class="modal-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#search-filter').click(function() {
+    showModal("filters", false);
+  });
+</script>
