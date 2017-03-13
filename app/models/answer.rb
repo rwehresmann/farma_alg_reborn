@@ -26,24 +26,29 @@ class Answer < ApplicationRecord
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
 
-  scope :by_user, -> (user = nil) do
+  scope :by_user, -> (user) do
     return unless user.present?
     where(user: user)
   end
 
-  scope :by_team, -> (team = nil) do
+  scope :by_team, -> (team) do
     return unless team.present?
     where(team: team)
   end
 
-  scope :by_question, -> (question = nil) do
+  scope :by_question, -> (question) do
     return unless question.present?
     where(question: question)
   end
 
-  scope :correct_status, -> (correct = nil) do
+  scope :correct_status, -> (correct) do
     return if correct.nil?
     where(correct: correct)
+  end
+
+  scope :between_dates, -> (start_date, end_date) do
+    return if start_date.nil? || end_date.nil?
+    where("created_at BETWEEN datetime(?) AND datetime(?)", start_date, end_date)
   end
 
   # Return the answers which the specified answer should be compared.
@@ -53,6 +58,16 @@ class Answer < ApplicationRecord
 
   scope :created_last, -> do
     order(created_at: :desc)
+  end
+
+  scope :by_key_words, -> (key_words) do
+    return if key_words.nil?
+    search(key_words, fields: [:content])
+  end
+
+  # Return the connections of the answer with the specified answers.
+  def connections_with(answers)
+    answer_connections.where(answer_2: answers)
   end
 
   # @results is a variable who store the test case results before save the

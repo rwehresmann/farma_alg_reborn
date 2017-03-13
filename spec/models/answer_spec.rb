@@ -182,18 +182,77 @@ RSpec.describe Answer, type: :model do
       create(:answer, :correct)
     end
 
-    context "when no status is passed" do
-      it "returns all answers" do
-        expect(Answer.correct_status).to eq(answers)
-      end
-    end
-
     context "when status is passed" do
       it "returns the correct data" do
         [true, false].each do |status|
           expect(Answer.correct_status(status)).to eq(answers.where(correct: status))
         end
       end
+    end
+  end
+
+  describe ".between_dates" do
+    let(:start_date) { '2017-01-01' }
+    let(:end_date) { '2017-01-02' }
+    let!(:answer_1) { create(:answer, created_at: start_date) }
+    let!(:answer_2) { create(:answer, created_at: end_date) }
+
+    before { create(:answer, created_at: answer_2.created_at + 1.day) }
+
+    context "when arguments are informed" do
+      it "returns the answers in the date range" do
+        expected = [answer_1, answer_2]
+        expect(Answer.between_dates(start_date, end_date).to_a).to eq(expected)
+      end
+    end
+
+    context "when aruments aren't informed" do
+      it "returns all answers" do
+        expect(Answer.between_dates(nil, nil)).to eq(Answer.all)
+      end
+    end
+  end
+
+  describe ".by_key_words" do
+    let!(:to_return) { create(:answer, content: "This test should return") }
+
+    before do
+      create(:answer, content: "This not")
+      Answer.reindex
+    end
+
+    it "returns the right answer" do
+      expect(Answer.by_key_words("test").to_a).to eq([to_return])
+    end
+  end
+
+  describe '#connections_with' do
+    before do
+      4.times { create_pair(:answer) }
+
+      answers = Answer.all
+      @answers_to_query = [answers[1], answers[2]]
+      @target_answer = answers.first
+
+      @connection_1 = AnswerConnection.create(answer_1: @target_answer,
+                                              answer_2: answers[1],
+                                              similarity: 20)
+      @connection_2 = AnswerConnection.create(answer_1: @target_answer,
+                                              answer_2: answers[2],
+                                              similarity: 20)
+      @connection_3 = AnswerConnection.create(answer_1: @target_answer,
+                                              answer_2: answers[3],
+                                              similarity: 20)
+      @connection_4 = AnswerConnection.create(answer_1: answers[1],
+                                              answer_2: answers[3],
+                                              similarity: 20)
+
+
+    end
+
+    it "returns only the connections with the specified answers" do
+      expected = [@connection_1, @connection_2]
+      expect(@target_answer.connections_with(@answers_to_query)).to eq(expected)
     end
   end
 end
