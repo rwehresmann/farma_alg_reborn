@@ -15,9 +15,11 @@ Rails.application.routes.draw do
     member do
       post :enroll
       post :unenroll
-      post :search_answers
+      get :search_answers
       get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'
     end
+
+    get :connections, on: :collection
   end
 
   devise_for :users
