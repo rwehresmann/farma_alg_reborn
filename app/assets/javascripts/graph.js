@@ -120,6 +120,8 @@ function getAlreadyDisplaiedAnswers() {
   return answer_ids
 }
 
+// Add the answer itself, checking if is connected with another answer
+// alredy in the graph, adding a link between them if is the case.
 function addAnswer(id, object) {
   var answers_ids = getAlreadyDisplaiedAnswers();
 
@@ -131,23 +133,39 @@ function addAnswer(id, object) {
              target_answer: id
            },
      success: function(connections) {
-          if (connections.length > 0) {
-            for (i = 0; i < connections.length; i++) {
-              connection = connections[i];
-
-              answer_1 = graph.addNode(connection.answer_1.id,
-                                       connection.answer_1);
-              answer_2 = graph.addNode(connection.answer_2.id,
-                                       connection.answer_2);
-              graph.addLink(connection.answer_1.id, connection.answer_2.id)
-            }
-          } else {
-            graph.addNode(id, object);
-          }
+        if (connections.length > 0) addConnections(connections);
+        else graph.addNode(id, object);
       }
   });
 }
 
+// Add the selected answer and also all its simillar answers.
+function addSimilarAnswers(id, object) {
+  $.ajax({
+     type: "GET",
+     url: 'connections',
+     dataType: 'json',
+     data: { all_answers: true,
+             target_answer: id
+           },
+     success: function(connections) {
+        if (connections.length > 0) addConnections(connections);
+        else graph.addNode(id, object);
+      }
+  });
+}
+
+function addConnections(connections) {
+  for (i = 0; i < connections.length; i++) {
+    connection = connections[i];
+
+    answer_1 = graph.addNode(connection.answer_1.id,
+                             connection.answer_1);
+    answer_2 = graph.addNode(connection.answer_2.id,
+                             connection.answer_2);
+    graph.addLink(connection.answer_1.id, connection.answer_2.id)
+  }
+}
 
 // Pause the graph animation.
 function pause() {

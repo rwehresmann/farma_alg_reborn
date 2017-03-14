@@ -96,7 +96,9 @@ class TeamsController < ApplicationController
 
   def connections
     target_answer = Answer.find(params[:target_answer])
-    connections = target_answer.connections_with(params[:answers])
+
+    connections = params[:all_answers] ? target_answer.answer_connections :
+                                         target_answer.connections_with(params[:answers])
 
     @connections = connections.each.inject([]) do |array, connection|
       hash = {}
