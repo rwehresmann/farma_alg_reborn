@@ -1,0 +1,53 @@
+
+<table id="example" class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Aluno</th>
+      <th>Exercício</th>
+      <th>Questão</th>
+      <th>Respondido em</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @answers.each do |answer| %>
+      <tr>
+        <td><%= answer[:user][:name] %></td></td>
+        <td><%= answer[:exercise][:title] %></td>
+        <td><%= answer[:question][:title] %></td>
+        <td><%= answer[:created_at] %></td>
+        <td>
+          <button type="button" id="add-answer-<%= answer[:id] %>"
+                  data-answer-id="<%= answer[:id] %>"
+                  class="btn btn-block btn-primary btn-xs">Adicionar</button>
+          <button type="button" id="add-answer-<%= answer[:id] %>-similar"
+                  data-answer-id="<%= answer[:id] %>"
+                  class="btn btn-block btn-success btn-xs">Adicionar semelhantes</button>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script text="text/javascript">
+  $('#example').DataTable({
+    "lengthChange": false,
+    "searching": false,
+    "columnDefs": [
+      { "width": "5%", "orderable": false, "targets": [4]  }
+    ]
+  });
+</script>
+
+<script text="text/javascript">
+  <% @answers.each do |answer| %>
+    $(document).on('click', '#add-answer-<%= answer[:id] %>', function() {
+      addAnswer(<%= answer[:id] %>, <%= raw(answer.to_json) %>)
+    });
+
+    $(document).on('click', '#add-answer-<%= answer[:id] %>-similar', function(){
+      alert("a");
+    })
+  <% end %>
+</script>
