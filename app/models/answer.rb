@@ -41,13 +41,15 @@ class Answer < ApplicationRecord
     where(question: question)
   end
 
+  # 'correct' is a boolean and so the return status need to check if the value
+  # is a boolean.
   scope :correct_status, -> (correct) do
-    return if correct.nil?
+    return unless [true, false].include?(correct)
     where(correct: correct)
   end
 
   scope :between_dates, -> (start_date, end_date) do
-    return if start_date.nil? || end_date.nil?
+    return unless start_date.present? && end_date.present?
     where("created_at BETWEEN datetime(?) AND datetime(?)", start_date, end_date)
   end
 
@@ -61,7 +63,7 @@ class Answer < ApplicationRecord
   end
 
   scope :by_key_words, -> (key_words) do
-    return if key_words.nil?
+    return unless key_words.present?
     search(key_words, fields: [:content])
   end
 
