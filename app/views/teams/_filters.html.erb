@@ -2,7 +2,8 @@
   <div class="col-md-12">
     <label for="daterange-btn">Intervalo de tempo: </label>
     <div class="input-group">
-      <%= text_field_tag :date_range, nil, class: "btn btn-default pull-right", id: "daterange-btn" %>
+      <%= text_field_tag :date_range, nil, class: "btn btn-default pull-right",
+                                           id: "daterange-btn" %>
     </div>
   </div>
 </div>
@@ -45,7 +46,7 @@
 
       <div class="box box-default collapsed-box">
         <div class="box-header with-border">
-          <h3 class="box-title">Expandable</h3>
+          <h3 class="box-title">Questões</h3>
           <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
           </div><!-- /.box-tools -->
@@ -101,7 +102,7 @@
   });
 
   $('#daterange-btn').on('apply.daterangepicker', function(ev, picker) {
-      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + '_' + picker.endDate.format('YYYY-MM-DD'));
   });
 
   $('#daterange-btn').on('cancel.daterangepicker', function(ev, picker) {
