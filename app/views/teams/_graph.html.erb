@@ -17,6 +17,16 @@
 </div>
 
 <script text="text/javascript">
+  function createModal() {
+    var div = $(document.createElement('div'))
+    div.attr('id', 'search-container');
+    $('body').append(div);
+    $(div).html("<%= escape_javascript(render 'search_modal') %>");
+    $('body').append(div);
+  }
+</script>
+
+<script text="text/javascript">
   initialize_graph();
 
   $('#pause-resume').click(function() {
