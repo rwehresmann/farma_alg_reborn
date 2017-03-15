@@ -39,17 +39,18 @@ function nodeLayout(node) {
   var circle = Viva.Graph.svg('circle')
     .attr('cx', radius)
     .attr('cy', radius)
-    .attr('fill', 'green')
+    .attr('fill', setNodeCollor(data.correct))
     .attr('r', radius)
     .attr('id', 'node_n')
 
   $(circle).dblclick(function(){
-    /*$(this).attr('fill', setNodeCollor(node.data.correct, true));
-    $.ajax({
+    $(this).attr('fill', setNodeCollor(node.data.correct, true));
+    showModal("answer");
+    /*$.ajax({
        type: "GET",
-       url: 'node',
+       url: 'show_answer',
        dataType: 'script',
-       data: { answer: node.data, node_html_id: $(this).attr('id') }
+       data: { answer: data, node_html_id: $(this).attr('id') }
      });*/
   });
 
@@ -166,6 +167,15 @@ function addConnections(connections) {
     graph.addLink(connection.answer_1.id, connection.answer_2.id)
   }
 }
+
+function setNodeCollor(correct, selected = false) {
+  if (selected)
+    return "yellow";
+  else if (correct)
+    return "green"
+  return "red"
+}
+
 
 // Pause the graph animation.
 function pause() {

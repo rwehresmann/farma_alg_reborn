@@ -34,7 +34,7 @@
 // view where 'showModal' is called, using the apropriate tag ids
 // ('modal_name-container', 'modal_name-modal').
 // OBS2: 'createModal' cannot be created here because it uses rails 'render'
-// method (and in assets isn't alowed to use ruby embed code). 
+// method (and in assets isn't alowed to use ruby embed code).
 function showModal(modal_name, create = true) {
   var modal = $('#' + modal_name + '-container');
 
