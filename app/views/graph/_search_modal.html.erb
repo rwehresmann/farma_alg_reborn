@@ -6,7 +6,9 @@
         <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <br></br>
 
-          <%= form_tag search_answers_team_path(@team), method: :get, remote: true, class: "form-inline" do %>
+          <%= form_tag graph_search_answers_path, method: :get, remote: true, class: "form-inline" do %>
+            <%= hidden_field_tag :team_id, @team.id %>
+
             <div class="input-group margin", style="width: 100%">
               <span class="input-group-btn">
                 <a class="btn btn-default btn-flat" data-toggle="collapse" data-target="#filters">
@@ -22,7 +24,7 @@
             </div>
             <div id="filters" class="collapse">
               <br></br>
-              <%= render "filters" %>
+              <%= render "graph/filters" %>
             </div>
           <% end %>
       </div>

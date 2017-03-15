@@ -128,7 +128,7 @@ function addAnswer(id, object) {
 
   $.ajax({
      type: "GET",
-     url: 'connections',
+     url: Routes.graph_connections_path(),
      dataType: 'json',
      data: { answers: answers_ids,
              target_answer: id
@@ -144,7 +144,7 @@ function addAnswer(id, object) {
 function addSimilarAnswers(id, object) {
   $.ajax({
      type: "GET",
-     url: 'connections',
+     url: Routes.graph_connections_path(),
      dataType: 'json',
      data: { all_answers: true,
              target_answer: id
