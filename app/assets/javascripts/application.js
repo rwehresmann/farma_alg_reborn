@@ -24,6 +24,7 @@
 //= require ace-builds/src-min/theme-twilight
 //= require ace-builds/src-min/mode-pascal
 //= require vivagraphjs/dist/vivagraph
+//= require js-routes
 //= require_tree .
 
 
