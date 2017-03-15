@@ -15,11 +15,13 @@ Rails.application.routes.draw do
     member do
       post :enroll
       post :unenroll
-      get :search_answers
       get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'
     end
+  end
 
-    get :connections, on: :collection
+  scope :graph, as: :graph do
+    get :search_answers, to: 'graph#search_answers'
+    get :connections,    to: 'graph#connections'
   end
 
   devise_for :users
