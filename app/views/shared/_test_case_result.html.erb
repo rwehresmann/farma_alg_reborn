@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-12">
+
+  <% if test_case_result.answer.correct? %>
+      <div class="alert alert-danger text-left" style="display: inline-block; width: 100%">
+        <div class="col-md-1">
+          <i class='icon fa fa-check'></i>
+  <% else %>
+      <div class="alert alert-success text-left" style="display: inline-block; width: 100%">
+        <div class="row">
+          <div class="col-md-1">
+            <i class='icon fa fa-close'></i>
+  <% end %>
+          </div>
+
+          <div class="col-md-10">
+            <%= test_case_result.test_case.title %>
+          </div>
+
+          <div class="col-md-1">
+            <button data-toggle="modal" data-target="" class="btn btn-default btn-sm pull-right">
+              <i class="fa fa-columns"></i> Diff
+            </button>
+          </div>
+
+        </div>
+      </div><!-- alert-danger -->
+  </div><!-- col-md-12 -->
+</div><!-- row -->
