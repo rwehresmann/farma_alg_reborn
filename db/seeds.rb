@@ -78,8 +78,12 @@ User.all.each do |user|
     team.exercises.each do |exercise|
       exercise.questions.each do |question|
         correct = [true, false].sample
-        FactoryGirl.create(:answer, question: question, team: team,
+        answer = FactoryGirl.create(:answer, question: question, team: team,
                            user: user, correct: correct)
+        question.test_cases.each do |test_case|
+          AnswerTestCaseResult.create(answer: answer, test_case: test_case,
+                                  output: answer.compiler_output)
+        end
       end
     end
   end
