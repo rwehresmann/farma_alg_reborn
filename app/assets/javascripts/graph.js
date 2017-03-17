@@ -44,14 +44,15 @@ function nodeLayout(node) {
     .attr('id', 'node_n')
 
   $(circle).dblclick(function(){
-    $(this).attr('fill', setNodeCollor(node.data.correct, true));
-    showModal("answer");
-    /*$.ajax({
+    $(this).attr('fill', setNodeCollor(data.correct, true));
+    $.ajax({
        type: "GET",
-       url: 'show_answer',
+       url: Routes.graph_answer_path(),
        dataType: 'script',
-       data: { answer: data, node_html_id: $(this).attr('id') }
-     });*/
+       data: { answer_id: data.id, node_html_id: $(this).attr('id') }
+     });
+
+    showModal("answer");
   });
 
   $(circle).click(function() {

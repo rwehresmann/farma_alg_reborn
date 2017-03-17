@@ -1,14 +1,68 @@
 
 <div class="modal" id="answer-modal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <br></br>
-
+        <%= @answer.user.name %>
       </div>
-      <div class="modal-body">
 
+      <div class="modal-body">
+        <h3>Detalhes da resposta</h3>
+
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td><b>Aluno</b></td>
+              <td><%= @answer.user.name %></td>
+            </tr>
+            <tr>
+              <td><b>Turma</b></td>
+              <td><%= @answer.team.name %></td>
+            </tr>
+            <tr>
+              <td><b>Questão</b></td>
+              <td><%= @answer.question.title %></td>
+            </tr>
+            <tr>
+              <td><b>Exercício</b></td>
+              <td><%= @answer.question.exercise.title %></td>
+            </tr>
+            <tr>
+              <td><b>Correta</b></td>
+              <td><%= @answer.correct %></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <small>Realizada em <b><%= @answer.created_at.strftime("%d/%m/%Y às %H:%M:%S") %></b></small>
+        <br></br>
+
+        <table style="width: 100%">
+          <tbody>
+            <tr>
+              <td>
+                <button class="btn btn-primary text-center"
+                        style="display: block; width: 100%">Visualizar resposta</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button id="add-answer-<%= @answer.id %>-similar" class="btn btn-primary text-center"
+                        style="display: block; width: 100%">Adicionar respostas semelhantes</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr></hr>
+
+        <h3>Resultados dos casos de teste</h3>
+
+        <% @answer.test_cases_results.each do |test_case_result| %>
+          <%= render partial: "shared/test_case_result", locals: { test_case_result: test_case_result } %>
+        <% end %>
       </div>
     </div>
   </div>

@@ -20,7 +20,6 @@ RSpec.describe GraphController, type: :controller do
 
   describe 'GET #connections' do
     let(:teacher) { create(:user, :teacher) }
-    let!(:team) { create(:team, owner: teacher) }
     let(:answer) { create(:answer) }
     subject { get :connections, xhr: true, params: { target_answer: answer,
                                                       answers: [] } }
@@ -33,6 +32,23 @@ RSpec.describe GraphController, type: :controller do
 
       it "assigns a collection of answers to @answers" do
         expect(assigns(:connections)).to_not be_nil
+      end
+    end
+  end
+
+  describe 'GET #answer' do
+    let(:teacher) { create(:user, :teacher) }
+    let(:answer) { create(:answer) }
+    subject { get :answer, xhr: true, params: { answer_id: answer } }
+
+    context "when logged-in -->" do
+      before do
+        sign_in teacher
+        subject
+      end
+
+      it "assigns a collection of answers to @answers" do
+        expect(assigns(:answer)).to_not be_nil
       end
     end
   end

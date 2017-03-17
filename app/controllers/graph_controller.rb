@@ -35,6 +35,12 @@ class GraphController < ApplicationController
     respond_to { |format| format.json { render json: @connections } }
   end
 
+  def answer
+    @answer = Answer.find(params[:answer_id])
+
+    respond_to { |format| format.js }
+  end
+
     private
 
     # Get answer data used in views.

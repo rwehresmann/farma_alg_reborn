@@ -21,11 +21,7 @@
     var div = $(document.createElement('div'))
     div.attr('id', modal_name + '-container');
     $('body').append(div);
-    if (modal_name == "search")
-      $(div).html("<%= escape_javascript(render 'graph/search_modal') %>");
-    else if (modal_name == "answer")
-      $(div).html("<%= escape_javascript(render 'graph/answer_modal') %>");
-
+    $(div).html("<%= escape_javascript(render 'graph/search_modal') %>");
     $('body').append(div);
   }
 </script>

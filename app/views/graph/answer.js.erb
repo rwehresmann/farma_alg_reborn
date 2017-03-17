@@ -1,0 +1,9 @@
+function createModal(modal_name) {
+  var div = $(document.createElement('div'))
+  div.attr('id', modal_name + '-container');
+  $('body').append(div);
+  $(div).html("<%= escape_javascript(render 'graph/answer_modal') %>");
+  $('body').append(div);
+}
+
+showModal('answer')
