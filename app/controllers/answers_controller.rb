@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
   include ApplicationHelper
 
   before_action :authenticate_user!
-  before_action :find_question
+  before_action :find_question, only: [:create]
 
   def new
     @answer = Answer.new
@@ -15,6 +15,10 @@ class AnswersController < ApplicationController
     @results = @answer.results
 
     respond_to { |format| format.js { render 'shared/test_answer' } }
+  end
+
+  def show
+    @answer = Answer.find(params[:id])
   end
 
     private
