@@ -1,0 +1,28 @@
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td><b>Aluno</b></td>
+      <td><%= answer.user.name %></td>
+    </tr>
+    <tr>
+      <td><b>Turma</b></td>
+      <td><%= answer.team.name %></td>
+    </tr>
+    <tr>
+      <td><b>Questão</b></td>
+      <td><%= answer.question.title %></td>
+    </tr>
+    <tr>
+      <td><b>Exercício</b></td>
+      <td><%= answer.question.exercise.title %></td>
+    </tr>
+    <tr>
+      <td><b>Correta</b></td>
+      <td><%= answer.correct %></td>
+    </tr>
+  </tbody>
+</table>
+
+<small>
+  Realizada em <b><%= answer.created_at.strftime("%d/%m/%Y às %H:%M:%S") %></b>
+</small>
