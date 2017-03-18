@@ -41,10 +41,10 @@ function nodeLayout(node) {
     .attr('cy', radius)
     .attr('fill', setNodeCollor(data.correct))
     .attr('r', radius)
-    .attr('id', 'node_n')
+    .attr('id', 'node_' + data.id)
 
   $(circle).dblclick(function(){
-    $(this).attr('fill', setNodeCollor(data.correct, true));
+    $(this).attr('fill', 'yellow');
     $.ajax({
        type: "GET",
        url: Routes.graph_answer_path(),
@@ -165,15 +165,13 @@ function addConnections(connections) {
                              connection.answer_1);
     answer_2 = graph.addNode(connection.answer_2.id,
                              connection.answer_2);
-    graph.addLink(connection.answer_1.id, connection.answer_2.id)
+    graph.addLink(connection.answer_1.id, connection.answer_2.id,
+                  { answer_1: connection.answer_1, answer_2: connection.answer_2 })
   }
 }
 
-function setNodeCollor(correct, selected = false) {
-  if (selected)
-    return "yellow";
-  else if (correct)
-    return "green"
+function setNodeCollor(correct) {
+  if (correct) return "green"
   return "red"
 }
 

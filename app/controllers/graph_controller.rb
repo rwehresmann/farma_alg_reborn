@@ -37,6 +37,7 @@ class GraphController < ApplicationController
 
   def answer
     @answer = Answer.find(params[:answer_id])
+    @node_html_id = params[:node_html_id]
 
     respond_to { |format| format.js }
   end

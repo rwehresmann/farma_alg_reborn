@@ -42,6 +42,9 @@ function showModal(modal_name, create = true) {
   if (modal.length) {
     if (create) {
       modal.remove();
+      // When modal container is removed, bootstrap will not be able to find a
+      // reference to close it, so modal-backdrop must be forced to be removed. 
+      $('.modal-backdrop').remove();
       createModal(modal_name);
     }
   } else createModal(modal_name);

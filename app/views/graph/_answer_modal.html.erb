@@ -42,3 +42,9 @@
     </div>
   </div>
 </div>
+
+<script text="text/javascript">
+  $('#answer-container').on('hidden.bs.modal', function () {
+    $("#<%= @object_html_id %>").attr('fill', setNodeCollor(<%= @answer.correct %>));
+  });
+</script>

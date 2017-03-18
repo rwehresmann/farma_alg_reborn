@@ -36,10 +36,10 @@ RSpec.describe GraphController, type: :controller do
     end
   end
 
-  describe 'GET #answer' do
+  describe 'GET #answers' do
     let(:teacher) { create(:user, :teacher) }
     let(:answer) { create(:answer) }
-    subject { get :answer, xhr: true, params: { answer_id: answer } }
+    subject { get :answers, xhr: true, params: { answers_ids: answer } }
 
     context "when logged-in -->" do
       before do
@@ -48,7 +48,7 @@ RSpec.describe GraphController, type: :controller do
       end
 
       it "assigns a collection of answers to @answers" do
-        expect(assigns(:answer)).to_not be_nil
+        expect(assigns(:answers)).to_not be_nil
       end
     end
   end
