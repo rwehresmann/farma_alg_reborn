@@ -58,9 +58,8 @@ end
 
 # Add exercises to teams
 Team.all.each do |team|
-  Exercise.all.each do |exercise|
-    team.exercises << exercise if !team.exercises.include?(exercise)
-  end
+  exercise = Exercise.find(rand(0...Exercise.count))
+  team.exercises << exercise if !team.exercises.include?(exercise)
 end
 
 # Add users to teams and create some user scores.
@@ -81,10 +80,18 @@ User.all.each do |user|
         answer = FactoryGirl.create(:answer, question: question, team: team,
                            user: user, correct: correct)
         question.test_cases.each do |test_case|
-          AnswerTestCaseResult.create(answer: answer, test_case: test_case,
+          FactoryGirl.create(:answer_test_case_result, answer: answer, test_case: test_case,
                                   output: answer.compiler_output)
         end
       end
     end
   end
+end
+
+
+# Create answer connections.
+Answer.all.each do |answer|
+  AnswerConnection.create!(answer_1: answer,
+                                      answer_2: Answer.find(rand(1..Answer.count)),
+                                      similarity: rand(1..100))
 end
