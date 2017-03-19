@@ -2,11 +2,8 @@ function createModal(modal_name) {
   var div = $(document.createElement('div'))
   div.attr('id', modal_name + '-container');
   $('body').append(div);
-
-  if (modal_name == "answer")
-    $(div).html("<%= escape_javascript(render partial: 'graph/answer_modal', locals: { answer: @answers[0] }) %>");
-
+  $(div).html("<%= escape_javascript(render 'graph/connection_modal') %>");
   $('body').append(div);
 }
 
-showModal('answer')
+showModal('connection');

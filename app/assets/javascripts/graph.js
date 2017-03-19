@@ -79,6 +79,8 @@ function nodeLayout(node) {
 
 // Link layout design.
 function linkLayout(link) {
+  data = link.data;
+
   var ui = Viva.Graph.svg('path')
     .attr('stroke', 'black')
     .attr('stroke-width', 5)
@@ -86,15 +88,14 @@ function linkLayout(link) {
 
   $(ui).dblclick(function() {
     $(this).attr('stroke', 'yellow');
-    /*$.ajax({
-       type: "GET",
-       url: 'link',
-       dataType: 'script',
-       data: { link_html_id: $(this).attr('id'),
-               answer_1: link.data.answer_1,
-               answer_2: link.data.answer_2
+    $.ajax({
+      type: "GET",
+      url: Routes.graph_connection_path(),
+      dataType: 'script',
+      data: { link_html_id: $(this).attr('id'),
+              connection_id: data.id
              }
-     });*/
+     });
   });
 
   return ui;
@@ -165,8 +166,7 @@ function addConnections(connections) {
                              connection.answer_1);
     answer_2 = graph.addNode(connection.answer_2.id,
                              connection.answer_2);
-    graph.addLink(connection.answer_1.id, connection.answer_2.id,
-                  { answer_1: connection.answer_1, answer_2: connection.answer_2 })
+    graph.addLink(connection.answer_1.id, connection.answer_2.id, connection)
   }
 }
 

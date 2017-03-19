@@ -8,7 +8,7 @@
 
         <div class="callout callout-info">
           <p class="text-center">
-              <b>Grau de semelhanca: </b> 
+              <b>Grau de semelhanca: </b> <%= @connection.similarity %>
           </p>
         </div>
 
@@ -19,5 +19,6 @@
 
 <script text="text/javascript">
   $('#connection-container').on('hidden.bs.modal', function () {
+    $("#<%= @link_html_id %>").attr('fill', setNodeCollor("black"));
   });
 </script>
