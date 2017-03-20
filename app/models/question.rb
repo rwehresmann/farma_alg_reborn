@@ -25,7 +25,8 @@ class Question < ApplicationRecord
       # The source code or is compiled above, or is already compiled fro where
       # 'test_all' is called, so 'compile: false'.
       test_result = test_case.test(file_name, file_ext, source_code, compile: false)
-      results << { test_case: test_case, status: test_result[:status], output: test_result[:output] }
+      results << { test_case: test_case, correct: test_result[:correct],
+                   output: test_result[:output] }
     end
 
     results

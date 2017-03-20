@@ -82,11 +82,11 @@ RSpec.describe Question, type: :model do
       question.test_all("test_file", "pas", source_code)
     end
 
-    it "returns an array of results, containing hashes whit the test case object, status and output" do
+    it "returns an array of results, containing hashes whit the test case object, correct flag and output" do
       expect(results.class).to eq(Array)
       expect(results.count).to eq(2)
       expect(results.first[:test_case]).to_not be_nil
-      expect(results.first[:status]).to_not be_nil
+      expect(results.first[:correct]).to_not be_nil
       expect(results.first[:output]).to_not be_nil
     end
   end

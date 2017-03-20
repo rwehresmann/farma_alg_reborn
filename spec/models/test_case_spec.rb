@@ -32,8 +32,8 @@ RSpec.describe TestCase, type: :model do
       test_case.test("test_file", "pas", source_code)
     end
 
-    it "return an status and output" do
-      expect(result[:status]).to_not be_nil
+    it "return an correct flag and output" do
+      expect(result[:correct]).to_not be_nil
       expect(result[:output]).to_not be_nil
     end
   end

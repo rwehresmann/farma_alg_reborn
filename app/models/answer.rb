@@ -95,6 +95,7 @@ class Answer < ApplicationRecord
       # The source code is already compiled, so 'compile: false'.
       @results = question.test_all(filename, "pas", content, compile: false)
       self.correct = is_correct?
+
       if correct?
         score = score_to_earn
         EarnedScore.create!(user: user, question: question, team: team,
@@ -112,7 +113,8 @@ class Answer < ApplicationRecord
       @results.each do |result|
         AnswerTestCaseResult.create!(answer: self,
                                      test_case: result[:test_case],
-                                     output: result[:output])
+                                     output: result[:output],
+                                     correct: result[:correct])
       end
 
       ComputeAnswerSimilarityJob.perform_later(self)
@@ -120,7 +122,7 @@ class Answer < ApplicationRecord
 
     # According the results from each test case, check if the answer is correct.
     def is_correct?
-      @results.each { |result| return false if result[:status] == :error }
+      @results.each { |result| return false if result[:correct] == false }
       true
     end
 

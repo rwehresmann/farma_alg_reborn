@@ -13,6 +13,11 @@ RSpec.describe AnswerTestCaseResult, type: :model do
       expect(@answer_test_case_result).to_not be_valid
     end
 
+    it "is invalid with empty correct flag" do
+      @answer_test_case_result.correct = nil
+      expect(@answer_test_case_result).to_not be_valid
+    end
+
     context "when is tryied to create a new record to the answer and test case" do
       it "raise an error" do
         expect { @answer_test_case_result.dup.save! }.to raise_error(ActiveRecord::RecordInvalid)

@@ -1,5 +1,6 @@
 class AnswerTestCaseResult < ApplicationRecord
   validates_presence_of :output
+  validates_inclusion_of :correct, in: [true, false]
   validates_uniqueness_of :answer, scope: :test_case
 
   belongs_to :answer

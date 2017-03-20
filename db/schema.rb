@@ -25,9 +25,10 @@ ActiveRecord::Schema.define(version: 20170228201615) do
   create_table "answer_test_case_results", force: :cascade do |t|
     t.integer  "answer_id"
     t.integer  "test_case_id"
-    t.string   "output",       null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "output",                       null: false
+    t.boolean  "correct",      default: false, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.index ["answer_id", "test_case_id"], name: "index_answer_test_case_results_on_answer_id_and_test_case_id", unique: true
     t.index ["answer_id"], name: "index_answer_test_case_results_on_answer_id"
     t.index ["test_case_id"], name: "index_answer_test_case_results_on_test_case_id"

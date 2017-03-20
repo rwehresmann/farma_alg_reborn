@@ -17,9 +17,9 @@ class TestCase < ApplicationRecord
     output = self.output.gsub("\r", "")
 
     if result != output
-      { status: :error, output: result }
+      { correct: false, output: result }
     else
-      { status: :success, output: result }
+      { correct: true, output: result }
     end
   end
 end
