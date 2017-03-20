@@ -81,7 +81,7 @@ User.all.each do |user|
                            user: user, correct: correct)
         question.test_cases.each do |test_case|
           FactoryGirl.create(:answer_test_case_result, answer: answer, test_case: test_case,
-                                  output: answer.compiler_output)
+                                  output: answer.compiler_output, correct: correct)
         end
       end
     end
