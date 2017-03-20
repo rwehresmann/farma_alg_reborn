@@ -22,6 +22,10 @@ class AnswerConnection < ApplicationRecord
     .pluck(:similarity).first
   end
 
+  def same_user?
+    answer_1.user == answer_2.user
+  end
+
     private
 
     # Used in connection_threshold, specify the answers to be checked. The double
