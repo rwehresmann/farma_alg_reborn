@@ -8,9 +8,75 @@
 
         <div class="callout callout-info">
           <p class="text-center">
-              <b>Grau de semelhanca: </b> <%= @connection.similarity %>
+            <b>Grau de semelhanca: </b> <%= @connection.similarity %>
           </p>
         </div>
+
+          <table class="table table-bordered text-center">
+            <thead>
+              <th></th>
+              <th>Resposta 1</th>
+              <th>Resposta 2</th>
+            </thead>
+
+            <% if @connection.same_user? %>
+              <tbody>
+                  <tr>
+                    <td><b>Aluno</b></td>
+                    <td colspan="2"><%= @connection.answer_1.user.name %></td>
+                  </tr>
+
+                  <tr>
+                    <td><b>Questão</b></td>
+                    <td colspan="2"><%= @connection.answer_1.question.title %></td>
+                  </tr>
+
+                  <tr>
+                    <td><b>Exercício</b></td>
+                    <td colspan="2"><%= @connection.answer_1.question.exercise.title %></td>
+                  </tr>
+              </tbody>
+            <% else %>
+              <tbody>
+                <tr>
+                  <td><b>Aluno</b></td>
+                  <td><%= @connection.answer_1.user.name %></td>
+                  <td><%= @connection.answer_2.user.name %></td>
+                </tr>
+
+                <tr>
+                  <td><b>Questão</b></td>
+                  <td><%= @connection.answer_1.question.title %></td>
+                  <td><%= @connection.answer_2.question.title %></td>
+                </tr>
+
+                <tr>
+                  <td><b>Exercício</b></td>
+                  <td><%= @connection.answer_1.question.exercise.title %></td>
+                  <td><%= @connection.answer_2.question.exercise.title %></td>
+                </tr>
+              </tbody>
+            <% end %>
+
+          </table>
+
+        <table style="width: 100%">
+          <tbody>
+            <tr>
+              <td>
+                <button class="btn btn-primary text-center"
+                        style="width: 100%">Comparar respostas</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <button class="btn btn-primary text-center"
+                        style="width: 100%">Rejeitar similaridade</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
       </div>
     </div>
@@ -19,6 +85,6 @@
 
 <script text="text/javascript">
   $('#connection-container').on('hidden.bs.modal', function () {
-    $("#<%= @link_html_id %>").attr('fill', setNodeCollor("black"));
+    $("#<%= @link_html_id %>").attr('stroke', "black");
   });
 </script>

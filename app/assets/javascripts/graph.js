@@ -79,12 +79,12 @@ function nodeLayout(node) {
 
 // Link layout design.
 function linkLayout(link) {
-  data = link.data;
+  var data = link.data;
 
   var ui = Viva.Graph.svg('path')
     .attr('stroke', 'black')
     .attr('stroke-width', 5)
-    .attr('id', 'link-x');
+    .attr('id', "link-" + data.answer_1.id + "-" + data.answer_2.id);
 
   $(ui).dblclick(function() {
     $(this).attr('stroke', 'yellow');

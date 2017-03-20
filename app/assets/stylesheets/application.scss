@@ -21,6 +21,9 @@
  *= require_self
  */
 
+$light-green: #B3D372;
+$light-red: #E27A7A;
+
 svg { width: 100%; height: 100%;}
 
 #graph-menu {
@@ -93,4 +96,20 @@ dt {
 
 td {
   padding: 2px;
+}
+
+.right-wrong {
+  background: linear-gradient(to right, $light-green 50%, $light-red 50%);
+}
+
+.wrong-right {
+  background: linear-gradient(to right, $light-red 50%, $light-green 50%);
+}
+
+.right-right {
+  background: $light-green;
+}
+
+.wrong-wrong {
+  background: $light-red;
 }
