@@ -4,6 +4,7 @@
     "AdminLTE": "adminlte#^2.3.8",
     "simplemde": "simplemde-markdown-editor#^1.11.2",
     "ace-builds": "^1.2.6",
-    "vivagraphjs": "vivagraph#^0.8.2"
+    "vivagraphjs": "vivagraph#^0.8.2",
+    "jsdifflib": "*"
   }
 }
