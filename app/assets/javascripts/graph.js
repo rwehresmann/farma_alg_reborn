@@ -132,7 +132,7 @@ function addAnswer(id, object) {
      type: "GET",
      url: Routes.graph_connections_path(),
      dataType: 'json',
-     data: { all_answers: true,
+     data: { answers_ids: answers_ids,
              target_answer: id
            },
      success: function(connections) {
