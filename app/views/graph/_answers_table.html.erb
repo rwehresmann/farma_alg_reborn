@@ -43,11 +43,11 @@
 <script text="text/javascript">
   <% @answers.each do |answer| %>
     $(document).on('click', '#add-answer-<%= answer[:id] %>', function() {
-      addAnswer(<%= answer[:id] %>, <%= raw(answer.to_json) %>)
+      addAnswer(<%= answer[:id] %>, <%= raw(answer.to_json) %>);
     });
 
     $(document).on('click', '#add-answer-<%= answer[:id] %>-similar', function(){
-      addSimilarAnswers(<%= answer[:id] %>, <%= raw(answer.to_json) %>)
-    })
+      addSimilarAnswers(<%= answer[:id] %>, <%= raw(answer.to_json) %>);
+    });
   <% end %>
 </script>

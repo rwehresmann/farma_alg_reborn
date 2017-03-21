@@ -19,7 +19,8 @@
               <%= text_field_tag :key_words, nil, class: "form-control" %>
 
               <span class="input-group-btn">
-                <%= submit_tag 'Buscar', class: "form-control btn btn-flat btn-primary" %>
+                <%= submit_tag 'Buscar', id: "search-btn",
+                    class: "form-control btn btn-flat btn-primary" %>
               </span>
             </div>
             <div id="filters" class="collapse">
@@ -38,5 +39,11 @@
 <script type="text/javascript">
   $('#search-filter').click(function() {
     showModal("filters", false);
+  });
+
+  $('#search-btn').click(function() {
+    var div = $(document.createElement('div'))
+    div.attr('id', 'loading-modal');
+    $('.modal-content').append(div);
   });
 </script>
