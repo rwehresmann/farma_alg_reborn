@@ -127,12 +127,12 @@ function getAlreadyDisplaiedAnswers() {
 // alredy in the graph, adding a link between them if is the case.
 function addAnswer(id, object) {
   var answers_ids = getAlreadyDisplaiedAnswers();
-
+  
   $.ajax({
      type: "GET",
      url: Routes.graph_connections_path(),
      dataType: 'json',
-     data: { answers: answers_ids,
+     data: { all_answers: true,
              target_answer: id
            },
      success: function(connections) {

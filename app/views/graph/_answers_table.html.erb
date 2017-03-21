@@ -1,5 +1,8 @@
+<button type="button" id="add-all-answers" class="btn btn-primary btn-md pull-right">
+  Adicionar todas encontradas
+</button>
 
-<table id="example" class="table table-striped table-bordered">
+<table id="example" class="table table-striped">
   <thead>
     <tr>
       <th>Aluno</th>
@@ -50,4 +53,10 @@
       addSimilarAnswers(<%= answer[:id] %>, <%= raw(answer.to_json) %>);
     });
   <% end %>
+
+  $('#add-all-answers').click(function() {
+    <% @answers.each do |answer| %>
+      addAnswer(<%= answer[:id] %>, <%= raw(answer.to_json) %>);
+    <% end %>
+  });
 </script>
