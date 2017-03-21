@@ -18,7 +18,9 @@
     </tr>
     <tr>
       <td><b>Correta</b></td>
-      <td><%= answer.correct %></td>
+      <td>
+        <%= answer.correct %> <%= "(erro de compilação)" if answer.compilation_error? %>
+      </td>
     </tr>
   </tbody>
 </table>

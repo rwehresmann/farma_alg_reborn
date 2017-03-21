@@ -32,10 +32,12 @@
 
         <hr></hr>
 
-        <h3>Resultados dos casos de teste</h3>
+        <% unless @answer.compilation_error? %>
+          <h3>Resultados dos casos de teste</h3>
 
-        <% @answer.test_cases_results.each do |test_case_result| %>
-          <%= render partial: "shared/test_case_result", locals: { test_case_result: test_case_result } %>
+          <% @answer.test_cases_results.each do |test_case_result| %>
+            <%= render partial: "shared/test_case_result", locals: { test_case_result: test_case_result } %>
+          <% end %>
         <% end %>
 
       </div>
