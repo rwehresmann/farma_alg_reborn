@@ -4,14 +4,17 @@
             title="Adicionar respostas ao grafo">
       <i class="fa fa-plus"></i>
     </button>
-    <button id="pause-resume" type="button" class="btn btn-secondary" title="Stop graph animation">
+    <button id="pause-resume" type="button" class="btn btn-secondary"
+            title="Parar/reiniciar animação do grafo">
       <i class="fa fa-pause"></i>
     </button>
-    <button id="back-center" type="button" class="btn btn-secondary" title="Back to the graph center">
+    <button id="back-center" type="button" class="btn btn-secondary"
+            title="Retornar ao centro do grafo">
       <i class="fa fa-crosshairs"></i>
     </button>
-    <button id="new_graph" type="button" class="btn btn-secondary" title="Generate new graph">
-      <i class="fa fa-asterisk"></i>
+    <button id="remove-graph" type="button" class="btn btn-secondary"
+            title="Remover o grafo">
+      <i class="fa fa-trash-o"></i>
     </button>
   </div>
 </div>
@@ -42,7 +45,17 @@
      }
    });
 
+   $('#back-center').click(function() {
+     reset();
+   });
+
+   $('#remove-graph').click(function() {
+     dispose();
+   });
+
    $('#add-nodes').click(function() {
      showModal("search", false);
    });
+
+
 </script>

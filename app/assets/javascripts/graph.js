@@ -127,7 +127,7 @@ function getAlreadyDisplaiedAnswers() {
 // alredy in the graph, adding a link between them if is the case.
 function addAnswer(id, object) {
   var answers_ids = getAlreadyDisplaiedAnswers();
-  
+
   $.ajax({
      type: "GET",
      url: Routes.graph_connections_path(),
@@ -138,6 +138,7 @@ function addAnswer(id, object) {
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
         else graph.addNode(id, object);
+        reset();
       }
   });
 }
@@ -154,6 +155,7 @@ function addSimilarAnswers(id, object) {
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
         else graph.addNode(id, object);
+        reset();
       }
   });
 }
@@ -184,4 +186,14 @@ function pause() {
 // Resume the graph animation.
 function resume() {
   renderer.resume();
+}
+
+// Bring graph back to the center.
+function reset() {
+  renderer.reset();
+}
+
+// Remove graph.
+function dispose() {
+  renderer.dispose();
 }
