@@ -50,7 +50,10 @@
     var div = $(document.createElement('div'))
     div.attr('id', modal_name + '-container');
     $('body').append(div);
-    $(div).html("<%= escape_javascript(render partial: 'graph/answer_content_modal', locals: { answer: @answer }) %>");
+
+    if (modal_name == "answer-content")
+      $(div).html("<%= escape_javascript(render partial: 'graph/answer_content_modal', locals: { answer: @answer }) %>");
+
     $('body').append(div);
   }
 

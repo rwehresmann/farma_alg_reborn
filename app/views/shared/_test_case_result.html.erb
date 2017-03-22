@@ -1,16 +1,11 @@
 <div class="row">
   <div class="col-md-12">
 
-  <% if test_case_result.answer.correct? %>
-      <div class="alert alert-danger text-left" style="display: inline-block; width: 100%">
-        <div class="col-md-1">
-          <i class='icon fa fa-check'></i>
-  <% else %>
-      <div class="alert alert-success text-left" style="display: inline-block; width: 100%">
+    <div class="box box-solid <%= correct_box_style(test_case_result.answer) %>">
+      <div class="box-header">
         <div class="row">
           <div class="col-md-1">
-            <i class='icon fa fa-close'></i>
-  <% end %>
+            <i class="<%= correct_icon(test_case_result.answer) %>"></i>
           </div>
 
           <div class="col-md-10">
@@ -18,12 +13,49 @@
           </div>
 
           <div class="col-md-1">
-            <button data-toggle="modal" data-target="" class="btn btn-default btn-sm pull-right">
+            <button class="btn btn-default btn-sm pull-right" data-toggle="collapse"
+                    data-target="#test-case-diff-<%= test_case_result.id %>">
               <i class="fa fa-columns"></i> Diff
             </button>
           </div>
-
         </div>
-      </div><!-- alert-danger -->
-  </div><!-- col-md-12 -->
-</div><!-- row -->
+      </div><!-- /.box-header -->
+
+      <div id="test-case-diff-<%= test_case_result.id %>" class="box-body collapse">
+      </div><!-- /.box-body -->
+    </div><!-- box -->
+
+  </div><!-- row -->
+</div>
+
+<script text="text/javascript">
+  var base = difflib.stringAsLines("<%= j raw(test_case_result.test_case.output) %>");
+  var newtxt = difflib.stringAsLines("<%= j raw(test_case_result.output) %>");
+
+  // create a SequenceMatcher instance that diffs the two sets of lines
+  var sm = new difflib.SequenceMatcher(base, newtxt);
+
+  // get the opcodes from the SequenceMatcher instance
+  // opcodes is a list of 3-tuples describing what changes should be made to the base text
+  // in order to yield the new text
+  var opcodes = sm.get_opcodes();
+  var diffoutputdiv = document.createElement("div");
+
+  while (diffoutputdiv.firstChild) diffoutputdiv.removeChild(diffoutputdiv.firstChild);
+  var contextSize = $("contextSize").value;
+  contextSize = contextSize ? contextSize : null;
+
+  // build the diff view and add it to the current DOM
+  diffoutputdiv.appendChild(diffview.buildView({
+      baseTextLines: base,
+      newTextLines: newtxt,
+      opcodes: opcodes,
+      // set the display titles for each resource
+      baseTextName: "Esperado",
+      newTextName: "Recebido",
+      contextSize: contextSize,
+      viewType: $("inline").checked ? 1 : 0
+  }));
+
+  $("#test-case-diff-<%= test_case_result.id %>").append(diffoutputdiv);
+</script>
