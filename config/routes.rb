@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :answer_connections, only: [:show, :destroy]
+
   scope :graph, as: :graph do
     get    :search_answers,     to: 'graph#search_answers'
     get    :connections,        to: 'graph#connections'

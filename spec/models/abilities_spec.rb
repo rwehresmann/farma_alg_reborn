@@ -68,8 +68,8 @@ describe "User" do
       it { should_not be_able_to(:test_all, TestCase) }
       it { should_not be_able_to(:update, Team) }
       it { should_not be_able_to(:destroy, Team) }
-      it { should_not be_able_to(:search_answers, Team) }
-      it { should_not be_able_to(:connections, Team) }
+      it { should_not be_able_to(:answers, Team) }
+      it { should_not be_able_to(:show, AnswerConnection) }
 
       context "when unenrolled in the team" do
         let(:team) { create(:team) }

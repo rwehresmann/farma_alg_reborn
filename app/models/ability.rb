@@ -27,6 +27,8 @@ class Ability
       can [:update, :destroy, :answers], Team do |team|
         user.owner?(team)
       end
+
+      can [:show], AnswerConnection
     end
 
     can :read, Team do |team|

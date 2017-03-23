@@ -2,7 +2,7 @@ function createModal(modal_name) {
   var div = $(document.createElement('div'))
   div.attr('id', modal_name + '-container');
   $('body').append(div);
-  $(div).html("<%= escape_javascript(render 'graph/connection_modal') %>");
+  $(div).html("<%= escape_javascript(render 'connection_modal') %>");
   $('body').append(div);
 }
 

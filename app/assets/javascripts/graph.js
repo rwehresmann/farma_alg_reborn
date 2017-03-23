@@ -90,11 +90,9 @@ function linkLayout(link) {
     $(this).attr('stroke', 'yellow');
     $.ajax({
       type: "GET",
-      url: Routes.graph_connection_path(),
+      url: Routes.answer_connection_path(data.id),
       dataType: 'script',
-      data: { link_html_id: $(this).attr('id'),
-              connection_id: data.id
-             }
+      data: { link_html_id: $(this).attr('id') }
      });
   });
 

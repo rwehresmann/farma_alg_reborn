@@ -1,18 +1,4 @@
 class GraphController < ApplicationController
-  def search_answers
-    date_range = params[:date_range] ? params[:date_range].split("_") : []
-    answers = Answer.by_team(params[:team_id]).by_user(params[:users])
-                                   .by_question(params[:questions])
-                                   .between_dates(date_range[0], date_range[1])
-                                   .by_key_words(params[:key_words])
-
-    @answers = answers.each.inject([]) { |array, answer|
-                 array << answer_object_to_graph(answer)
-              }
-
-    respond_to { |format| format.js }
-  end
-
   def connections
     target_answer = Answer.find(params[:target_answer])
 

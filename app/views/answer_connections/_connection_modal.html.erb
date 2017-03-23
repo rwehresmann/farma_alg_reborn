@@ -71,10 +71,8 @@
 
             <tr>
               <td>
-                <%= link_to "Rejeitar similaridade",
-                            graph_destroy_connection_path(connection_id: @connection.id),
-                            method: :delete, remote: true, style: "width: 100%",
-                            class: "btn btn-primary text-center" %>
+                <button class="btn btn-primary text-center"
+                        style="width: 100%">Rejeitar similaridade</button>
               </td>
             </tr>
           </tbody>
@@ -88,9 +86,5 @@
 <script text="text/javascript">
   $('#connection-container').on('hidden.bs.modal', function () {
     $("#<%= @link_html_id %>").attr('stroke', "black");
-  });
-
-  $('#reject-similarity-btn').click(function() {
-
   });
 </script>
