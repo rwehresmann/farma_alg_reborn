@@ -21,13 +21,6 @@ class GraphController < ApplicationController
     respond_to { |format| format.json { render json: @connections } }
   end
 
-  def connection
-    @connection = AnswerConnection.find(params[:connection_id])
-    @link_html_id = params[:link_html_id]
-
-    respond_to { |format| format.js }
-  end
-
   def destroy_connection
     @connection = AnswerConnection.find(params[:connection_id])
     @connection.destroy
