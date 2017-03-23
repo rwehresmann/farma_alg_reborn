@@ -38,7 +38,14 @@ class GraphController < ApplicationController
   def connection
     @connection = AnswerConnection.find(params[:connection_id])
     @link_html_id = params[:link_html_id]
-    
+
+    respond_to { |format| format.js }
+  end
+
+  def destroy_connection
+    @connection = AnswerConnection.find(params[:connection_id])
+    @connection.destroy
+
     respond_to { |format| format.js }
   end
 

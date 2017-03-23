@@ -20,10 +20,11 @@ Rails.application.routes.draw do
   end
 
   scope :graph, as: :graph do
-    get :search_answers, to: 'graph#search_answers'
-    get :connections,    to: 'graph#connections'
-    get :connection,     to: 'graph#connection'
-    get :answer,         to: 'graph#answer'
+    get    :search_answers,     to: 'graph#search_answers'
+    get    :connections,        to: 'graph#connections'
+    get    :connection,         to: 'graph#connection'
+    get    :answer,             to: 'graph#answer'
+    delete :destroy_connection, to: 'graph#destroy_connection'
   end
 
   devise_for :users

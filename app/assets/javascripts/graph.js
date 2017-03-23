@@ -177,6 +177,11 @@ function setNodeCollor(correct) {
   return "red"
 }
 
+function removeLink(connectionId) {
+  graph.forEachLink(function(link) {
+    if (link.data.id == connectionId) graph.removeLink(link);
+  });
+}
 
 // Pause the graph animation.
 function pause() {
