@@ -30,8 +30,7 @@ describe "User" do
         it { should be_able_to(:destroy, test_case) }
         it { should be_able_to(:update, test_case) }
         it { should be_able_to(:destroy, team) }
-        it { should be_able_to(:search_answers, team) }
-        it { should be_able_to(:connections, team) }
+        it { should be_able_to(:answers, team) }
       end
 
       context "when access objects that he doesn't created -->" do

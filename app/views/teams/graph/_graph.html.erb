@@ -24,7 +24,7 @@
     var div = $(document.createElement('div'))
     div.attr('id', modal_name + '-container');
     $('body').append(div);
-    $(div).html("<%= escape_javascript(render 'graph/search_modal') %>");
+    $(div).html("<%= escape_javascript(render 'teams/graph/search_modal') %>");
     $('body').append(div);
   }
 </script>

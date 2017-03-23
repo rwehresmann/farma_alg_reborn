@@ -80,6 +80,20 @@ class TeamsController < ApplicationController
     @questions = @exercise.questions
   end
 
+  def answers
+    date_range = split_date_range
+    answers = Answer.by_team(params[:id]).by_user(params[:users])
+                    .by_question(params[:questions])
+                    .between_dates(date_range[0], date_range[1])
+                    .by_key_words(params[:key_words])
+
+    @answers = answers.each.inject([]) { |array, answer|
+                 array << answer_object_to_graph(answer)
+              }
+
+    respond_to { |format| format.js { render "teams/graph/answers" } }
+  end
+
     private
 
     def team_params
@@ -128,5 +142,40 @@ class TeamsController < ApplicationController
     def current_user_index
       record = @incentive_ranking.select { |data| data[:user] == current_user }.first
       @incentive_ranking.index(record)
+    end
+
+    def split_date_range
+      params[:date_range] ? params[:date_range].split("_") : []
+    end
+
+    # Get answer data used in views.
+    def answer_data(answer)
+      answer.slice(:id, :content, :correct, :compilation_error,
+                               :compiler_output, :created_at).symbolize_keys
+    end
+
+    # Get user data used in views.
+    def user_data(user)
+      user.slice(:id, :name).symbolize_keys
+    end
+
+    # Get exercise data used in views.
+    def exercise_data(exercise)
+      exercise.slice(:id, :title).symbolize_keys
+    end
+
+    # Get question data used in views.
+    def question_data(question)
+      question.slice(:id, :title).symbolize_keys
+    end
+
+    # Create a hash with the necessary data to display in the graph.
+    def answer_object_to_graph(answer)
+      hash = {}
+      hash.merge!(answer_data(answer))
+      hash[:user] = user_data(answer.user)
+      hash[:question] = question_data(answer.question)
+      hash[:exercise] = exercise_data(answer.question.exercise)
+      hash
     end
 end

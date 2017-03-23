@@ -246,4 +246,29 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
   end
+
+  describe 'GET #answers' do
+    let(:user) { create(:user, :teacher) }
+    let(:team) { create(:team, owner: user) }
+    subject { get :answers, xhr: true, params: { id: team } }
+
+    context "when logged-in" do
+      before do
+        sign_in user
+        subject
+      end
+
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("text/javascript") }
+      it { expect(response).to render_template("teams/graph/answers") }
+      it { expect(assigns(:answers)).to_not be_nil }
+    end
+
+    context "when logged out" do
+      before { subject }
+
+      it { expect(flash[:warning]).to_not be_nil }
+      it { expect(response).to render_template("shared/unauthorized") }
+    end
+  end
 end
