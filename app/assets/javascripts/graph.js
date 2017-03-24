@@ -47,9 +47,9 @@ function nodeLayout(node) {
     $(this).attr('fill', 'yellow');
     $.ajax({
        type: "GET",
-       url: Routes.graph_answer_path(),
+       url: Routes.answer_path(data.id),
        dataType: 'script',
-       data: { answer_id: data.id, node_html_id: $(this).attr('id') }
+       data: { node_html_id: $(this).attr('id') }
      });
 
     showModal("answer");

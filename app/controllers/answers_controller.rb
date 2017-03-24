@@ -19,6 +19,7 @@ class AnswersController < ApplicationController
   end
 
   def show
+    respond_to { |format| format.js }
   end
 
   def connections
