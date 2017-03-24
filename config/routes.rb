@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   resources :exercises, shallow: true do
     resources :questions do
       member do
-        resources :answers, only: [:new, :create, :show]
+        resources :answers, only: [:new, :create, :show] do
+          get :connections, on: :member
+        end
         post :test_answer
       end
 

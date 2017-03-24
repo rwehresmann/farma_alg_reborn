@@ -25,4 +25,59 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe "GET #show" do
+    let(:answer) { create(:answer) }
+
+    subject { get :show, xhr: true, params: { id: answer } }
+
+    context "when logged-in" do
+      before do
+        sign_in create(:user, :teacher)
+        subject
+      end
+
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("text/javascript") }
+      it { expect(response).to render_template(:show) }
+      it { expect(assigns(:answer)).to_not be_nil }
+    end
+
+# TODO: Should be implemented after defined answer permissions.
+=begin
+    context "when logged-out" do
+      before { subject }
+
+      it { expect(flash[:warning]).to_not be_nil }
+      it { expect(response).to render_template("shared/unauthorized") }
+    end
+=end
+  end
+
+  describe "GET #connections" do
+    let(:answer) { create(:answer) }
+
+    subject { get :connections, xhr: true, params: { id: answer } }
+
+    context "when logged-in" do
+      before do
+        sign_in create(:user, :teacher)
+        subject
+      end
+
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("application/json") }
+      it { expect(assigns(:connections)).to_not be_nil }
+    end
+
+# TODO: Should be implemented after defined answer permissions.
+=begin
+    context "when logged-out" do
+      before { subject }
+
+      it { expect(flash[:warning]).to_not be_nil }
+      it { expect(response).to render_template("shared/unauthorized") }
+    end
+=end
+  end
+
 end

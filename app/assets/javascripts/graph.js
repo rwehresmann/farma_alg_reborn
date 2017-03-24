@@ -123,36 +123,31 @@ function getAlreadyDisplaiedAnswers() {
 
 // Add the answer itself, checking if is connected with another answer
 // alredy in the graph, adding a link between them if is the case.
-function addAnswer(id, object) {
+function addAnswer(answer_id, object) {
   var answers_ids = getAlreadyDisplaiedAnswers();
 
   $.ajax({
      type: "GET",
-     url: Routes.graph_connections_path(),
+     url: Routes.connections_answer_path(answer_id),
      dataType: 'json',
-     data: { answers_ids: answers_ids,
-             target_answer: id
-           },
+     data: { answers: answers_ids },
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
-        else graph.addNode(id, object);
+        else graph.addNode(answer_id, object);
         reset();
       }
   });
 }
 
 // Add the selected answer and also all its simillar answers.
-function addSimilarAnswers(id, object) {
+function addSimilarAnswers(answer_id, object) {
   $.ajax({
      type: "GET",
-     url: Routes.graph_connections_path(),
+     url: Routes.connections_answer_path(answer_id),
      dataType: 'json',
-     data: { all_answers: true,
-             target_answer: id
-           },
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
-        else graph.addNode(id, object);
+        else graph.addNode(answer_id, object);
         reset();
       }
   });
