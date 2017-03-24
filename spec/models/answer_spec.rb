@@ -250,9 +250,19 @@ RSpec.describe Answer, type: :model do
 
     end
 
-    it "returns only the connections with the specified answers" do
-      expected = [@connection_1, @connection_2]
-      expect(@target_answer.connections_with(@answers_to_query)).to eq(expected)
+    context "when answers are specified" do
+      it "returns only the connections of the targer answer with these answers" do
+        expected = [@connection_1, @connection_2]
+        expect(@target_answer.connections_with(@answers_to_query)).to eq(expected)
+      end
     end
+
+    context "when no answers is specified" do
+      it "returns all connections of the targer answer" do
+        expected = @target_answer.answer_connections
+        expect(@target_answer.connections_with(nil)).to eq(expected)
+      end
+    end
+
   end
 end

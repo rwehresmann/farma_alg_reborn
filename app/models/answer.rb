@@ -67,8 +67,10 @@ class Answer < ApplicationRecord
     search(key_words, fields: [:content])
   end
 
-  # Return the connections of the answer with the specified answers.
+  # Return the connections of the answer with the specified answers, or all
+  # connections if answers is nil.
   def connections_with(answers)
+    return answer_connections if answers.nil?
     answer_connections.where(answer_2: answers)
   end
 
