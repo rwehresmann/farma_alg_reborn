@@ -52,7 +52,7 @@
     $('body').append(div);
 
     if (modal_name == "answer-content")
-      $(div).html("<%= escape_javascript(render partial: 'graph/answer_content_modal', locals: { answer: @answer }) %>");
+      $(div).html("<%= escape_javascript(render partial: 'answer_content_modal', locals: { answer: @answer }) %>");
 
     $('body').append(div);
   }
