@@ -102,6 +102,8 @@ GEM
     faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.14)
+    figaro (1.1.1)
+      thor (~> 0.14)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     gretel (3.0.9)
@@ -260,6 +262,7 @@ DEPENDENCIES
   delayed_job_active_record (~> 4.1)
   devise (~> 4.2)
   factory_girl_rails (~> 4.0)
+  figaro (~> 1.1)
   gretel (~> 3.0)
   jbuilder (~> 2.5)
   jquery-rails
