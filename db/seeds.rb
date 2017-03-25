@@ -58,7 +58,7 @@ end
 
 # Add exercises to teams
 Team.all.each do |team|
-  exercise = Exercise.find(rand(0...Exercise.count))
+  exercise = Exercise.find(rand(1..Exercise.count))
   team.exercises << exercise if !team.exercises.include?(exercise)
 end
 
