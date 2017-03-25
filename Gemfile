@@ -41,6 +41,7 @@ gem 'whenever'
 gem 'cancancan', '~> 1.15'
 gem 'searchkick', '~> 2.1'
 gem 'figaro', '~> 1.1'
+gem 'factory_girl_rails', '~> 4.0'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
@@ -49,7 +50,6 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.0'
   gem 'rails-controller-testing', '~> 1.0'
-  gem 'factory_girl_rails', '~> 4.0'
   # To generate diagrams based in the current controller and models structure.
   gem 'railroady'
 end
