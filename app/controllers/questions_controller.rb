@@ -9,6 +9,7 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.where(exercise: @exercise)
+                         .paginate(page: params[:page], per_page: 5)
   end
 
   def new
