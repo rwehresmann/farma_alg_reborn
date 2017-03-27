@@ -10,6 +10,7 @@ class TestCasesController < ApplicationController
   def index
     @answer = Answer.new
     @test_cases = TestCase.where(question: @question)
+                          .paginate(page: params[:page], per_page: 5)
   end
 
   def new
