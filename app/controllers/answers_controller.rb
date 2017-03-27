@@ -3,7 +3,7 @@ class AnswersController < ApplicationController
   include ApplicationHelper
 
   before_action :authenticate_user!
-  before_action :find_question, only: [:create]
+  before_action :find_question, only: [:new, :create]
   before_action :find_answer, only: [:show, :connections]
 
   def new
