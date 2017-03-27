@@ -1,8 +1,3 @@
-<%= link_to "Criar nova turma", new_team_path(@team),
-                                  class: "btn btn-primary pull-right" %>
-<br></br>
-<br></br>
-
 <div class="btn-group">
   <%= link_to "Todas turmas", teams_path, remote: true,
                               id: "all-teams", class: "btn btn-default active" %>
@@ -10,11 +5,18 @@
                               id: "my-teams", class: "btn btn-default" %>
 </div>
 
+<% if can? :create, @team %>
+  <%=link_to "Criar nova turma", new_team_path(@team),
+                                  class: "btn btn-primary pull-right" %>
+<% end %>
+
 <br></br>
 
 <div id="teams">
   <%= render 'teams' %>
 </div>
+
+<%= render "shared/paginate", object: @teams %>
 
 <script type="text/javascript">
   $(document).ready(function() {

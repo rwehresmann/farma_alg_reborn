@@ -1,2 +1,3 @@
 $('#teams').empty();
 $('#teams').html('<%= j(render "teams") %>');
+$('#pagination').html('<%= j(render "shared/paginate", object: @teams) %>')
