@@ -6,6 +6,7 @@ class ExercisesController < ApplicationController
 
   def index
     @exercises = Exercise.where(user: current_user)
+                         .paginate(page: params[:page], per_page: 5)
   end
 
   def show
