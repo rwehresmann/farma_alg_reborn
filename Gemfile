@@ -42,6 +42,7 @@ gem 'cancancan', '~> 1.15'
 gem 'searchkick', '~> 2.1'
 gem 'figaro', '~> 1.1'
 gem 'factory_girl_rails', '~> 4.0'
+gem 'will_paginate', '~> 3.1.0'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
