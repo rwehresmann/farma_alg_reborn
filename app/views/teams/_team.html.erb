@@ -1,0 +1,35 @@
+<div class="box box-solid box-default">
+  <div class="box-header">
+    <h3 class="box-title"><%= team.name %></h3>
+    <h3 class="box-title pull-right">Prof(a). <%= team.owner.name %></h3>
+  </div><!-- /.box-header -->
+
+  <div class="box-footer">
+    <% if team.enrolled?(current_user) || current_user == team.owner %>
+      <% if can? :unenroll, team %>
+        <%= link_to "Cancelar matrícula", unenroll_team_path(team), method: :post %>
+      <% end %>
+
+      <div class="pull-right">
+        <%= link_to "Ver", team %>
+          <% if can? :update, team %>
+            | <%= link_to "Editar", edit_team_path(team) %>
+          <% end %>
+          <% if can? :destroy, team %>
+            | <%= link_to "Excluir", team, method: :delete,
+                        data: { confirm: "Tem certeza que deseja excluir?" } %>
+          <% end %>
+      </div>
+
+    <% else %>
+
+      <%= form_tag enroll_team_url(team), remote: true, class: "form-inline", id: "enroll-form" do %>
+        <%= text_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
+        <%= submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
+      <% end %>
+
+    <% end %>
+
+  </div><!-- /.box-footer -->
+
+</div><!-- /.box -->

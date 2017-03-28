@@ -98,6 +98,7 @@ RSpec.configure do |config|
   config.include Helpers::Relationships, type: :model
   config.include Helpers::AnswerProcessHelper
   config.include Devise::Test::ControllerHelpers, :type => :controller
+  config.include Devise::Test::ControllerHelpers, :type => :view
   config.include Warden::Test::Helpers
   config.include ActiveJob::TestHelper
 end
