@@ -4,7 +4,7 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_question, only: [:new, :create]
-  before_action :find_answer, only: [:show, :connections]
+  before_action :find_answer, only: [:show]
 
   def new
     @answer = Answer.new
@@ -20,12 +20,15 @@ class AnswersController < ApplicationController
   end
 
   def show
-    @node_html_id = params[:node_html_id]
-    respond_to { |format| format.js }
+    respond_to do |format|
+      format.html { @connections = AnswerConnection.connections(@answer) }
+      format.js { @node_html_id = params[:node_html_id] }
+    end
   end
 
   def connections
-    connections = @answer.connections_with(params[:answers])
+    connections = AnswerConnection.connections(params[:answers],
+                                               params[:type].to_sym)
 
     @connections = connections.each.inject([]) do |array, connection|
       hash = {}
