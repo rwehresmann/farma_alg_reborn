@@ -225,44 +225,4 @@ RSpec.describe Answer, type: :model do
       expect(Answer.by_key_words("test").to_a).to eq([to_return])
     end
   end
-
-  describe '#connections_with' do
-    before do
-      4.times { create_pair(:answer) }
-
-      answers = Answer.all
-      @answers_to_query = [answers[1], answers[2]]
-      @target_answer = answers.first
-
-      @connection_1 = AnswerConnection.create(answer_1: @target_answer,
-                                              answer_2: answers[1],
-                                              similarity: 20)
-      @connection_2 = AnswerConnection.create(answer_1: @target_answer,
-                                              answer_2: answers[2],
-                                              similarity: 20)
-      @connection_3 = AnswerConnection.create(answer_1: @target_answer,
-                                              answer_2: answers[3],
-                                              similarity: 20)
-      @connection_4 = AnswerConnection.create(answer_1: answers[1],
-                                              answer_2: answers[3],
-                                              similarity: 20)
-
-
-    end
-
-    context "when answers are specified" do
-      it "returns only the connections of the targer answer with these answers" do
-        expected = [@connection_1, @connection_2]
-        expect(@target_answer.connections_with(@answers_to_query)).to eq(expected)
-      end
-    end
-
-    context "when no answers is specified" do
-      it "returns all connections of the targer answer" do
-        expected = @target_answer.answer_connections
-        expect(@target_answer.connections_with(nil)).to eq(expected)
-      end
-    end
-
-  end
 end

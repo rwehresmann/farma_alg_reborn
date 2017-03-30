@@ -77,4 +77,62 @@ RSpec.describe AnswerConnection, type: :model do
       expect(connection.answers).to eq(expected)
     end
   end
+
+  describe '#same_user?' do
+    subject { answer_connection.same_user? }
+
+    context "when both answers belongs to the same user" do
+      let(:user) { create(:user) }
+      let(:answer_1) { create(:answer, user: user) }
+      let(:answer_2) { create(:answer, user: user) }
+      let(:answer_connection) { create(:answer_connection,
+                                          answer_1: answer_1,
+                                          answer_2: answer_2) }
+
+      it { expect(subject).to be_truthy }
+    end
+
+    context "when answers are from different users" do
+      let(:answer_connection) { create(:answer_connection) }
+
+      it { expect(subject).to be_falsey }
+    end
+  end
+
+  describe '.connections' do
+    let(:team) { create(:team) }
+    let(:answer_1) { create(:answer, team: team) }
+    let(:answer_2) { create(:answer, team: team) }
+    let(:answer_3) { create(:answer, team: team) }
+
+    context "when should search by connections with the specified answers" do
+      let!(:connection_1) { create(:answer_connection, answer_1: answer_1,
+                                   answer_2: answer_2) }
+      let!(:connection_2) { create(:answer_connection, answer_1: answer_2,
+                                   answer_2: answer_1) }
+      let!(:connection_3) { create(:answer_connection, answer_1: answer_1,
+                                   answer_2: answer_3) }
+
+      it "searches by connections where one of the two answers is equal to the specified answers" do
+        received = AnswerConnection.connections(answer_2)
+        expect(received.count).to eq(2)
+        expect(received).to include(connection_1, connection_2)
+      end
+    end
+
+    context "when should search connections between the specified answers" do
+      let!(:connection_1) { create(:answer_connection, answer_1: answer_3,
+                                   answer_2: answer_2) }
+      let!(:connection_2) { create(:answer_connection, answer_1: answer_2,
+                                   answer_2: answer_1) }
+      let!(:connection_3) { create(:answer_connection, answer_1: answer_2,
+                                   answer_2: answer_3) }
+
+      it "searches by connections where both answers should be between the specified answers" do
+        received = AnswerConnection.connections([answer_3, answer_2], :between)
+        expect(received.count).to eq(2)
+        expect(received).to include(connection_1, connection_3)
+      end
+    end
+  end
 end

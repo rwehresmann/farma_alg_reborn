@@ -67,13 +67,6 @@ class Answer < ApplicationRecord
     search(key_words, fields: [:content])
   end
 
-  # Return the connections of the answer with the specified answers, or all
-  # connections if answers is nil.
-  def connections_with(answers)
-    return answer_connections if answers.nil?
-    answer_connections.where(answer_2: answers)
-  end
-
   # @results is a variable who store the test case results before save the
   # answer instance. We store these results there to avoid reprocess
   # these results again, because they're used in an after create callback again.
