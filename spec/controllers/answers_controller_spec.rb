@@ -46,7 +46,7 @@ RSpec.describe AnswersController, type: :controller do
         it { expect(response).to have_http_status(:ok) }
         it { expect(response.content_type).to eq("text/html") }
         it { expect(response).to render_template(:show) }
-        it { expect(assigns(:connections)).to_not be_nil }
+        it { expect(assigns(:similar_answers)).to_not be_nil }
       end
     end
 
