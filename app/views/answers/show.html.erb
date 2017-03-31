@@ -1,5 +1,116 @@
 <div class="row">
   <div class="col-md-6">
-    
+
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Informações principais</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <%= render partial: 'shared/answer_info', locals: { answer: @answer } %>
+
+        <br></br>
+
+        <button id="show-answer" class="btn btn-primary pull-right">
+          Visualizar resposta
+        </button>
+
+      </div><!-- /.box-body -->
+    </div>
+
+  </div><!-- /.col-md-6 -->
+
+  <div class="col-md-6">
+
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Resultados dos casos de teste</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <% @answer.test_cases_results.each do |test_case_result| %>
+          <%= render partial: 'shared/test_case_result',
+                     locals: { test_case_result: test_case_result } %>
+        <% end %>
+      </div><!-- /.box-body -->
+    </div>
+
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Comentários</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+      </div><!-- /.box-header -->
+      <div class="box-body">
+
+      </div><!-- /.box-body -->
+    </div>
+
+  </div>
+
+  <div class="col-md-6">
+
+    <div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Respostas semelhantes</h3>
+        <div class="box-tools pull-right">
+          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        </div><!-- /.box-tools -->
+      </div><!-- /.box-header -->
+      <div class="box-body">
+
+        <% @similar_answers.each do |object| %>
+          <div class="callout callout-<%= correct_style(object[:answer].correct) %>">
+            <h4>
+              <%= object[:answer].user.name %>
+              <a class="label label-default pull-right" style="margin: 5px" title="Visualizar resposta">
+                <i class="fa fa-eye"></i>
+              </a>
+              <a class="label label-default pull-right" style="margin: 5px" title="Visualizar relação">
+                <i class="fa fa-link"></i>
+              </a>
+            </h4>
+            Similaridade
+            <div class="progress">
+              <div class="progress-bar progress-bar-yellow progress-bar-striped"
+                  style="width: <%= object[:similarity] %>%">
+                    <%= object[:similarity] %>%
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+      </div><!-- /.box-body -->
+    </div>
+
   </div>
 </div>
+
+<script text="text/javascript">
+  function createModal(modal_name) {
+    var div = $(document.createElement('div'))
+    div.attr('id', modal_name + '-container');
+    $('body').append(div);
+
+    if (modal_name == "answer-content")
+      $(div).html("<%= escape_javascript(render partial: 'answer_content_modal', locals: { answer: @answer }) %>");
+
+    $('body').append(div);
+  }
+
+  $('#show-answer').click(function() {
+    showModal('answer-content');
+  });
+</script>

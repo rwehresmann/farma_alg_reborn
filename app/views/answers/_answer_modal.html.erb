@@ -18,13 +18,20 @@
             <tr>
               <td>
                 <button id="show-answer" class="btn btn-primary text-center"
-                        style="display: block; width: 100%">Visualizar resposta</button>
+                        style="width: 100%">Visualizar resposta</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <%= link_to "Exibir mais detalhes", answer_path(@answer),
+                            method: :get, class: "btn btn-primary text-center",
+                            style: "width: 100%", target: "_blank" %>
               </td>
             </tr>
             <tr>
               <td>
                 <button id="add-answer-<%= @answer.id %>-similar" class="btn btn-primary text-center"
-                        style="display: block; width: 100%">Adicionar respostas semelhantes</button>
+                        style="width: 100%">Adicionar respostas semelhantes</button>
               </td>
             </tr>
           </tbody>
