@@ -21,8 +21,8 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
   belongs_to :team
-  has_many :answer_connections, foreign_key: :answer_1_id
-  has_many :similarities, through: :answer_connections, source: :answer_2
+  has_many :answer_connections_1, class_name: "AnswerConnection", foreign_key: :answer_1_id
+  has_many :answer_connections_2, class_name: "AnswerConnection", foreign_key: :answer_2_id
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
 
@@ -53,7 +53,7 @@ class Answer < ApplicationRecord
     where("created_at BETWEEN datetime(?) AND datetime(?)", start_date, end_date)
   end
 
-  # Return the answers which the specified answer should be compared.
+  # Returns the answers which one the specified answer should be compared.
   scope :to_compare_similarity, -> (answer) do
     by_team(answer.team).by_question(answer.question).where.not(id: answer)
   end
@@ -65,6 +65,14 @@ class Answer < ApplicationRecord
   scope :by_key_words, -> (key_words) do
     return unless key_words.present?
     search(key_words, fields: [:content])
+  end
+
+  # Returns an array of hashes, where the keys are :answer with the answers
+  # object and :similarity with the similarity between both answers.
+  def similar_answers(threshold:)
+    results_1 = answers_similarity_data(answer_connections_1, threshold, :answer_2)
+    results_2 = answers_similarity_data(answer_connections_2, threshold, :answer_1)
+    (results_1 + results_2)
   end
 
   # @results is a variable who store the test case results before save the
@@ -152,5 +160,13 @@ class Answer < ApplicationRecord
     # Check if @results is defined
     def results_present?
       !@results.nil?
+    end
+
+    # Build an array of hashes, where a hash contains the answers object and the
+    # similarity between both answers.
+    def answers_similarity_data(connections, threshold, field_name)
+      connections.where("answer_connections.similarity >= ?", threshold).map do |connection|
+        { answer: connection.send(field_name), similarity: connection.similarity }
+      end
     end
 end
