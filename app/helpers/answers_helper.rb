@@ -4,8 +4,8 @@ module AnswersHelper
     "fa fa-close"
   end
 
-  def correct_box_style(answer)
-    return "box-success" if answer.correct?
-    "box-danger"
+  def correct_style(boolean)
+    return "success" if boolean == true
+    "danger"
   end
 end

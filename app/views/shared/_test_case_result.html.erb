@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
 
-    <div class="box box-solid <%= correct_box_style(test_case_result.answer) %>">
+    <div class="box box-solid box-<%= correct_style(test_case_result.answer.correct?) %>">
       <div class="box-header">
         <div class="row">
           <div class="col-md-1">
@@ -34,6 +34,6 @@
   var baseTextName = "Esperado";
   var newTextName = "Recebido";
   var tagId = "test-case-diff-<%= test_case_result.id %>"
-  
+
   diffView(baseText, newText, baseTextName, newTextName, tagId);
 </script>
