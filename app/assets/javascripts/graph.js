@@ -124,13 +124,13 @@ function getAlreadyDisplaiedAnswers() {
 // Add the answer itself, checking if is connected with another answer
 // alredy in the graph, adding a link between them if is the case.
 function addAnswer(answer_id, object) {
-  var answers_ids = getAlreadyDisplaiedAnswers();
+  var answers_ids = getAlreadyDisplaiedAnswers().push(answer_id);
 
   $.ajax({
      type: "GET",
-     url: Routes.connections_answer_path(answer_id),
+     url: Routes.answers_connections_path(),
      dataType: 'json',
-     data: { answers: answers_ids },
+     data: { answers: answers_ids, type: 'between' },
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
         else graph.addNode(answer_id, object);
@@ -143,8 +143,9 @@ function addAnswer(answer_id, object) {
 function addSimilarAnswers(answer_id, object) {
   $.ajax({
      type: "GET",
-     url: Routes.connections_answer_path(answer_id),
+     url: Routes.answers_connections_path(),
      dataType: 'json',
+     data: { answers: answer_id, type: 'with' },
      success: function(connections) {
         if (connections.length > 0) addConnections(connections);
         else graph.addNode(answer_id, object);
