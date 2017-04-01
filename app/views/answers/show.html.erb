@@ -1,14 +1,9 @@
 <div class="row">
   <div class="col-md-6">
 
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Informações principais</h3>
-        <div class="box-tools pull-right">
-          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-      </div><!-- /.box-header -->
-      <div class="box-body">
+    <%= render layout: 'shared/structures/box_default',
+               locals: { box_title: "Informações principais" } do %>
+
         <%= render partial: 'shared/answer_info', locals: { answer: @answer } %>
 
         <br></br>
@@ -17,70 +12,53 @@
           Visualizar resposta
         </button>
 
-      </div><!-- /.box-body -->
-    </div>
+    <% end %>
 
   </div><!-- /.col-md-6 -->
 
   <div class="col-md-6">
 
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Resultados dos casos de teste</h3>
-        <div class="box-tools pull-right">
-          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-      </div><!-- /.box-header -->
-      <div class="box-body">
-        <% @answer.test_cases_results.each do |test_case_result| %>
-          <%= render partial: 'shared/test_case_result',
-                     locals: { test_case_result: test_case_result } %>
-        <% end %>
-      </div><!-- /.box-body -->
-    </div>
+    <%= render layout: 'shared/structures/box_default',
+               locals: { box_title: "Informações principais" } do %>
 
+       <% @answer.test_cases_results.each do |test_case_result| %>
+         <%= render partial: 'shared/test_case_result',
+                    locals: { test_case_result: test_case_result } %>
+       <% end %>
+
+    <% end %>
   </div>
 
 </div>
 
 <div class="row">
   <div class="col-md-6">
+    <%= render layout: 'shared/structures/box_default',
+               locals: { box_title: "Comentários" } do %>
 
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Comentários</h3>
-        <div class="box-tools pull-right">
-          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-      </div><!-- /.box-header -->
-      <div class="box-body">
-
-      </div><!-- /.box-body -->
-    </div>
-
+    <% end %>
   </div>
 
   <div class="col-md-6">
-
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Respostas semelhantes</h3>
-        <div class="box-tools pull-right">
-          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-      </div><!-- /.box-header -->
-      <div class="box-body">
+    <%= render layout: 'shared/structures/box_default',
+               locals: { box_title: "Respostas semelhantes" } do %>
 
         <% @similar_answers.each do |object| %>
           <div class="callout callout-<%= correct_style(object[:answer].correct) %>">
             <h4>
               <%= object[:answer].user.name %>
-              <a class="label label-default pull-right" style="margin: 5px" title="Visualizar resposta">
+              <%= link_to answer_path(object[:answer].id),
+                          class: "label label-default pull-right",
+                          style: "margin: 5px", target: "_blank",
+                          title: "Visualizar resposta" do %>
                 <i class="fa fa-eye"></i>
-              </a>
-              <a class="label label-default pull-right" style="margin: 5px" title="Visualizar relação">
+              <% end %>
+
+              <%= link_to answer_connection_path(object[:connection_id]),
+                          class: "label label-default pull-right",
+                          style: "margin: 5px", title: "Visualizar relação" do %>
                 <i class="fa fa-link"></i>
-              </a>
+              <% end %>
             </h4>
             Similaridade
             <div class="progress">
@@ -92,10 +70,10 @@
           </div>
         <% end %>
 
-      </div><!-- /.box-body -->
-    </div>
+    <% end %>
 
   </div>
+
 </div>
 
 <script text="text/javascript">
@@ -113,4 +91,14 @@
   $('#show-answer').click(function() {
     showModal('answer-content');
   });
+
+  <% @similar_answers.each do |object| %>
+    $('#show-answer-<%= object[:answer].id %>').click(function() {
+
+    });
+
+    $('#show-connection-<%= object[:connection_id] %>').click(function() {
+
+    });
+  <% end %>
 </script>

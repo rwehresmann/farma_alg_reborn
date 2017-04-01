@@ -5,15 +5,22 @@ class AnswerConnectionsController < ApplicationController
   before_action :find_connection, only: [:show, :destroy]
 
   def show
-    @link_html_id = params[:link_html_id]
-
-    respond_to { |format| format.js }
+    respond_to do |format|
+      format.js { @link_html_id = params[:link_html_id] }
+      format.html
+    end
   end
 
   def destroy
     @connection.destroy
 
-    respond_to { |format| format.js }
+    respond_to do |format|
+      format.js
+      format.html do
+        flash[:success] = "Relacionamento deletado!"
+        redirect_to session[:previous_answer_url]
+      end
+    end
   end
 
     private
