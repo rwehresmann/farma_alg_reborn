@@ -68,7 +68,7 @@ class Answer < ApplicationRecord
   end
 
   # Returns an array of hashes, where the keys are :answer with the answers
-  # object and :similarity with the similarity between both answers.
+  # object, :connection_id and :similarity with the similarity between both answers.
   def similar_answers(threshold:)
     results_1 = answers_similarity_data(answer_connections_1, threshold, :answer_2)
     results_2 = answers_similarity_data(answer_connections_2, threshold, :answer_1)
@@ -162,11 +162,12 @@ class Answer < ApplicationRecord
       !@results.nil?
     end
 
-    # Build an array of hashes, where a hash contains the answers object and the
-    # similarity between both answers.
+    # Build an array of hashes, where a hash contains the answers object,
+    # connection id and the similarity between both answers.
     def answers_similarity_data(connections, threshold, field_name)
       connections.where("answer_connections.similarity >= ?", threshold).map do |connection|
-        { answer: connection.send(field_name), similarity: connection.similarity }
+        { answer: connection.send(field_name), connection_id: connection.id,
+          similarity: connection.similarity }
       end
     end
 end
