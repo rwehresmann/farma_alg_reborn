@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: [:new, :create]
   before_action :find_answer, only: [:show]
+  before_action :save_answer_url, only: [:show]
 
   def new
     @answer = Answer.new
@@ -64,5 +65,11 @@ class AnswersController < ApplicationController
 
     def find_question
       @question = Question.find(params[:id])
+    end
+
+    # Add answer url in sessions to be used in a redirect when an answer
+    # connection is deleted.
+    def save_answer_url
+      session[:previous_answer_url] = answer_url(@answer)
     end
 end
