@@ -1,0 +1,91 @@
+<div class="callout callout-info">
+  <p class="text-center">
+    <b>Grau de semelhanca: </b> <%= @connection.similarity %>
+  </p>
+</div>
+
+  <table class="table table-bordered text-center">
+    <thead>
+      <th></th>
+      <th>Resposta 1</th>
+      <th>Resposta 2</th>
+    </thead>
+
+    <% if @connection.same_user? %>
+      <tbody>
+          <tr>
+            <td><b>Aluno</b></td>
+            <td colspan="2"><%= @connection.answer_1.user.name %></td>
+          </tr>
+
+          <tr>
+            <td><b>Questão</b></td>
+            <td colspan="2"><%= @connection.answer_1.question.title %></td>
+          </tr>
+
+          <tr>
+            <td><b>Exercício</b></td>
+            <td colspan="2"><%= @connection.answer_1.question.exercise.title %></td>
+          </tr>
+      </tbody>
+    <% else %>
+      <tbody>
+        <tr>
+          <td><b>Aluno</b></td>
+          <td><%= @connection.answer_1.user.name %></td>
+          <td><%= @connection.answer_2.user.name %></td>
+        </tr>
+
+        <tr>
+          <td><b>Questão</b></td>
+          <td><%= @connection.answer_1.question.title %></td>
+          <td><%= @connection.answer_2.question.title %></td>
+        </tr>
+
+        <tr>
+          <td><b>Exercício</b></td>
+          <td><%= @connection.answer_1.question.exercise.title %></td>
+          <td><%= @connection.answer_2.question.exercise.title %></td>
+        </tr>
+      </tbody>
+    <% end %>
+
+  </table>
+
+<table style="width: 100%">
+  <tbody>
+    <tr>
+      <td>
+        <button class="btn btn-primary text-center" style="width: 100%"
+                data-toggle="collapse" data-target="#diff">Comparar respostas</button>
+        <div id="diff" class="collapse"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <%= link_to "Rejeitar similaridade",
+                    answer_connection_path(@connection), method: :delete,
+                    remote: true, style: "width: 100%",
+                    class: "btn btn-primary text-center",
+                    data: { confirm: "Uma vez rejeitada, a similaridade será excluída e não aparecerá mais no grafo. Deseja confirmar esta ação?" }
+        %>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<script text="text/javascript">
+  $('#connection-container').on('hidden.bs.modal', function () {
+    $("#<%= @link_html_id %>").attr('stroke', "black");
+  });
+
+  var baseText = "<%= j raw(@connection.answer_1.content) %>";
+  var newText = "<%= j raw(@connection.answer_2.content) %>";
+  var baseTextName = "Resposta 1";
+  var newTextName = "Resposta 2";
+  var tagId = "diff"
+
+  diffView(baseText, newText, baseTextName, newTextName, tagId);
+</script>
