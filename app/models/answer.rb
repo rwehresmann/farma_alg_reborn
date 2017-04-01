@@ -13,9 +13,10 @@ class Answer < ApplicationRecord
   LIMIT_TO_START_VARIATION = 10
 
   before_create :check
+  before_validation :set_attempt
   after_create :save_test_cases_results, if: :results_present?
 
-  validates_presence_of :content
+  validates_presence_of :content, :attempt
   validates_inclusion_of :correct, in: [true, false]
 
   belongs_to :user
@@ -169,5 +170,11 @@ class Answer < ApplicationRecord
         { answer: connection.send(field_name), connection_id: connection.id,
           similarity: connection.similarity }
       end
+    end
+
+    # Set answer attempt number.
+    def set_attempt
+      attempts_count = Answer.by_question(question).by_user(user).count
+      self.attempt = attempts_count + 1
     end
 end

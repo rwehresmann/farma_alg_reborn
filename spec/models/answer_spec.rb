@@ -36,8 +36,9 @@ RSpec.describe Answer, type: :model do
       expect(relationship_type(Answer, :test_cases_results)).to eq(:has_many)
     end
 
-    it "has many similarities" do
-      expect(relationship_type(Answer, :similarities)).to eq(:has_many)
+    it "has many connections" do
+      expect(relationship_type(Answer, :answer_connections_1)).to eq(:has_many)
+      expect(relationship_type(Answer, :answer_connections_2)).to eq(:has_many)
     end
   end
 
@@ -149,6 +150,15 @@ RSpec.describe Answer, type: :model do
           expect(results_count.call(answer)).to eq(0)
         end
       end
+    end
+
+    describe 'set_attempt' do
+      let(:user) { create(:user) }
+      let(:question) { create(:question) }
+      let(:answers) { create_pair(:answer, user: user, question: question) }
+
+      it { expect(answers[0].attempt).to eq(1) }
+      it { expect(answers[1].attempt).to eq(2) }
     end
   end
 

@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20170228201615) do
     t.boolean  "correct",           default: false, null: false
     t.boolean  "compilation_error", default: false
     t.string   "compiler_output"
+    t.integer  "attempt",                           null: false
     t.integer  "user_id"
     t.integer  "question_id"
     t.integer  "team_id"

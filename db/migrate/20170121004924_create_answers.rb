@@ -5,6 +5,7 @@ class CreateAnswers < ActiveRecord::Migration[5.0]
       t.boolean :correct, default: false, null: false
       t.boolean :compilation_error, default: false
       t.string  :compiler_output
+      t.integer :attempt, null: false
       t.references :user, :question, :team
 
       t.timestamps null: false
