@@ -34,7 +34,7 @@ function nodeLayout(node) {
   var span_ui = Viva.Graph.svg('tspan')
     .attr("x","-25px")
     .attr("dy","1.2em")
-    .text(data.user.name + " #" + data.question.title);
+    .text(data.user.name + " @" + data.question.title + "#" + data.attempt);
 
   var circle = Viva.Graph.svg('circle')
     .attr('cx', radius)

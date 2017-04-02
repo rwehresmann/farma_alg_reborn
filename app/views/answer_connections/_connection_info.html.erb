@@ -27,6 +27,16 @@
             <td><b>Exercício</b></td>
             <td colspan="2"><%= @connection.answer_1.question.exercise.title %></td>
           </tr>
+
+          <tr>
+            <td><b>Tentativa</b></td>
+            <td colspan="2"><%= @connection.answer_1.attempt %></td>
+          </tr>
+
+          <tr>
+            <td><b>Correta</b></td>
+            <td colspan="2"><%= @connection.answer_1.correct %></td>
+          </tr>
       </tbody>
     <% else %>
       <tbody>
@@ -46,6 +56,18 @@
           <td><b>Exercício</b></td>
           <td><%= @connection.answer_1.question.exercise.title %></td>
           <td><%= @connection.answer_2.question.exercise.title %></td>
+        </tr>
+
+        <tr>
+          <td><b>Tenativa</b></td>
+          <td><%= @connection.answer_1.attempt %></td>
+          <td><%= @connection.answer_2.attempt %></td>
+        </tr>
+
+        <tr>
+          <td><b>Correta</b></td>
+          <td><%= @connection.answer_1.correct %></td>
+          <td><%= @connection.answer_2.correct %></td>
         </tr>
       </tbody>
     <% end %>
