@@ -28,28 +28,3 @@
 //= require jsdifflib/difflib
 //= require jsdifflib/diffview
 //= require_tree .
-
-
-// If modal isn't present in the page, create it (even if 'create' flag is
-// false), else create it (first excluding it from the page) only if 'create'
-// flag is true.
-// OBS: 'createModal', used inside 'showModal', must be created inside the
-// view where 'showModal' is called, using the apropriate tag ids
-// ('modal_name-container', 'modal_name-modal').
-// OBS2: 'createModal' cannot be created here because it uses rails 'render'
-// method (and in assets isn't alowed to use ruby embed code).
-function showModal(modal_name, create = true) {
-  var modal = $('#' + modal_name + '-container');
-
-  if (modal.length) {
-    if (create) {
-      modal.remove();
-      // When modal container is removed, bootstrap will not be able to find a
-      // reference to close it, so modal-backdrop must be forced to be removed.
-      $('.modal-backdrop').remove();
-      createModal(modal_name);
-    }
-  } else createModal(modal_name);
-
-  $('#' + modal_name + '-modal').modal('show');
-}
