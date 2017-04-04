@@ -52,7 +52,7 @@ function nodeLayout(node) {
        data: { node_html_id: $(this).attr('id') }
      });
 
-    showModal("answer");
+    showModal("answer", true);
   });
 
   $(circle).click(function() {
