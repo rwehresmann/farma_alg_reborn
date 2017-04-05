@@ -15,6 +15,7 @@ module TeamsHelper
   # Get the percentage of representativeness of the score, considering the
   # base score.
   def score_representation(base_score, score)
+    return 0 if base_score == 0
     "#{(100 * score) / base_score}%"
   end
 
