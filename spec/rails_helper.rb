@@ -13,6 +13,7 @@ require 'capybara/poltergeist'
 
 require 'support/helpers/relationships_helper'
 require 'support/helpers/answer_process_helper'
+require 'support/helpers/ace_editor_helper'
 
 Capybara.javascript_driver = :poltergeist
 # Time must be high because test involving Answer model need a time to compile
@@ -97,6 +98,7 @@ RSpec.configure do |config|
   # Helpers
   config.include Helpers::Relationships, type: :model
   config.include Helpers::AnswerProcessHelper
+  config.include Helpers::AceEditorHelper, type: :feature
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include Devise::Test::ControllerHelpers, :type => :view
   config.include Warden::Test::Helpers
