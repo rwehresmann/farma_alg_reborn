@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228201615) do
+ActiveRecord::Schema.define(version: 20170406005128) do
 
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
@@ -48,6 +48,16 @@ ActiveRecord::Schema.define(version: 20170228201615) do
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["team_id"], name: "index_answers_on_team_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "answer_id"
+    t.integer  "user_id"
+    t.text     "content",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answer_id"], name: "index_comments_on_answer_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

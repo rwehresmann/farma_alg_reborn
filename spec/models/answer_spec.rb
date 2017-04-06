@@ -40,6 +40,10 @@ RSpec.describe Answer, type: :model do
       expect(relationship_type(Answer, :answer_connections_1)).to eq(:has_many)
       expect(relationship_type(Answer, :answer_connections_2)).to eq(:has_many)
     end
+
+    it "has many comments" do
+      expect(relationship_type(Answer, :comments)).to eq(:has_many)
+    end
   end
 
   describe "Callbacks -->" do

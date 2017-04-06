@@ -26,6 +26,7 @@ class Answer < ApplicationRecord
   has_many :answer_connections_2, class_name: "AnswerConnection", foreign_key: :answer_2_id
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
+  has_many :comments
 
   scope :by_user, -> (user) do
     return unless user.present?
