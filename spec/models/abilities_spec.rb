@@ -23,6 +23,7 @@ describe "User" do
         let(:question) { create(:question, exercise: exercise) }
         let(:test_case) { create(:test_case, question: question) }
         let(:team) { create(:team, owner: user) }
+        let(:comment) { create(:comment, user: user) }
 
         it { should be_able_to(:destroy, exercise) }
         it { should be_able_to(:update, exercise) }
@@ -32,6 +33,9 @@ describe "User" do
         it { should be_able_to(:update, test_case) }
         it { should be_able_to(:destroy, team) }
         it { should be_able_to(:answers, team) }
+        it { should be_able_to(:create, comment) }
+        it { should be_able_to(:update, comment) }
+        it { should be_able_to(:destroy, comment) }
       end
 
       context "when access objects that he doesn't created -->" do
@@ -39,12 +43,14 @@ describe "User" do
         let(:question) { create(:question) }
         let(:test_case) { create(:test_case) }
         let(:team) { create(:team) }
+        let(:comment) { create(:comment) }
         let(:proibited_abilities) { [:update, :destroy] }
 
         it { should_not be_able_to(proibited_abilities, exercise) }
         it { should_not be_able_to(proibited_abilities, question) }
         it { should_not be_able_to(proibited_abilities, test_case) }
-        it { should_not be_able_to([:update, :destroy, :unenroll, :read], team) }
+        it { should_not be_able_to(proibited_abilities + [:unenroll, :read], team) }
+        it { should_not be_able_to(proibited_abilities, comment) }
 
         context "when is enrolled in a team" do
           before { team.enroll(user) }
@@ -72,6 +78,9 @@ describe "User" do
       it { should_not be_able_to(:answers, Team) }
       it { should_not be_able_to(:show, AnswerConnection) }
       it { should_not be_able_to(:destroy, AnswerConnection) }
+      it { should_not be_able_to(:create, Comment) }
+      it { should_not be_able_to(:update, Comment) }
+      it { should_not be_able_to(:destroy, Comment) }
 
       context "when unenrolled in the team" do
         let(:team) { create(:team) }
