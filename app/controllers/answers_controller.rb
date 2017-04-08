@@ -22,7 +22,11 @@ class AnswersController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { @similar_answers = @answer.similar_answers(threshold: 10) }
+      format.html do
+        @similar_answers = @answer.similar_answers(threshold: 10)
+        @comments = @answer.comments
+        @comment = Comment.new
+      end
       format.js { @node_html_id = params[:node_html_id] }
     end
   end
