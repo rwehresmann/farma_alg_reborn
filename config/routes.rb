@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   resources :exercises, shallow: true do
     resources :questions do
       member do
-        resources :answers, only: [:new, :create, :show]
+        resources :answers, only: [:new, :create, :show], shallow: true do
+          resources :comments, only: [:create, :destroy, :update]
+        end
         post :test_answer
       end
 

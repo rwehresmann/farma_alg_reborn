@@ -1,0 +1,8 @@
+<% if @comment.errors.any? %>
+  $('#edit_comment_<%= @comment.id %>').prepend('<%= escape_javascript(render "shared/error_messages", object: @comment) %>');
+<% else %>
+  // Replace old comment.
+  $('#comment-<%= @comment.id %>').replaceWith('<%= escape_javascript(render partial: "comment", locals: { comment: @comment }) %>')
+  // Replace form to a new for create a comment.
+  $('#comments-form').html("<%= escape_javascript(render partial: 'comments/form', locals: { comment: @new_comment, answer: @answer, btn_text: 'Postar comentário' } ) %>");
+<% end %>

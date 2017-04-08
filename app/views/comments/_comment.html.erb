@@ -1,0 +1,48 @@
+<li id="comment-<%= comment.id %>">
+  <i class="fa fa-envelope bg-blue"></i>
+
+  <div class="timeline-item">
+    <span class="time">
+      <i class="fa fa-clock-o"></i>
+      <%= comment.created_at.strftime("%d/%m/%Y %H:%M:%S") %>
+    </span>
+
+    <div class="timeline-body">
+      <div id="comment-<%= comment.id %>-content">
+        <%= comment.content %>
+      </div>
+    </div>
+
+    <div class="pull-left" style="color: grey; margin-right: 20px" title="Hora de postagem">
+      <i class="fa fa-clock-o"></i>
+      <%= comment.created_at.strftime("%H:%M:%S") %>
+    </div>
+
+    <% if comment.created_at != comment.updated_at %>
+      <div class="pull-left" style="color: grey" title="Data e hora de alteração">
+        <i class="fa fa-pencil-square-o"></i>
+        <%= comment.created_at.strftime("%d/%m/%Y %H:%M:%S") %>
+      </div>
+    <% end %>
+
+    <div class="pull-right">
+      <%= link_to comment, method: :delete, remote: true, title: "Deletar comentário",
+          data: { confirm: "Tem certeza que deseja excluir esse comentário?" } do %>
+          <i class="fa fa-times" style="color: red; margin-right: 4px"></i>
+      <% end %>
+
+      <a id="edit-comment-<%= comment.id %>" href="#" target="">
+        <i class="fa fa-pencil-square-o"></i>
+      </a>
+    </div>
+
+  </div>
+</li>
+
+<script>
+  $('#edit-comment-<%= comment.id %>').click(function(event) {
+    event.preventDefault();
+    $('#comments-form').html("<%= escape_javascript(render partial: 'comments/form', locals: { comment: comment, answer: nil, btn_text: 'Salvar' } ) %>");
+    $('#comments-form').append("<a id='cancel-edit' href='#'>Cancelar edição</a>");
+  });
+</script>
