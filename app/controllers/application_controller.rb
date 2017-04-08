@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     flash[:warning] = exception.message
     respond_to do |format|
       format.html { redirect_to request.referer || root_url }
-      format.js   { render 'shared/unauthorized' }
+      format.js   { render 'shared/unauthorized', status: :unauthorized }
     end
   end
 
