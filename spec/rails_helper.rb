@@ -16,9 +16,7 @@ require 'support/helpers/answer_process_helper'
 require 'support/helpers/ace_editor_helper'
 
 Capybara.javascript_driver = :poltergeist
-# Time must be high because test involving Answer model need a time to compile
-# and run the answer.
-Capybara.default_max_wait_time = 20
+Capybara.default_max_wait_time = 30
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -40,9 +38,6 @@ Capybara.default_max_wait_time = 20
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
   # Database clean strategies are all treated whit DatabaseCleaner, because
   # 'before(:all)' blocks are used to speed up the test suite (these blocks are)
   # invoked before the transaction is opened, living data around.
@@ -56,20 +51,20 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each, :js => true) do
+  config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.append_after(:each) do
     DatabaseCleaner.clean
-  end
-
-  config.after(:all) do
-    DatabaseCleaner.clean_with(:truncation)
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
