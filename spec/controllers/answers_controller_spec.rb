@@ -64,7 +64,7 @@ RSpec.describe AnswersController, type: :controller do
   describe "GET #connections" do
     let(:answer) { create(:answer) }
 
-    subject { get :connections, xhr: true, params: { id: answer } }
+    subject { get :connections, xhr: true, params: { id: answer, type: "with" } }
 
     context "when logged-in" do
       before do
