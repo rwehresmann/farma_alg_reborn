@@ -27,12 +27,17 @@ describe "User" do
 
         it { should be_able_to(:destroy, exercise) }
         it { should be_able_to(:update, exercise) }
+
         it { should be_able_to(:destroy, question) }
         it { should be_able_to(:update, question) }
+
         it { should be_able_to(:destroy, test_case) }
         it { should be_able_to(:update, test_case) }
+
         it { should be_able_to(:destroy, team) }
         it { should be_able_to(:answers, team) }
+        it { should be_able_to(:add_or_remove_exercise, team) }
+
         it { should be_able_to(:create, comment) }
         it { should be_able_to(:update, comment) }
         it { should be_able_to(:destroy, comment) }
@@ -51,6 +56,7 @@ describe "User" do
         it { should_not be_able_to(proibited_abilities, test_case) }
         it { should_not be_able_to(proibited_abilities + [:unenroll, :read], team) }
         it { should_not be_able_to(proibited_abilities, comment) }
+        it { should_not be_able_to(:add_or_remove_exercise, team) }
 
         context "when is enrolled in a team" do
           before { team.enroll(user) }
@@ -67,17 +73,23 @@ describe "User" do
 
       it { should_not be_able_to(:update, Exercise) }
       it { should_not be_able_to(:destroy, Exercise) }
+
       it { should_not be_able_to(:update, Question) }
       it { should_not be_able_to(:destroy, Question) }
+
       it { should_not be_able_to(:update, TestCase) }
       it { should_not be_able_to(:destroy, TestCase) }
       it { should_not be_able_to(:test, TestCase) }
       it { should_not be_able_to(:test_all, TestCase) }
+
       it { should_not be_able_to(:update, Team) }
       it { should_not be_able_to(:destroy, Team) }
       it { should_not be_able_to(:answers, Team) }
+      it { should_not be_able_to(:add_or_remove_exercise, Team) }
+
       it { should_not be_able_to(:show, AnswerConnection) }
       it { should_not be_able_to(:destroy, AnswerConnection) }
+
       it { should_not be_able_to(:create, Comment) }
       it { should_not be_able_to(:update, Comment) }
       it { should_not be_able_to(:destroy, Comment) }

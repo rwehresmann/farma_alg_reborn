@@ -24,7 +24,7 @@ class Ability
         question.exercise.user == user
       end
 
-      can [:update, :destroy, :answers], Team do |team|
+      can [:update, :destroy, :answers, :add_or_remove_exercise], Team do |team|
         user.owner?(team)
       end
 
