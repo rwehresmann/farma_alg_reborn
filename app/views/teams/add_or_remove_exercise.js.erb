@@ -1,0 +1,3 @@
+$('#exercises-table').html("<%= escape_javascript(render 'teacher_exercises_table') %>");
+
+$('#add-exercise-<%= @exercise.id %>').html("<%= escape_javascript(render partial: 'add_exercise', locals: { exercise: @exercise }) %>")

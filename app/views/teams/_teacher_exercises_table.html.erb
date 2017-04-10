@@ -1,0 +1,26 @@
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <th style="width: 10px">#</th>
+      <th>Exercício</th>
+      <th style="width: 50px"></th>
+    </tr>
+
+    <% @team_exercises.each_with_index do |exercise, index| %>
+      <tr id="team-exercise-<%= exercise.id %>">
+        <td><%= index %>.</td>
+        <td><%= link_to exercise.title, exercises_url(exercise) %></td>
+        <td>
+          <%= link_to add_or_remove_exercise_team_path(@team, exercise, operation: :remove),
+                      method: :post, remote: true, title: "Remover exercício",
+                      data: { confirm: "Tem certeza que deseja remover esse exercício da disciplina?" } do %>
+              <div class="text-center">
+                <i class="fa fa-times" style="color: red; margin-right: 4px"></i>
+              </div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    
+  </tbody>
+</table>

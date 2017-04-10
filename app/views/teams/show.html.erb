@@ -4,7 +4,7 @@
       <a href="#rankings" data-toggle="tab" aria-expanded="true">Rankings</a>
     </li>
     <li>
-      <a href="#exercise-lists" data-toggle="tab" aria-expanded="true">Listas de exercício</a>
+      <a href="#list-exercises" data-toggle="tab" aria-expanded="true">Listas de exercício</a>
     </li>
     <li>
       <a href="#enroled-students" data-toggle="tab" aria-expanded="true">Alunos matriculados</a>
@@ -28,15 +28,27 @@
                                                    base_score: @weekly_base_score } %>
         </div>
       </div>
+
       <% if @team.enrolled?(current_user) %>
         <br></br>
         <%= render partial: 'incentive_ranking' %>
       <% end %>
     </div>
 
-    <div class="tab-pane" id="exercise-lists">
+    <div class="tab-pane" id="list-exercises">
       <div class="box-body">
-        <%= render 'exercises_table' %>
+        <%= link_to_if(can?(:add_or_remove_exercise, @team), "Adicionar exercício",
+                       '#', id: "add-exercise", class: "btn btn-primary pull-right") %>
+
+        <br></br>
+
+        <div id="exercises-table">
+          <% if current_user.owner?(@team) %>
+            <%= render 'teacher_exercises_table' %>
+          <% else %>
+            <%= render 'student_exercises_table' %>
+          <% end %>
+        </div>
       </div>
     </div>
 
@@ -64,3 +76,20 @@
     </div>
   </div>
 </div>
+
+<script text="text/javascript">
+  function createModal(modal_name) {
+    var div = $(document.createElement('div'))
+    div.attr('id', modal_name + '-container');
+    $('body').append(div);
+    $(div).html("<%= escape_javascript(render 'exercises_modal') %>");
+    $('body').append(div);
+  }
+</script>
+
+<script text="text/javascript">
+  createModal("exercises");
+  $("#add-exercise").click(function() {
+    showModal("exercises", false);
+  });
+</script>
