@@ -16,11 +16,11 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :users, only: [:index, :show]
   resources :teams do
     member do
       post :enroll
       post :unenroll
+      post 'add_or_remove_exercise/:exercise_id', to: 'teams#add_or_remove_exercise', as: :add_or_remove_exercise
       get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'
       get :answers
     end

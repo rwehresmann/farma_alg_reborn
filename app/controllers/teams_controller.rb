@@ -4,7 +4,10 @@ class TeamsController < ApplicationController
   include AnswerObjectToGraph
 
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update, :destroy]
+  before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update,
+                                   :destroy, :add_or_remove_exercise]
+  before_action :find_exercise, only: [:add_or_remove_exercise]
+  before_action :find_exercises, only: [:show]
 
   def index
     @teams = find_teams
@@ -30,13 +33,11 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @exercises = @team.exercises
     records = UserScore.rank(team: @team, limit: 5)
     set_general_ranking_data(records)
     set_weekly_ranking_data(records)
     set_incentive_ranking_data if @team.enrolled?(current_user)
     @enrolled_users = @team.users
-    @exercises = @team.exercises
   end
 
   def edit
@@ -96,6 +97,13 @@ class TeamsController < ApplicationController
     respond_to { |format| format.js { render "teams/graph/answers" } }
   end
 
+  def add_or_remove_exercise
+    @team.send("#{params[:operation]}_exercise", @exercise)
+    find_exercises
+
+    respond_to { |format| format.js }
+  end
+
     private
 
     def team_params
@@ -110,6 +118,15 @@ class TeamsController < ApplicationController
 
     def find_team
       @team = Team.find(params[:id])
+    end
+
+    def find_exercise
+      @exercise = Exercise.find(params[:exercise_id])
+    end
+
+    def find_exercises
+      @team_exercises = @team.exercises
+      @teacher_exercises = current_user.exercises
     end
 
     # Format to an array of hashes, where the first key is the user object, and

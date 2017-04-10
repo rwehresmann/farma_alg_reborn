@@ -105,28 +105,67 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "GET #show" do
-    let(:team) { create(:team) }
-    subject { get :show, params: { id: team } }
+    subject(:show_team) { get :show, params: { id: team } }
 
-    context "when logged-in" do
-      before do
-        user = create(:user)
-        team.enroll(user)
-        sign_in user
-        subject
+    context "when logged-in -->" do
+      context "when is a student" do
+        let(:user) { create(:user) }
+        let(:team) { create(:team) }
+
+        before do
+          create(:earned_score, team: team)
+          create(:user_score, user: user)
+          team.enroll(user)
+          sign_in user
+          show_team
+        end
+
+        it { expect(response).to have_http_status(:ok) }
+        it { expect(response.content_type).to eq("text/html") }
+        it { expect(response).to render_template("teams/show") }
+        it { expect(assigns(:team)).to_not be_nil }
+        it { expect(assigns(:team_exercises)).to_not be_nil }
+        it { expect(assigns(:general_ranking)).to_not be_nil }
+        it { expect(assigns(:general_base_score)).to_not be_nil }
+        it { expect(assigns(:weekly_ranking)).to_not be_nil }
+        it { expect(assigns(:weekly_base_score)).to_not be_nil }
+        it { expect(assigns(:incentive_ranking)).to_not be_nil }
+        it { expect(assigns(:current_user_index)).to_not be_nil }
+        it { expect(assigns(:enrolled_users)).to_not be_nil }
       end
 
-      it "renders show view" do
-        expect(response).to render_template(:show)
+      context "when is the owner of the team" do
+        let(:user) { create(:user, :teacher) }
+        let!(:team) { create(:team, owner: user) }
+
+        before do
+          create(:earned_score, team: team)
+          create(:user_score, team: team)
+          sign_in user
+          show_team
+        end
+
+        it { expect(response).to have_http_status(:ok) }
+        it { expect(response.content_type).to eq("text/html") }
+        it { expect(response).to render_template("teams/show") }
+        it { expect(assigns(:team)).to_not be_nil }
+        it { expect(assigns(:team_exercises)).to_not be_nil }
+        it { expect(assigns(:teacher_exercises)).to_not be_nil }
+        it { expect(assigns(:general_ranking)).to_not be_nil }
+        it { expect(assigns(:general_base_score)).to_not be_nil }
+        it { expect(assigns(:weekly_ranking)).to_not be_nil }
+        it { expect(assigns(:weekly_base_score)).to_not be_nil }
+        it { expect(assigns(:enrolled_users)).to_not be_nil }
       end
     end
 
     context "when not logged-in" do
-      before { subject }
+      let(:team) { create(:team) }
+      before { show_team }
 
-      it "redirects to sign in page" do
-        expect(response).to redirect_to(root_url)
-      end
+      it { expect(response).to have_http_status(:found) }
+      it { expect(flash[:warning]).to_not be_nil }
+      it { expect(response).to redirect_to(root_url) }
     end
   end
 
@@ -269,6 +308,47 @@ RSpec.describe TeamsController, type: :controller do
 
       it { expect(flash[:warning]).to_not be_nil }
       it { expect(response).to render_template("shared/unauthorized") }
+    end
+  end
+
+  describe 'POST #add_or_remove_exercise' do
+    let(:user) { create(:user, :teacher) }
+    let(:team) { create(:team, owner: user) }
+    let(:exercise) { create(:exercise) }
+
+    context "when adding" do
+      before do
+        sign_in user
+        post :add_or_remove_exercise, xhr: true,
+             params: { id: team, exercise_id: exercise, operation: :add }
+      end
+
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("text/javascript") }
+      it { expect(response).to render_template("teams/add_or_remove_exercise") }
+      it { expect(assigns(:team)).to_not be_nil }
+      it { expect(assigns(:exercise)).to_not be_nil }
+      it { expect(assigns(:team_exercises)).to_not be_nil }
+      it { expect(assigns(:teacher_exercises)).to_not be_nil }
+      it { expect(team.exercises.count).to eq(1) }
+    end
+
+    context "when removing" do
+      before do
+        sign_in user
+        team.add_exercise(exercise)
+        post :add_or_remove_exercise, xhr: true,
+             params: { id: team, exercise_id: exercise, operation: :remove }
+      end
+
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("text/javascript") }
+      it { expect(response).to render_template("teams/add_or_remove_exercise") }
+      it { expect(assigns(:team)).to_not be_nil }
+      it { expect(assigns(:exercise)).to_not be_nil }
+      it { expect(assigns(:team_exercises)).to_not be_nil }
+      it { expect(assigns(:teacher_exercises)).to_not be_nil }
+      it { expect(team.exercises.count).to eq(0) }
     end
   end
 end

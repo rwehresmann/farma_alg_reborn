@@ -54,7 +54,7 @@
         <div class="box-body">
 
           <ul class="list-unstyled">
-            <% @exercises.each do |exercise| %>
+            <% @team_exercises.each do |exercise| %>
                 <li>
                   <%= check_box_tag nil, exercise.id, false, id: "exercise-#{exercise.id}" %>
                   <%= exercise.title %>
@@ -80,7 +80,7 @@
 
 
 <script text="text/javascript">
-  <% @exercises.each do |exercise| %>
+  <% @team_exercises.each do |exercise| %>
     $('#exercise-<%= exercise.id %>').click(function () {
       checked = $(this).is(':checked');
       questions = $('#exercise-questions-<%= exercise.id %> li input').prop('checked', checked);
