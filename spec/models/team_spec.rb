@@ -109,4 +109,49 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe '#add_exercise' do
+    context "when exercise isn't associated to the team yet" do
+      let(:team) { create(:team) }
+      let(:exercise) { create(:exercise) }
+
+      before { team.add_exercise(exercise) }
+
+      it { expect(team.exercises).to include(exercise) }
+    end
+
+    context "when exercise is already associated to the team" do
+      let(:exercise) { create(:exercise) }
+      let(:team) { create(:team, exercises: [team]) }
+
+      subject { team.add_exercise(exercise) }
+
+      it { expect{ subject }.to raise_error }
+    end
+  end
+
+  describe '#remove_exercise' do
+    let(:exercise) { create(:exercise) }
+    let(:team) { create(:team, exercises: [exercise]) }
+
+    before { team.remove_exercise(exercise) }
+
+    it { expect(team.exercises).to_not include(exercise) }
+  end
+
+  describe '#have_exercise?' do
+    context "when yes" do
+      let(:exercise) { create(:exercise) }
+      let(:team) { create(:team, exercises: [exercise]) }
+
+      it { expect(team.have_exercise?(exercise)).to be_truthy }
+    end
+
+    context "when no" do
+      let(:exercise) { create(:exercise) }
+      let(:team) { create(:team) }
+
+      it { expect(team.have_exercise?(exercise)).to be_falsey }
+    end
+  end
 end

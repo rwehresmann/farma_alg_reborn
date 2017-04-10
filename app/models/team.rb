@@ -36,4 +36,17 @@ class Team < ApplicationRecord
   def owner?(user)
     self.owner == user
   end
+
+  def add_exercise(exercise)
+    raise "This exercise already exists in this team!" if have_exercise?(exercise)
+    self.exercises << exercise
+  end
+
+  def remove_exercise(exercise)
+    self.exercises.delete(exercise)
+  end
+
+  def have_exercise?(exercise)
+    exercises.include?(exercise)
+  end
 end
