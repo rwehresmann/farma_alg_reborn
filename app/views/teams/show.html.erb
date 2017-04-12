@@ -9,9 +9,11 @@
     <li>
       <a href="#enroled-students" data-toggle="tab" aria-expanded="true">Alunos matriculados</a>
     </li>
-    <li>
-      <a href="#graph" data-toggle="tab" aria-expanded="true">Grafo de manipulação</a>
-    </li>
+    <% if current_user.owner?(@team) %>
+      <li>
+        <a href="#graph" data-toggle="tab" aria-expanded="true">Grafo de manipulação</a>
+      </li>
+    <% end %>
   </ul>
 
   <div class="tab-content">
