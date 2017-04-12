@@ -7,7 +7,7 @@
 // OBS2: 'createModal' cannot be created here because it uses rails 'render'
 // method (and in assets isn't alowed to use ruby embed code).
 
-function showModal(modalName, recreate) {
+function showModal(modalName, recreate, createModalFunc) {
   var modal = $('#' + modalName + '-container');
 
   if (modal.length) {
@@ -16,9 +16,9 @@ function showModal(modalName, recreate) {
       // When modal container is removed, bootstrap will not be able to find a
       // reference to close it, so modal-backdrop must be forced to be removed.
       $('.modal-backdrop').remove();
-      createModal(modalName);
+      createModalFunc(modalName);
     }
-  } else createModal(modalName);
+  } else createModalFunc(modalName);
 
   $('#' + modalName + '-modal').modal('show');
 }

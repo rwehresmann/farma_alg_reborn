@@ -53,22 +53,17 @@
 </div>
 
 <script text="text/javascript">
-  function createModal(modal_name) {
-    var div = $(document.createElement('div'))
-    div.attr('id', modal_name + '-container');
-    $('body').append(div);
-
-    if (modal_name == "answer-content")
-      $(div).html("<%= escape_javascript(render partial: 'answer_content_modal', locals: { answer: @answer }) %>");
-
-    $('body').append(div);
-  }
-
   $('#answer-container').on('hidden.bs.modal', function () {
     $("#<%= @node_html_id %>").attr('fill', setNodeCollor(<%= @answer.correct %>));
   });
 
   $('#show-answer').click(function() {
-    showModal('answer-content', true);
+    showModal('answer-content', true, function(modalName) {
+      var div = $(document.createElement('div'))
+      div.attr('id', modalName + '-container');
+      $('body').append(div);
+      $(div).html("<%= escape_javascript(render partial: 'answer_content_modal', locals: { answer: @answer }) %>");
+      $('body').append(div);
+    });
   });
 </script>

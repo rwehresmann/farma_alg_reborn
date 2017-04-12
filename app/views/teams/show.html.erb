@@ -78,9 +78,9 @@
 </div>
 
 <script text="text/javascript">
-  function createModal(modal_name) {
+  function createModal(modalName) {
     var div = $(document.createElement('div'))
-    div.attr('id', modal_name + '-container');
+    div.attr('id', modalName + '-container');
     $('body').append(div);
     $(div).html("<%= escape_javascript(render 'exercises_modal') %>");
     $('body').append(div);
@@ -90,6 +90,6 @@
 <script text="text/javascript">
   createModal("exercises");
   $("#add-exercise").click(function() {
-    showModal("exercises", false);
+    showModal("exercises", false, createModal);
   });
 </script>

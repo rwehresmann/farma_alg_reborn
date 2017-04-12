@@ -51,8 +51,6 @@ function nodeLayout(node) {
        dataType: 'script',
        data: { node_html_id: $(this).attr('id') }
      });
-
-    showModal("answer", true);
   });
 
   $(circle).click(function() {

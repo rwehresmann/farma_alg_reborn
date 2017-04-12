@@ -1,9 +1,7 @@
-function createModal(modal_name) {
+showModal('answer', true, function(modalName) {
   var div = $(document.createElement('div'))
-  div.attr('id', modal_name + '-container');
+  div.attr('id', modalName + '-container');
   $('body').append(div);
   $(div).html("<%= escape_javascript(render 'answer_modal') %>");
   $('body').append(div);
-}
-
-showModal('answer', true);
+});
