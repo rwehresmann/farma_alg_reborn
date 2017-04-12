@@ -1,3 +1,6 @@
+$('.modal-body').empty();
 $('.modal-body').append('<%= escape_javascript(render "teams/graph/answers_table") %>')
+
+// Could not figure out why, but the #loadin-modal is only removed calling remove() twice.
 $('#loading-modal').remove();
 $('#loading-modal').remove();

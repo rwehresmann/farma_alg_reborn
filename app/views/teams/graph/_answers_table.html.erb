@@ -2,7 +2,7 @@
   Adicionar todas encontradas
 </button>
 
-<table id="example" class="table table-striped">
+<table id="answers-table" class="table table-striped">
   <thead>
     <tr>
       <th>Aluno</th>
@@ -34,7 +34,8 @@
 </table>
 
 <script text="text/javascript">
-  $('#example').DataTable({
+  $('#answers-table').DataTable({
+    "retrieve": true,
     "lengthChange": false,
     "searching": false,
     "columnDefs": [
