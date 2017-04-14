@@ -59,6 +59,7 @@ group :test do
   gem 'poltergeist', '~> 1.13'
   gem 'database_cleaner', '~> 1.0'
   gem 'capybara', '~> 2.0'
+  gem 'shoulda-callback-matchers', '~> 1.1.1'
 end
 
 group :development do

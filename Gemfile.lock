@@ -211,6 +211,8 @@ GEM
       activemodel (>= 4.1)
       elasticsearch (>= 1)
       hashie
+    shoulda-callback-matchers (1.1.4)
+      activesupport (>= 3)
     spring (2.0.0)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -280,6 +282,7 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   sass-rails (~> 5.0)
   searchkick (~> 2.1)
+  shoulda-callback-matchers (~> 1.1.1)
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
@@ -290,4 +293,4 @@ DEPENDENCIES
   will_paginate (~> 3.1.0)
 
 BUNDLED WITH
-   1.13.2
+   1.14.6
