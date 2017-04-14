@@ -4,41 +4,31 @@ FactoryGirl.define do
     user
     question
     team
-    compiler_output "compiler output"
 
     after(:build) do |answer|
       class << answer
-        def check; end
-        def save_results; end
+        def set_correct; end
       end
     end
 
     trait :whit_custom_callbacks do
       after(:build) do |answer|
         class << answer
-          def check; super; end
-          def save_results; super; end
+          def set_correct; super; end
         end
       end
     end
 
     trait :correct do
       correct true
-      compilation_error false
-    end
-
-    trait :whit_compilation_error do
-      correct false
-      compilation_error true
-    end
-
-    trait :whit_compilation_error do
-      correct false
-      compilation_error false
     end
 
     trait :invalid_content do
       content "This string doesn't compile as a code"
+    end
+
+    trait :hello_world do
+      content File.open("spec/support/files/hello_world.pas").read
     end
 
     trait :ola_mundo do
@@ -47,10 +37,6 @@ FactoryGirl.define do
 
     trait :params do
       content File.open("spec/support/files/params.pas").read
-    end
-
-    trait :compilation_error do
-      content File.open("spec/support/files/hello_world_compilation_error.pas").read
     end
   end
 end
