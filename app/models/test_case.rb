@@ -1,25 +1,18 @@
-require 'utils/compilers'
+require 'utils/code_runner'
 
 class TestCase < ApplicationRecord
-  include Compilers
   validates_presence_of :output, :title
 
   belongs_to :question
 
   # Test a the compiled source code whit the test case (when 'compiled: false',
   # the source code must have been compiled already).
-  def test(file_name, file_ext, source_code, options = { compile: true })
-    if options[:compile] == true
-      result = compile_and_run(file_name, file_ext, source_code, input)
-    else
-      result = run(file_name, file_ext, source_code, input)
-    end
+  def test(file_name:, extension:, source_code:, not_compile: false)
+    code_runner = CodeRunner.new(file_name: file_name, extension: extension,
+                                 source_code: source_code)
+    result = code_runner.run(input: input, not_compile: not_compile)
     output = self.output.gsub("\r", "")
-
-    if result != output
-      { correct: false, output: result }
-    else
-      { correct: true, output: result }
-    end
+    
+    { output: result, correct: result == output  }
   end
 end

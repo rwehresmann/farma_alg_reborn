@@ -27,9 +27,10 @@ RSpec.describe TestCase, type: :model do
 
   describe '#test' do
     let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
-    let(:result) do
+    subject(:result) do
       test_case = create(:test_case)
-      test_case.test("test_file", "pas", source_code)
+      test_case.test(file_name: SecureRandom.hex, extension: "pas",
+                     source_code: source_code)
     end
 
     it "return an correct flag and output" do
