@@ -82,7 +82,7 @@ User.all.each do |user|
         answer.comments.create!(user: team.owner, content: "This is a comment.")
         question.test_cases.each do |test_case|
           FactoryGirl.create(:answer_test_case_result, answer: answer, test_case: test_case,
-                                  output: answer.compiler_output, correct: correct)
+                                  output: "test", correct: correct)
         end
       end
     end
