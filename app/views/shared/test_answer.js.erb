@@ -13,12 +13,12 @@ function placeTestCasesResults() {
     // Div to put the result.
     var div = $(document.createElement('div'));
 
-    <% if result[:status] == :error %>
-      div.attr('class', 'alert alert-danger text-left');
-      div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
-    <% else %>
+    <% if result[:correct] %>
       div.attr('class', 'alert alert-success text-left');
       div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
+    <% else %>
+      div.attr('class', 'alert alert-danger text-left');
+      div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
     <% end %>
 
     $('#test-results').append(div);
@@ -32,9 +32,7 @@ $('#error_explanation').remove();
   $('.fa.fa-refresh.fa-spin').remove();
   $('#new_answer').prepend('<%= j(render "shared/error_messages", object: @answer) %>');
 <% else %>
-  <% if @answer.compilation_error? %>
-    $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-red"></i> <span>Erro de compilação</span></div>');
-  <% elsif @answer.correct? %>
+  <% if @answer.correct? %>
     $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-green"></i> <span>Resposta correta</span></div>');
     placeTestCasesResults();
   <% else %>

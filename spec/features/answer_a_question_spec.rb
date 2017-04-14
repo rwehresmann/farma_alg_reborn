@@ -17,24 +17,32 @@ describe "Answer a question", type: :feature, js: true do
     find('[name=commit]').click
   end
 
-  it "shows the answer" do
-    visit_page
-    content = "puts 'Hello, world!'"
-    fill_in_editor_field content
-    expect(page).to have_editor_display text: content
-  end
-
-
   context "with a right answer" do
     let(:content) { IO.read("spec/support/files/hello_world.pas") }
 
+    before { submit_answer }
+
     it "informs that the answer is right" do
-      submit_answer
-      expect(page).to have_css(".alert.alert-success")
+      expect(page).to have_selector("span", text: "Resposta correta")
+    end
+
+    it "shows the test case results" do
+      expect(page).to have_selector('#test-results .alert.alert-success')
     end
   end
 
-  # TODO
   context "whit a wrong answer" do
+    let(:content) { "puts 'Hello world'" }
+
+    before { submit_answer }
+
+    it "informs that the answer is wrong and doesn't clean the editor display" do
+      expect(page).to have_selector("span", text: "Resposta incorreta")
+      expect(page).to have_editor_display text: content
+    end
+
+    it "shows the test case results" do
+      expect(page).to have_selector('#test-results .alert.alert-danger')
+    end
   end
 end
