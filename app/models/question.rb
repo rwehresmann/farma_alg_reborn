@@ -1,8 +1,6 @@
-require 'utils/compilers'
+require 'utils/code_runner'
 
 class Question < ApplicationRecord
-  include Compilers
-
   before_destroy :destroy_dependencies
   before_create :normalize_operation
 
@@ -17,19 +15,17 @@ class Question < ApplicationRecord
 
   # Test the source code with the specified input of each test case and check
   # its output.
-  def test_all(file_name, file_ext, source_code, options = { compile: true })
-    results = []
-    compile(file_name, file_ext, source_code) if options[:compile]
+  def test_all(file_name:, extension:, source_code:, not_compile: false)
+    code_runner = CodeRunner.new(file_name: file_name, extension: extension,
+                                 source_code: source_code)
+    code_runner.compile unless not_compile
 
-    self.test_cases.each_with_index do |test_case, index|
-      # The source code or is compiled above, or is already compiled fro where
-      # 'test_all' is called, so 'compile: false'.
-      test_result = test_case.test(file_name, file_ext, source_code, compile: false)
+    self.test_cases.each.inject([]) do |results, test_case|
+      test_result = test_case.test(file_name: file_name, extension: extension,
+                                   source_code: source_code, not_compile: true)
       results << { test_case: test_case, correct: test_result[:correct],
                    output: test_result[:output] }
     end
-
-    results
   end
 
   # Check what is the dependency operator between two questions.

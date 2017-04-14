@@ -77,9 +77,9 @@ RSpec.describe Question, type: :model do
 
   describe '#test_all' do
     let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
-    let(:results) do
+    subject(:results) do
       question = create(:question, test_cases_count: 2 )
-      question.test_all("test_file", "pas", source_code)
+      question.test_all(file_name: SecureRandom.hex, extension: "pas", source_code: source_code)
     end
 
     it "returns an array of results, containing hashes whit the test case object, correct flag and output" do
