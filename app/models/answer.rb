@@ -1,20 +1,17 @@
-require 'utils/compilers'
-
 class Answer < ApplicationRecord
-  include ApplicationHelper
-  include Compilers
-
   searchkick
 
   # The key is the difficult level, and the value is the percentage
   # of variation.
   SCORE_VARIATION = { 0 => -0.25, 1 => -0.25, 2 => -0.15, 3 => 0,
                       4 => 0.15, 5 => 0.25 }
+  # Score variation starts only after a certain number of users attempts to answer.
   LIMIT_TO_START_VARIATION = 10
 
-  before_create :check
+  before_create :set_correct
   before_validation :set_attempt
   after_create :save_test_cases_results, if: :results_present?
+  after_create :increase_score, if: :correct?
 
   validates_presence_of :content, :attempt
   validates_inclusion_of :correct, in: [true, false]
@@ -22,8 +19,13 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
   belongs_to :team
+
+  # The relationship from AnswerConnection is symmetrical, and so we need
+  # to check both foreign keys (answer_1 and answer_2) to discover if the
+  # connection is made or not.
   has_many :answer_connections_1, class_name: "AnswerConnection", foreign_key: :answer_1_id
   has_many :answer_connections_2, class_name: "AnswerConnection", foreign_key: :answer_2_id
+
   has_many :test_cases_results, class_name: "AnswerTestCaseResult"
   has_many :test_cases, through: :test_cases_results
   has_many :comments
@@ -69,7 +71,7 @@ class Answer < ApplicationRecord
     search(key_words, fields: [:content])
   end
 
-  # Returns an array of hashes, where the keys are :answer with the answers
+  # Returns an array of hashes, where the keys are :answer with the answer
   # object, :connection_id and :similarity with the similarity between both answers.
   def similar_answers(threshold:)
     results_1 = answers_similarity_data(answer_connections_1, threshold, :answer_2)
@@ -84,43 +86,32 @@ class Answer < ApplicationRecord
     @results ||= []
   end
 
-  # Compile the source code, set compiler_output and compilation_erro flag,
-  # and run the test cases if the answer is compiled succesfully to check if
-  # is right or wrong. We use @results because after the answer is saved,
-  # after create callback call a new method and use the same results.
-  def check
-    filename = plain_current_datetime
-    self.compiler_output = compile(filename, "pas", content)
-
-    if has_error?
-      self.compilation_error = true
-      self.correct = false
-    else
-      self.compilation_error = false
-      # The source code is already compiled, so 'compile: false'.
-      @results = question.test_all(filename, "pas", content, compile: false)
-      self.correct = is_correct?
-
-      if correct?
-        score = score_to_earn
-        EarnedScore.create!(user: user, question: question, team: team,
-                            score: score)
-      end
-    end
+  # Send to compile and tests against all the question test cases, checking
+  # if the answer is correct or not.
+  def set_correct
+    @results = question.test_all(file_name: SecureRandom.hex, extension: "pas",
+                                 source_code: content)
+    self.correct = is_correct?
   end
 
     private
 
-    # Save the result accoring the result of each test case (@results is filled
-    # from set_correct method), and enqueue the answer to compute similarities.
+    # Called in a callback if the answer is correct, increasing the user score.
+    def increase_score
+      score = score_to_earn
+      EarnedScore.create!(user: user, question: question, team: team, score: score)
+    end
+
+    # Save the result accoring the result of each test case,
+    # and enqueue the answer to compute similarities.
     def save_test_cases_results
-      return if @results.nil?
-      @results.each do |result|
-        AnswerTestCaseResult.create!(answer: self,
-                                     test_case: result[:test_case],
-                                     output: result[:output],
-                                     correct: result[:correct])
-      end
+      raise "No test case results found! Check if the question answered have at
+            least one test case associated." if @results.nil?
+
+      @results.each { |result|
+        AnswerTestCaseResult.create!(answer: self, test_case: result[:test_case],
+                                     output: result[:output], correct: result[:correct])
+      }
 
       ComputeAnswerSimilarityJob.perform_later(self)
     end

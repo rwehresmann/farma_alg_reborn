@@ -35,16 +35,14 @@ ActiveRecord::Schema.define(version: 20170406005128) do
   end
 
   create_table "answers", force: :cascade do |t|
-    t.string   "content",                           null: false
-    t.boolean  "correct",           default: false, null: false
-    t.boolean  "compilation_error", default: false
-    t.string   "compiler_output"
-    t.integer  "attempt",                           null: false
+    t.string   "content",                     null: false
+    t.boolean  "correct",     default: false, null: false
+    t.integer  "attempt",                     null: false
     t.integer  "user_id"
     t.integer  "question_id"
     t.integer  "team_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["team_id"], name: "index_answers_on_team_id"
     t.index ["user_id"], name: "index_answers_on_user_id"

@@ -3,8 +3,6 @@ class CreateAnswers < ActiveRecord::Migration[5.0]
     create_table :answers do |t|
       t.string :content, null: false
       t.boolean :correct, default: false, null: false
-      t.boolean :compilation_error, default: false
-      t.string  :compiler_output
       t.integer :attempt, null: false
       t.references :user, :question, :team
 

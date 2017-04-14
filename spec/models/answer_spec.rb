@@ -47,122 +47,100 @@ RSpec.describe Answer, type: :model do
   end
 
   describe "Callbacks -->" do
-    describe '#check_answer' do
-      let!(:question) { create(:question) }
+    it { is_expected.to callback(:set_correct).before(:create) }
+    it { is_expected.to callback(:save_test_cases_results).after(:create).if(:results_present?) }
+    it { is_expected.to callback(:increase_score).after(:create).if(:correct?) }
+    it { is_expected.to callback(:set_attempt).before(:validation) }
+  end
 
-      context "when is correct answered" do
-        let!(:answer) { create_right_answer_to_question(question, callbacks: true) }
+  describe '#set_correct' do
+    context "when correct" do
+      let(:answer) { create_or_build_right_answer(:create) }
 
-        it "flags are right setted and a record in earned_scores is created" do
-          expect(answer.correct).to be_truthy
-          expect(answer.compilation_error).to be_falsey
-          expect(answer.compiler_output).to_not be_nil
-          expect(EarnedScore.count).to eq(1)
-        end
-      end
-
-      context "when answer isn't correct answered, but compiled successfully" do
-        let(:answer) { create_wrong_answer_to_question(question, callbacks: true) }
-
-        it "correct is setted as false and compilation_error as false too" do
-          expect(answer.correct).to be_falsey
-          expect(answer.compilation_error).to be_falsey
-          expect(answer.compiler_output).to_not be_nil
-        end
-      end
-
-      context "when answer doesn't compile successfully" do
-        let(:answer) { create_answer_whit_compilation_error_to_question(question, callbacks: true) }
-
-        it "answer is setted as false and compilation_error too" do
-          expect(answer.correct).to be_falsey
-          expect(answer.compilation_error).to be_truthy
-          expect(answer.compiler_output).to_not be_nil
-        end
+      it "sets to correct and set @results" do
+        expect(answer.correct).to be_truthy
+        expect(answer.results.empty?).to be_falsey
       end
     end
 
-    describe '#score_to_earn' do
-      context "when question is a challenge" do
-        let(:answer) { build(:answer, question: create(:question, :challenge)) }
-        let(:received) { answer.send(:score_to_earn) }
+    context "when incorrect" do
+      let(:answer) { create_or_build_wrong_answer(:create) }
 
-        it "returns the question score" do
-          expect(received).to eq(answer.question.score)
-        end
+      it "sets to incorrect and set @results" do
+        expect(answer.correct).to be_falsey
+        expect(answer.results.empty?).to be_falsey
       end
+    end
+  end
 
-      context "when question is a task" do
-        let(:team) { create(:team) }
-        let(:question) { create(:question) }
-        let(:answer) { build(:answer, question: question, team: team) }
-        let(:received) { answer.send(:score_to_earn) }
+  describe '#increase_score' do
+    let(:answer) { build(:answer) }
 
-        context "when the limit to start variation is reached" do
-          before do
-            Answer::LIMIT_TO_START_VARIATION.times do
-              create_right_answer_to_question(question, team: team)
-            end
-          end
+    it { expect { answer.send(:increase_score) }.to change(EarnedScore, :count).by(1) }
+  end
 
-          it "returns the score after applied the variation" do
-            expect(received).not_to eql(answer.question.score)
-          end
-        end
+  describe '#save_test_cases_results' do
+    context "when there are test cases results" do
+      # It's not possible execite it individually because @results will be
+      # empty. So it's tested directly from an after_save callback.
+      subject { create_or_build_right_answer(:create) }
 
-        context "when the limit to start variation isn't reached" do
-          before do
-            (Answer::LIMIT_TO_START_VARIATION - 1).times do
-              create_right_answer_to_question(question, team: team)
-            end
-          end
+      it { expect { subject }.to change(AnswerTestCaseResult, :count).by(1) }
+    end
 
-          it "returns the original question score" do
-            expect(received).to eql(answer.question.score)
-          end
-        end
+    context "when there are no test cases results" do
+      let(:answer) { create_or_build_right_answer(:build) }
+
+      subject { answer.send(:save_test_cases_results) }
+
+      it { expect { subject }.to  raise_error(RuntimeError) }
+    end
+  end
+
+  describe '#score_to_earn' do
+    context "when question is a challenge" do
+      let(:answer) { build(:answer, question: create(:question, :challenge)) }
+
+      it "returns the question score" do
+        received = answer.send(:score_to_earn)
+        expect(received).to eq(answer.question.score)
       end
     end
 
-    describe '#after_create' do
+    context "when question is a task" do
+      let(:team) { create(:team) }
       let(:question) { create(:question) }
-      let(:results_count) { Proc.new { |answer| AnswerTestCaseResult.where(answer: answer).count } }
+      let(:answer) { build(:answer, question: question, team: team) }
+      let(:score_to_earn) { answer.send(:score_to_earn) }
 
-      context "when is correct answered" do
-        let!(:answer) { create_right_answer_to_question(question, callbacks: true) }
+      context "when the limit to start variation is reached" do
+        before {
+          Answer::LIMIT_TO_START_VARIATION.times {
+            create(:answer, question: question, team: team)
+          }
+        }
 
-        it "saves the test cases result" do
-          expect(question.test_cases.count > 0).to be_truthy
-          expect(results_count.call(answer)).to eq(question.test_cases.count)
+        it "returns the score after applied the variation" do
+          expect(score_to_earn).not_to eql(answer.question.score)
         end
       end
 
-      context "when answer isn't correct answered, but compiled successfully" do
-        let!(:answer) { create_wrong_answer_to_question(question, callbacks: true) }
-
-        it "saves the test cases result" do
-          expect(question.test_cases.count > 0).to be_truthy
-          expect(results_count.call(answer)).to eq(question.test_cases.count)
-        end
-      end
-
-      context "when answer doesn't compile successfully" do
-        let!(:answer) { create_answer_whit_compilation_error_to_question(question, callbacks: true) }
-
-        it "saves the test cases result" do
-          expect(question.test_cases.count > 0).to be_truthy
-          expect(results_count.call(answer)).to eq(0)
+      context "when the limit to start variation isn't reached" do
+        it "returns the original question score" do
+          expect(score_to_earn).to eql(answer.question.score)
         end
       end
     end
+  end
 
-    describe 'set_attempt' do
-      let(:user) { create(:user) }
-      let(:question) { create(:question) }
-      let(:answers) { create_pair(:answer, user: user, question: question) }
+  describe 'set_attempt' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let(:answers) { create_pair(:answer, user: user, question: question) }
 
-      it { expect(answers[0].attempt).to eq(1) }
-      it { expect(answers[1].attempt).to eq(2) }
+    it "increments in one each answer attempt" do
+      expect(answers[0].attempt).to eq(1)
+      expect(answers[1].attempt).to eq(2)
     end
   end
 
@@ -239,4 +217,51 @@ RSpec.describe Answer, type: :model do
       expect(Answer.by_key_words("test").to_a).to eq([to_return])
     end
   end
+
+  describe '#similar_answers' do
+    let(:answer_1) { create(:answer) }
+    let(:answer_2) { create(:answer) }
+    let(:answer_3) { create(:answer) }
+    let(:answer_4) { create(:answer) }
+
+    let!(:connection_1) { create(:answer_connection, answer_1: answer_2,
+                                 answer_2: answer_1, similarity: 10) }
+    let!(:connection_2) { create(:answer_connection, answer_1: answer_3,
+                                 answer_2: answer_1, similarity: 20) }
+    let!(:connection_3) { create(:answer_connection, answer_1: answer_1,
+                                answer_2: answer_4, similarity: 20) }
+
+    it "respects the specified threshold" do
+      received = answer_1.similar_answers(threshold: 11)
+      received_ids = received.map { |obj| obj[:answer].id }
+
+      expect(received.count).to eq(2)
+      expect(received_ids).to include(answer_3.id, answer_4.id)
+    end
+
+    it "returns the right keys and values" do
+      sample_record = answer_1.similar_answers(threshold: 11).first
+      keys = sample_record.keys
+
+      expect(keys.count).to eq(3)
+      expect(keys).to include(:answer, :connection_id, :similarity)
+      expect(sample_record[:answer]).to eq(answer_4)
+      expect(sample_record[:connection_id]).to eq(connection_3.id)
+      expect(sample_record[:similarity]).to eq(connection_3.similarity)
+    end
+  end
+
+    private
+
+    def create_or_build_right_answer(operation)
+      test_case = create(:test_case, output: "Hello, world.\n")
+      send(operation, :answer, :whit_custom_callbacks, :hello_world,
+           question: test_case.question)
+    end
+
+    def create_or_build_wrong_answer(operation)
+      test_case = create(:test_case, output: "this should not match")
+      send(operation, :answer, :whit_custom_callbacks, :hello_world,
+           question: test_case.question)
+    end
 end
