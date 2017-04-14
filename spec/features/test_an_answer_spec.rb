@@ -3,7 +3,8 @@ require 'rails_helper'
 describe "Test an answer", type: :feature, js: true do
   let(:user) { create(:user, :teacher) }
   let(:exercise) { create(:exercise, user: user) }
-  let!(:question) { create(:question, exercise: exercise) }
+  let(:question) { create(:question, exercise: exercise) }
+  let!(:test_case) { create(:test_case, output: "Hello, world.\n", question: question) }
 
   subject(:submit_answer) { click_on "Submeter resposta" }
 
@@ -19,41 +20,34 @@ describe "Test an answer", type: :feature, js: true do
     it { expect(page).to have_selector("div.alert.alert-danger") }
   end
 
-  context "when a source code with errors is submited" do
-    before do
-      fill_in_editor_field("this doesn't compile")
-      submit_answer
-    end
+  context "when the answer is right" do
+    let(:source_code) { IO.read("spec/support/files/hello_world.pas") }
 
-    it { expect(page).to have_content("Erro de compilação") }
-  end
-
-  context "when a source code without errors is submited" do
     before do
       fill_in_editor_field(source_code)
       submit_answer
     end
 
-    context "when answer is rigtht" do
-      let(:source_code) { IO.read("spec/support/files/hello_world.pas") }
+    before { create(:test_case, question: question, output: "Hello, world.\n") }
 
-      before { create(:test_case, question: question, output: "Hello, world.\n") }
+    it "informs that the answer is right and show test cases results" do
+      expect(page).to have_content("Resposta correta")
+      expect(page).to have_selector('#test-results div.alert.alert-success')
+    end
+  end
 
-      it "informs that the answer is right and show test cases results" do
-        expect(page).to have_content("Resposta correta")
-        expect(page).to have_selector('#test-results div.alert', count: 1)
-      end
+  context "when answer is wrong" do
+    let(:source_code) { "This is a wrong answer" }
+
+    before do
+      fill_in_editor_field(source_code)
+      submit_answer
+      page.save_screenshot("lalala.png")
     end
 
-    context "when answer is wrong" do
-      let(:source_code) { IO.read("spec/support/files/hello_world.pas") }
-
-      before { create(:test_case, question: question, output: "output") }
-
-      it "informs that the answer is right and show test cases results" do
-        expect(page).to have_content("Resposta incorreta")
-        expect(page).to have_selector('#test-results div.alert', count: 1)
-      end
+    it "informs that the answer is wrong and show test cases results" do
+      expect(page).to have_content("Resposta incorreta")
+      expect(page).to have_selector('#test-results div.alert.alert-danger')
     end
   end
 end

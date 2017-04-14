@@ -75,7 +75,7 @@ class QuestionsController < ApplicationController
 
   def test_answer
     @answer = @question.answers.build(answer_params)
-    @answer.check unless @answer.content.empty?
+    @answer.set_correct unless @answer.content.empty?
     @results = @answer.results
 
     respond_to { |format| format.js { render 'shared/test_answer' } }
