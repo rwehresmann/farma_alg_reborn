@@ -5,7 +5,7 @@ describe "Answer a question", type: :feature, js: true do
     login_as create(:user)
 
     exercise = create(:exercise)
-    question = create_a_question_to_exercise(exercise)
+    question = create(:question, exercise: exercise)
     create(:test_case, :hello_world, question: question)
 
     visit new_answer_path(question)
