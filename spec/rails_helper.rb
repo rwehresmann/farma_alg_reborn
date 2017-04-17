@@ -12,7 +12,6 @@ require 'capybara/rspec'
 require 'capybara/poltergeist'
 
 require 'support/helpers/relationships_helper'
-require 'support/helpers/answer_process_helper'
 require 'support/helpers/ace_editor_helper'
 
 Capybara.register_driver :poltergeist do |app|
@@ -96,7 +95,6 @@ RSpec.configure do |config|
 
   # Helpers
   config.include Helpers::Relationships, type: :model
-  config.include Helpers::AnswerProcessHelper
   config.include Helpers::AceEditorHelper, type: :feature
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include Devise::Test::ControllerHelpers, :type => :view
