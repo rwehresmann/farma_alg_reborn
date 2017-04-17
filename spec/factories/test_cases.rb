@@ -7,5 +7,9 @@ FactoryGirl.define do
     trait :hello_world do
       output "Hello, world.\n"
     end
+
+    trait :hello_world_2 do
+      output "Hello world!\n"
+    end
   end
 end

@@ -31,6 +31,10 @@ FactoryGirl.define do
       content File.open("spec/support/files/hello_world.pas").read
     end
 
+    trait :hello_world_2 do
+      content File.open("spec/support/files/hello_world_2.pas").read
+    end
+
     trait :ola_mundo do
       content File.open("spec/support/files/ola_mundo.pas").read
     end
