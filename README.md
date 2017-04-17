@@ -1,9 +1,9 @@
 # Description
 
 FARMA-ALG it is an app for teaching algorithms, focused in error mediaton between teachers and students. 
-We belive that the error is part of the learning process and should not be ignored. However, it is not unusual to see classes with a lot of students and only one teacher to handle with that. Think in the quantity of output errors generated in a class, specially when it envolves programming: it is impracticable to a teacher analise all this output.
+We belive that the error is part of the learning process and should not be ignored. However, it is not unusual to see classes with a lot of students and only one teacher to handle with them. Specially when it envolves programming, think in the quantity of output errors generated in a class: it is impracticable to a teacher analise all these outputs.
 
-So FARMA-ALG it is a tool to automatically save and analise this output, calculating the error similarity, exposing to the teacher the error cases pedagogically more relevant to the class. 
+So FARMA-ALG it is a tool to automatically save and analise these outputs, calculating the error similarity, exposing to the teacher the error cases pedagogically more relevant to the class. 
 
 ## More about
 
@@ -13,10 +13,13 @@ The implementation is in course and constanttly updated in this repository.
 
 ## Dependencies
 
-* [Free Pascal Compiler](http://www.freepascal.org/) (`sudo apt-get install fpc`)
+* [Free Pascal Compiler](http://www.freepascal.org/)
+* [ElasticSearch](https://www.elastic.co/products/elasticsearch)
+* [PhantomJS](http://phantomjs.org/)
 
 ## Usage
 
+* Install dependencies;
 * Clone the repository;
 * Run `bundle install`;
 * Run `rake db:create` and `rake db:migrate`;
