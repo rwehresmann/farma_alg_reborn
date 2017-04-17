@@ -22,4 +22,12 @@ describe Array do
       expect(array.common_values([6,7,8,9])).to eq([])
     end
   end
+
+  describe '#common_arrays_values' do
+    let(:arrays_group) { [[1,2,3,4,5], [2,3,4], [1,2,3]] }
+
+    it "returns the common values in the arrays collection" do
+      expect(arrays_group.common_arrays_values).to eq([2,3])
+    end
+  end
 end

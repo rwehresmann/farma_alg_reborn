@@ -1,4 +1,4 @@
-class Array  
+class Array
   def avg
     reduce(:+).to_f / size
   end
@@ -9,5 +9,11 @@ class Array
     not_common += self - array
     not_common += array - self
     (self + array - not_common).uniq
+  end
+
+  def common_arrays_values
+    values = self.shift
+    self.each { |array| values = values.common_values(array) }
+    values
   end
 end
