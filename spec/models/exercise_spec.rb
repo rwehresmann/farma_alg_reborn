@@ -34,41 +34,49 @@ RSpec.describe Exercise, type: :model do
   end
 
   describe '#user_progress' do
-    let!(:user) { create(:user) }
-    let!(:exercise) { create_an_exercise_to_user(user) }
+    let(:user) { create(:user) }
+    let(:exercise) { create(:exercise) }
+    let(:team) { create(:team, exercises: [exercise], users: [user]) }
+    let(:questions) { create_pair(:question, exercise: exercise) }
 
     context "when none question is right answered" do
-      before { create_a_question_to_exercise(exercise) }
+      before { create(:question, exercise: exercise) }
 
-      it "returns 0" do
-        expect(exercise.user_progress(user)).to eq(0)
-      end
+      it { expect(exercise.user_progress(user, team)).to eq(0) }
     end
 
-    context "when is incomplete but has a question answered correctly" do
+    context "when half of the questions are answered correctly" do
       before do
-        question = create_a_question_to_exercise(exercise)
-        create_right_answer_to_question(question, user: user)
-        question = create_a_question_to_exercise(exercise)
-        create_wrong_answer_to_question(question, user: user)
+        create(:answer, :correct, question: questions.first, user: user, team: team)
+        create(:answer, :incorrect, question: questions.first, user: user, team: team)
       end
 
-      it "returns a value between 0 and 100" do
-        expect(exercise.user_progress(user)).to eq(50)
-      end
+      it { expect(exercise.user_progress(user, team)).to eq(50) }
     end
 
     context "when all questions are right answered" do
       before do
-        2.times do
-          question = create_a_question_to_exercise(exercise)
-          create_right_answer_to_question(question, user: user)
-        end
+        questions.each { |question|
+          # Create wrong answers only to ensure that they're ignored in the
+          # presence of a right answer.
+          create(:answer, :incorrect, question: question, user: user, team: team)
+          create(:answer, :correct, question: question, user: user, team: team)
+        }
       end
 
-      it "returns 100" do
-        expect(exercise.user_progress(user)).to eq(100)
+      it { expect(exercise.user_progress(user, team)).to eq(100) }
+    end
+
+    context "when the user have progress in this exercise but in another team" do
+      let(:team_2) { create(:team, exercises: [exercise], users: [user]) }
+
+      before do
+        questions.each { |question|
+          create(:answer, :correct, question: question, user: user, team: team_2)
+        }
       end
+
+      it { expect(exercise.user_progress(user, team)).to eq(0) }
     end
   end
 end
