@@ -9,11 +9,11 @@ class AnswersController < ApplicationController
 
   def new
     @answer = Answer.new
+    @team = Team.find(params[:team_id])
   end
 
   def create
-    @answer = @question.answers.build(answer_params)
-    @answer.user = current_user
+    @answer = @question.answers.build(answer_params.merge(user: current_user))
     @answer.save unless @answer.content.empty?
     @results = @answer.results
 
@@ -64,7 +64,7 @@ class AnswersController < ApplicationController
     end
 
     def answer_params
-      params.require(:answer).permit(:content)
+      params.require(:answer).permit(:content, :team_id)
     end
 
     def find_question

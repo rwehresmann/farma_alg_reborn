@@ -1,6 +1,10 @@
 <%= form_for @answer, url: yield(:url), method: :post, remote: true do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
 
+  <% unless @team.nil? %>
+    <%= f.hidden_field :team_id, value: @team.id %>
+  <% end %>
+
   <div class="form-group">
     <%= f.text_area :content, id: 'editor', class: "form-control" %>
     <div id="editor_div"></div>

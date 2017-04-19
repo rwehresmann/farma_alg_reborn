@@ -6,9 +6,11 @@ Rails.application.routes.draw do
   resources :exercises, shallow: true do
     resources :questions do
       member do
-        resources :answers, only: [:new, :create, :show], shallow: true do
+        resources :answers, only: [:create, :show], shallow: true do
           resources :comments, only: [:create, :destroy, :update]
         end
+
+        get 'team/:team_id/answers', to: 'answers#new', as: :new_answer
         post :test_answer
       end
 

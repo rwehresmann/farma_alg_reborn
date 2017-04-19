@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   describe "GET #new" do
     let(:question) { create(:question) }
-    subject { get :new, params: { id: question } }
+    let(:team) { create(:team) }
+    subject { get :new, params: { id: question, team_id: team } }
 
     context "when logged-in" do
       before do
@@ -11,28 +12,32 @@ RSpec.describe AnswersController, type: :controller do
         subject
       end
 
-      it "renders new view" do
-        expect(response).to render_template(:new)
-      end
+      it { expect(response).to have_http_status(:ok) }
+      it { expect(response.content_type).to eq("text/html") }
+      it { expect(response).to render_template("answers/new") }
+      it { expect(assigns(:answer)).to_not be_nil }
+      it { expect(assigns(:team)).to_not be_nil }
     end
 
     context "when not logged-in" do
       before { subject }
 
-      it "redirects to sign in page" do
-        expect(response).to redirect_to(new_user_session_path)
-      end
+      it { expect(response).to have_http_status(:found) }
+      it { expect(response).to redirect_to(new_user_session_path) }
     end
   end
 
   describe "GET #show" do
     let(:answer) { create(:answer) }
 
+    subject(:ajax_request) { get :show, xhr: true, params: { id: answer } }
+    subject(:html_request) { get :show, params: { id: answer }  }
+
     context "when logged-in" do
       before { sign_in create(:user, :teacher) }
 
       context "with an ajax request" do
-        before { get :show, xhr: true, params: { id: answer } }
+        before { ajax_request }
 
         it { expect(response).to have_http_status(:ok) }
         it { expect(response.content_type).to eq("text/javascript") }
@@ -41,7 +46,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       context "when requesting a html" do
-        before { get :show, params: { id: answer } }
+        before { html_request }
 
         it { expect(response).to have_http_status(:ok) }
         it { expect(response.content_type).to eq("text/html") }
@@ -50,15 +55,12 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-# TODO: Should be implemented after defined answer permissions.
-=begin
     context "when logged-out" do
-      before { subject }
+      before { html_request }
 
-      it { expect(flash[:warning]).to_not be_nil }
-      it { expect(response).to render_template("shared/unauthorized") }
+      it { expect(response).to have_http_status(:found) }
+      it { expect(response).to redirect_to(new_user_session_path) }
     end
-=end
   end
 
   describe "GET #connections" do
@@ -77,15 +79,47 @@ RSpec.describe AnswersController, type: :controller do
       it { expect(assigns(:connections)).to_not be_nil }
     end
 
-# TODO: Should be implemented after defined answer permissions.
-=begin
     context "when logged-out" do
       before { subject }
 
-      it { expect(flash[:warning]).to_not be_nil }
-      it { expect(response).to render_template("shared/unauthorized") }
+      it { expect(response).to have_http_status(:unauthorized) }
     end
-=end
   end
 
+  describe "POST #create" do
+    let(:team) { create(:team) }
+    let(:question) { create(:question) }
+
+    subject do
+      post :create, xhr: true, params: { id: question,
+           answer: attributes_for(:answer).merge(team_id: team.id) }
+    end
+
+    context "when logged-in" do
+      before do
+        sign_in create(:user)
+      end
+
+      it { expect(subject).to have_http_status(:ok) }
+
+      it { expect(subject.content_type).to eq("text/javascript") }
+
+      it { expect(subject).to render_template("shared/test_answer") }
+
+      it "sets the instance variables" do
+        subject
+        expect(assigns(:answer)).to_not be_nil
+        expect(assigns(:question)).to_not be_nil
+        expect(assigns(:results)).to_not be_nil
+      end
+
+      it { expect { subject }.to change(Answer, :count).by(1) }
+    end
+
+    context "when logged-out" do
+      before { subject }
+
+      it { expect(response).to have_http_status(:unauthorized) }
+    end
+  end
 end
