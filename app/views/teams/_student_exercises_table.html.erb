@@ -11,7 +11,7 @@
         <td><%= link_to exercise.title, list_exercise_questions_team_url(@team, exercise) %></td>
         <td>
           <div class="progress progress-xs">
-            <div class="progress-bar progress-bar-alert" style="<%= progress(exercise) %>"></div>
+            <div class="progress-bar progress-bar-alert" style="<%= progress(exercise, @team) %>"></div>
           </div>
         </td>
       </tr>

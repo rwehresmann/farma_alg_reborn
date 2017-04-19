@@ -23,6 +23,10 @@ FactoryGirl.define do
       correct true
     end
 
+    trait :incorrect do
+      correct false
+    end
+
     trait :invalid_content do
       content "This string doesn't compile as a code"
     end

@@ -106,45 +106,57 @@ RSpec.describe User, type: :model do
   end
 
   describe '#answered_correctly?' do
-    let!(:user) { create(:user) }
-    let!(:exercise) { create_an_exercise_to_user(user) }
-    let!(:question) { create_a_question_to_exercise(exercise) }
+    let(:user) { create(:user) }
+    let(:team) { create(:team, users: [user]) }
+    let(:exercise) { create(:exercise, teams: [team]) }
+    let(:question) { create(:question, exercise: exercise) }
 
     context "when is answered right" do
       before do
-        create_right_answer_to_question(question, user: user)
+        # Create an incorrect answer only to check if is ignored in the query.
+        create(:answer, :incorrect, team: team, user: user, question: question)
+        create(:answer, :correct, team: team, user: user, question: question)
       end
 
-      it "returns true" do
-        expect(user.answered_correctly?(question)).to be_truthy
-      end
+      it { expect(user.answered_correctly?(question, team)).to be_truthy }
     end
 
     context "when isn't answered right" do
-      before { create_wrong_answer_to_question(question) }
+      before { create(:answer, :incorrect, team: team, user: user, question: question) }
 
-      it "returns false" do
-        expect(user.answered_correctly?(question)).to be_falsey
-      end
+      it { expect(user.answered_correctly?(question, team)).to be_falsey }
+    end
+
+    context "when is answered right but in another team" do
+      let(:team_2) { create(:team, exercises: [exercise], users: [user]) }
+
+      before { create(:answer, :correct, question: question, user: user, team: team_2) }
+
+      it { expect(user.answered_correctly?(question, team)).to be_falsey }
     end
   end
 
   describe '#unanswered?' do
     let(:user) { create(:user) }
+    let(:team) { create(:team) }
     let(:question) { create(:question) }
 
     context "when answered" do
-      before { create(:answer, user: user, question: question) }
+      before { create(:answer, user: user, question: question, team: team) }
 
-      it "returns false" do
-        expect(user.unanswered?(question)).to be_falsey
-      end
+      it { expect(user.unanswered?(question, team)).to be_falsey }
     end
 
     context "when unanswered" do
-      it "returns true" do
-        expect(user.unanswered?(question)).to be_truthy
-      end
+      it { expect(user.unanswered?(question, team)).to be_truthy }
+    end
+
+    context "when answered but in another team" do
+      let(:team_2) { create(:team) }
+
+      before { create(:answer, user: user, question: question, team: team_2) }
+
+      it { expect(user.unanswered?(question, team)).to be_truthy }
     end
   end
 

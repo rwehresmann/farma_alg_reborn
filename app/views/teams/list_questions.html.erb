@@ -11,9 +11,9 @@
           <% @questions.each_with_index do |question, index| %>
             <tr>
               <td><%= index %>.</td>
-              <td><%= link_to_if(current_user.able_to_answer?(question, @team), question.title, new_answer_url(question)) %></td>
+              <td><%= link_to_if(current_user.able_to_answer?(question, @team), question.title, new_answer_question_url(question, @team)) %></td>
               <td>
-                <%= raw question_status(question) %>
+                <%= raw question_status(question, @team) %>
               </td>
             </tr>
           <% end %>
