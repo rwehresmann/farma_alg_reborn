@@ -146,7 +146,7 @@ class TeamsController < ApplicationController
     end
 
     def set_weekly_ranking_data(records)
-      @weekly_ranking = EarnedScore.rank_user(team: @team,
+      @weekly_ranking = EarnedScore.ranking(team: @team,
                                               starting_from: current_week_date,
                                               limit: 5)
       @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?

@@ -27,7 +27,7 @@ class EarnedScore < ApplicationRecord
 
   # For future features, it coul be interesting make this method generic,
   # ranking not only the users, but also teams and questions.
-  def self.rank_user(options = {})
+  def self.ranking(options = {})
     records = by_user(options[:user]).by_team(options[:team])
              .by_question(options[:question])
              .starting_from(options[:starting_from])
@@ -45,13 +45,13 @@ class EarnedScore < ApplicationRecord
     end
 
     # Based on the records passed build an array with users ranking, based in
-    # the sum of its scores, returning the array in descendent order. 
+    # the sum of its scores, returning the array in descendent order.
     def self.build_ranking(records)
       ranking = []
-      select_users(records).each do |user|
+      select_users(records).each { |user|
         ranking << { user: user, score: records.where(user: user).sum(:score) }
-      end
+      }
 
-      ranking.sort_by { |_k, v| v }.reverse
+      ranking.sort_by { |user_score| user_score[:score] }.reverse
     end
 end
