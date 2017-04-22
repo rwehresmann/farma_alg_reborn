@@ -11,7 +11,7 @@ class Answer < ApplicationRecord
   before_create :set_correct
   before_validation :set_attempt
   after_create :save_test_cases_results, if: :results_present?
-  after_create :increase_score, if: :correct?
+  after_create :increase_score, if: :increase_score?
 
   validates_presence_of :content, :attempt
   validates_inclusion_of :correct, in: [true, false]
@@ -96,7 +96,12 @@ class Answer < ApplicationRecord
 
     private
 
-    # Called in a callback if the answer is correct, increasing the user score.
+    def increase_score?
+      return true if correct? && !question.answered?(team: team, user: user,
+                                                     correct_status: true)
+      false
+    end
+
     def increase_score
       score = score_to_earn
       EarnedScore.create!(user: user, question: question, team: team, score: score)

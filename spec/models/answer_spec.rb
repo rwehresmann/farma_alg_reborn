@@ -48,8 +48,11 @@ RSpec.describe Answer, type: :model do
 
   describe "Callbacks -->" do
     it { is_expected.to callback(:set_correct).before(:create) }
+
     it { is_expected.to callback(:save_test_cases_results).after(:create).if(:results_present?) }
-    it { is_expected.to callback(:increase_score).after(:create).if(:correct?) }
+
+    it { is_expected.to callback(:increase_score).after(:create).if(:increase_score?) }
+
     it { is_expected.to callback(:set_attempt).before(:validation) }
   end
 
@@ -248,6 +251,29 @@ RSpec.describe Answer, type: :model do
       expect(sample_record[:answer]).to eq(answer_4)
       expect(sample_record[:connection_id]).to eq(connection_3.id)
       expect(sample_record[:similarity]).to eq(connection_3.similarity)
+    end
+  end
+
+  describe '#increase_score?' do
+    context "when is the first correct answer to the question in this team" do
+      let(:answer) { build(:answer, :correct) }
+
+      it { expect(answer.send(:increase_score?)).to be_truthy }
+    end
+
+    context "when answer is incorrect" do
+      let(:answer) { build(:answer, :incorrect) }
+
+      it { expect(answer.send(:increase_score?)).to be_falsey }
+    end
+
+    context "when the questions answered in the team was already correct answered" do
+      let(:answer) { build(:answer, :correct) }
+
+      before { create(:answer, :correct, team: answer.team, user: answer.user,
+                      question: answer.question) }
+
+      it { expect(answer.send(:increase_score?)).to be_falsey }
     end
   end
 
