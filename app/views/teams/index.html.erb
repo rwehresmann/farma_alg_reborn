@@ -5,7 +5,7 @@
                               id: "my-teams", class: "btn btn-default" %>
 </div>
 
-<% if can? :create, @team %>
+<% if can? :create, Team %>
   <%=link_to "Criar nova turma", new_team_path(@team),
                                   class: "btn btn-primary pull-right" %>
 <% end %>
