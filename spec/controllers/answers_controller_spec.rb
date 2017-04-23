@@ -2,21 +2,34 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   describe "GET #new" do
+    let(:user) { create(:user) }
     let(:question) { create(:question) }
     let(:team) { create(:team) }
     subject { get :new, params: { id: question, team_id: team } }
 
     context "when logged-in" do
-      before do
-        sign_in create(:user)
+      before { sign_in user }
+
+      it { expect(subject).to have_http_status(:ok) }
+
+      it { expect(subject.content_type).to eq("text/html") }
+
+      it { expect(subject).to render_template("answers/new") }
+
+      it "sets the instance variables" do
         subject
+        expect(assigns(:answer)).to_not be_nil
+        expect(assigns(:team)).to_not be_nil
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.content_type).to eq("text/html") }
-      it { expect(response).to render_template("answers/new") }
-      it { expect(assigns(:answer)).to_not be_nil }
-      it { expect(assigns(:team)).to_not be_nil }
+      context "when user already have correct answered the question" do
+        before do
+          create(:answer, :correct, question: question, team: team, user: user )
+          subject
+        end
+
+        it { expect(flash[:info]).to_not be_nil }
+      end
     end
 
     context "when not logged-in" do

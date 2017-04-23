@@ -49,6 +49,11 @@ class Question < ApplicationRecord
     question_dependencies.where(operator: operator).map(&:question_2)
   end
 
+  def last_correct_answer(team, user)
+    Answer.by_question(self).by_team(team).by_user(user).correct_status(true)
+          .order(created_at: :desc).limit(1).first
+  end
+
     private
 
     # Destroy all dependencies (the symmetrical pair).

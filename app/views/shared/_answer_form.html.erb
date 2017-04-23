@@ -27,6 +27,7 @@
     $('#answer-result').remove();
     $('.submit').append('<i class="fa fa-refresh fa-spin"></i>');
   }
+  $('.content-wrapper').height($('.content-wrapper').height() + 300)
 
   var textarea = $('#editor');
   textarea.hide();
@@ -34,6 +35,10 @@
   var editor = ace.edit("editor_div");
   editor.setTheme("ace/theme/twilight");
   editor.getSession().setMode("ace/mode/pascal");
+
+  <% if @correct_answer %>
+    editor.insert("<%= escape_javascript(raw @correct_answer.content) %>");
+  <% end %>
 
   // When click put ace editor content in form hidden textarea.
   $('input[name="commit"]').on('click', function() {
