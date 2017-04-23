@@ -80,7 +80,6 @@ class TeamsController < ApplicationController
 
   def list_questions
     @exercise = Exercise.find(params[:exercise_id])
-    @questions = @exercise.questions
   end
 
   def answers

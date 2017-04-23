@@ -83,3 +83,15 @@ crumb :edit_team do |team|
   link "Editar", edit_team_path(team)
   parent :team, team
 end
+
+crumb :list_questions do |team, exercise|
+  link "#{exercise.title} - Questões", list_exercise_questions_team_path(team, exercise)
+  parent :team, team
+end
+
+## ANSWER crumbs ##
+
+crumb :new_answer do |team, question|
+  link "#{question.title} - Responder", new_answer_question_path
+  parent :list_questions, team, question.exercise
+end

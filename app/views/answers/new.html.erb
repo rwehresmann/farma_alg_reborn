@@ -1,5 +1,7 @@
 <% provide(:url, answers_path(@question)) %>
 
+<% breadcrumb :new_answer, @team, @question %>
+
 <div class="col-md-6" style="border-right: 1px solid black">
   <%= render "shared/answer_form" %>
   <br></br>

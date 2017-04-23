@@ -1,3 +1,5 @@
+<% breadcrumb :list_questions, @team, @exercise %>
+
 <div class="row">
   <div class="col-md-offset-1 col-md-10">
     <div class="box box-solid box-default">
@@ -8,7 +10,7 @@
             <th>Questão</th>
             <th style="width: 70px">Resposta</th>
           </tr>
-          <% @questions.each_with_index do |question, index| %>
+          <% @exercise.questions.each_with_index do |question, index| %>
             <tr>
               <td><%= index %>.</td>
               <td><%= link_to_if(current_user.able_to_answer?(question, @team), question.title, new_answer_question_url(question, @team)) %></td>
