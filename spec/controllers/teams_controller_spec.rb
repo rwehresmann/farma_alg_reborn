@@ -351,4 +351,25 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(team.exercises.count).to eq(0) }
     end
   end
+
+  describe "GET #list_questions" do
+    let(:user) { create(:user) }
+    let(:team) { create(:team, users: [user]) }
+    let!(:exercise) { create(:exercise, teams: [team]) }
+
+    subject { get :list_questions, params: { id: team, exercise_id: exercise } }
+
+    before { sign_in user }
+
+    it { expect(subject).to have_http_status(:ok) }
+
+    it { expect(subject.content_type).to eq("text/html") }
+
+    it { expect(subject).to render_template("teams/list_questions") }
+
+    it "sets the instance variables" do
+      subject
+      expect(assigns(:exercise)).to_not be_nil
+    end
+  end
 end
