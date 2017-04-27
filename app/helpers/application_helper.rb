@@ -12,8 +12,8 @@ module ApplicationHelper
     datetime.strftime("%Y%m%d%H%M%S")
   end
 
-  # Remote paginate.
-  def paginate(collection, params= {})
+  # Make will_paginate links remote.
+  def remote_paginate(collection, params= {})
     will_paginate collection, params.merge(:renderer => RemoteLinkPaginationHelper::LinkRenderer)
   end
 end
