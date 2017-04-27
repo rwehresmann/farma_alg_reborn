@@ -11,4 +11,9 @@ module ApplicationHelper
   def plain_current_datetime(datetime = Time.now)
     datetime.strftime("%Y%m%d%H%M%S")
   end
+
+  # Remote paginate.
+  def paginate(collection, params= {})
+    will_paginate collection, params.merge(:renderer => RemoteLinkPaginationHelper::LinkRenderer)
+  end
 end
