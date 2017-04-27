@@ -24,11 +24,8 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :comments
 
-  # If the user is a teacher, return the teams created by him, else return
-  # the teams where he is enrolled.
   def my_teams
-    return self.teams_created if teacher?
-    teams
+    self.teams_created + teams
   end
 
   # Check if the question is unanswered.

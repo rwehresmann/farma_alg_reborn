@@ -80,29 +80,11 @@ RSpec.describe User, type: :model do
   end
 
   describe '#my_teams' do
-    context "when is a student" do
-      let(:user) { create(:user) }
-      before do
-        create_pair(:team).each { |team| team.enroll(user) }
-        create_pair(:team)
-      end
+    let(:user) { create(:user, :teacher) }
+    let!(:team_1) { create(:team, owner: user) }
+    let!(:team_2) { create(:team, users: [user]) }
 
-      it "returns only the teams where he is enrolled" do
-        expect(user.my_teams).to eq(user.teams)
-      end
-    end
-
-    context "when is a teacher" do
-      let(:user) { create(:user, :teacher) }
-      before do
-        create_pair(:team, owner: user)
-        create_pair(:team)
-      end
-
-      it "returns only the teams he created" do
-        expect(user.my_teams).to eq(user.teams_created)
-      end
-    end
+    it { expect(user.my_teams).to eq([team_1, team_2]) }
   end
 
   describe '#answered_correctly?' do
