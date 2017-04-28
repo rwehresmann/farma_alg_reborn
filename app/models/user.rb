@@ -29,32 +29,11 @@ class User < ApplicationRecord
   end
 
   def answered_correctly?(question, team)
-    Answers::AnswersQuery.new.call(
-      users: self,
-      questions: question,
-      teams: team,
-      correct: true,
-      limit: 1,
-      select: 1
-    )
-
-    !answers.where(question: question, team: team, correct: true).empty?
-  end
-
-  def common_answer_query_call(correct:, team:, question:)
-    Answers::AnswersQuery.new.call(
-      users: self,
-      questions: question,
-      teams: team,
-      correct: true,
-      limit: 1,
-      select: 1
-    )
-  end
-
-  # Return the questions answered by the user to a specific team.
-  def team_questions_answered(team)
-    answers.where(team: team).map(&:question).uniq
+    !common_answer_query_call(
+      question: question,
+      team: team,
+      correct: true
+    ).empty?
   end
 
   def incentive_ranking(team, limits = {})
@@ -75,6 +54,17 @@ class User < ApplicationRecord
   end
 
   private
+
+    def common_answer_query_call(team:, question:, correct: nil)
+      Answers::AnswersQuery.new.call(
+        users: self,
+        questions: question,
+        teams: team,
+        correct: correct,
+        limit: 1,
+        select: 1
+      )
+    end
 
     # Check if the user answered the 'OR' dependencies of a specific question.
     def or_dependencies_completed?(question, team)
