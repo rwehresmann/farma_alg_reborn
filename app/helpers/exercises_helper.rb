@@ -29,10 +29,10 @@ module ExercisesHelper
   def question_status(question, team)
     if current_user.answered_correctly?(question, team)
       '<span class="badge bg-green">Correta</span>'
-    elsif current_user.unanswered?(question, team)
-      '<span class="badge bg-gray">Sem resposta</span>'
-    else
+    elsif current_user.answered_question?(question, team)
       '<span class="badge bg-red text-center" style="width=70px">Errada</span>'
+    else
+      '<span class="badge bg-gray">Sem resposta</span>'
     end
   end
 

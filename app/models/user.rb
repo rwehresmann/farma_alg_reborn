@@ -24,13 +24,15 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :comments
 
-  def my_teams
-    self.teams_created + teams
-  end
-
   # Check if the question is unanswered.
-  def unanswered?(question, team)
-    answers.by_question(question).by_team(team).empty?
+  def answered_question?(question, team)
+    !Answers::AnswersQuery.new.call(
+      users: self,
+      questions: question,
+      teams: team,
+      limit: 1,
+      select: 1
+    ).empty?
   end
 
   # Check if the question is already correctly answered.

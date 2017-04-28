@@ -79,14 +79,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#my_teams' do
-    let(:user) { create(:user, :teacher) }
-    let!(:team_1) { create(:team, owner: user) }
-    let!(:team_2) { create(:team, users: [user]) }
-
-    it { expect(user.my_teams).to eq([team_1, team_2]) }
-  end
-
   describe '#answered_correctly?' do
     let(:user) { create(:user) }
     let(:team) { create(:team, users: [user]) }
@@ -118,19 +110,21 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#unanswered?' do
+  describe '#answered_question?' do
     let(:user) { create(:user) }
     let(:team) { create(:team) }
     let(:question) { create(:question) }
 
+    subject { user.answered_question?(question, team) }
+
     context "when answered" do
       before { create(:answer, user: user, question: question, team: team) }
 
-      it { expect(user.unanswered?(question, team)).to be_falsey }
+      it { expect(subject).to be_truthy }
     end
 
     context "when unanswered" do
-      it { expect(user.unanswered?(question, team)).to be_truthy }
+      it { expect(subject).to be_falsey }
     end
 
     context "when answered but in another team" do
@@ -138,7 +132,7 @@ RSpec.describe User, type: :model do
 
       before { create(:answer, user: user, question: question, team: team_2) }
 
-      it { expect(user.unanswered?(question, team)).to be_truthy }
+      it { expect(subject).to be_falsey }
     end
   end
 
