@@ -24,20 +24,32 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :comments
 
-  # Check if the question is unanswered.
   def answered_question?(question, team)
-    !Answers::AnswersQuery.new.call(
+    !common_answer_query_call(question: question, team: team).empty?
+  end
+
+  def answered_correctly?(question, team)
+    Answers::AnswersQuery.new.call(
       users: self,
       questions: question,
       teams: team,
+      correct: true,
       limit: 1,
       select: 1
-    ).empty?
+    )
+
+    !answers.where(question: question, team: team, correct: true).empty?
   end
 
-  # Check if the question is already correctly answered.
-  def answered_correctly?(question, team)
-    !answers.where(question: question, team: team, correct: true).empty?
+  def common_answer_query_call(correct:, team:, question:)
+    Answers::AnswersQuery.new.call(
+      users: self,
+      questions: question,
+      teams: team,
+      correct: true,
+      limit: 1,
+      select: 1
+    )
   end
 
   # Return the questions answered by the user to a specific team.

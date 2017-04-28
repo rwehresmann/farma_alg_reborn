@@ -8,6 +8,7 @@ module Answers
       @relation.by_team(args[:teams])
         .by_user(args[:users])
         .by_question(args[:questions])
+        .correct_status(args[:correct])
         .limit(args[:limit])
         .order(args[:order])
         .select(args[:select])
