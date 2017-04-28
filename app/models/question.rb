@@ -30,7 +30,11 @@ class Question < ApplicationRecord
 
   # Check what is the dependency operator between two questions.
   def dependency_with(question)
-    QuestionDependency.where(question_1: self, question_2: question).pluck(:operator).first
+    QuestionDependencies::DependenciesQuery.new.call(
+      select: :operator,
+      question_1: self,
+      question_2: question
+    ).first.operator
   end
 
   # Check if the question is a task.
