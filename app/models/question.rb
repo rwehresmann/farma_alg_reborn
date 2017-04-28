@@ -41,7 +41,6 @@ class Question < ApplicationRecord
     operation == "task"
   end
 
-  # Check if the question is answered
   def answered?(args = {})
     !Answers::AnswersQuery.new.call(
       select: 1,
@@ -55,7 +54,10 @@ class Question < ApplicationRecord
 
   # Select dependencies according the informed operator.
   def dependencies_of_operator(operator)
-    question_dependencies.where(operator: operator).map(&:question_2)
+    QuestionDependencies::DependenciesQuery.new(question_dependencies).call(
+      select: :question_2_id,
+      operator: operator
+    ).map(&:question_2)
   end
 
   def last_correct_answer(team, user)

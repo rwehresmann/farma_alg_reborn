@@ -17,6 +17,11 @@ class QuestionDependency < ApplicationRecord
     where(question_2: question)
   end
 
+  scope :by_operator, -> (operator) do
+    return unless operator.present?
+    where(operator: operator)
+  end
+
     private
 
     def belongs_to_same_exercise
