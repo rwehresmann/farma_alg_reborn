@@ -37,15 +37,20 @@ class Question < ApplicationRecord
     ).first.operator
   end
 
-  # Check if the question is a task.
   def task?
     operation == "task"
   end
 
-  # Check if the question is answered, according the informed options.
-  def answered?(options = {})
-    !Answer.by_question(self).by_user(options[:user]).by_team(options[:team])
-           .correct_status(options[:correctly]).empty?
+  # Check if the question is answered
+  def answered?(args = {})
+    !Answers::AnswersQuery.new.call(
+      select: 1,
+      questions: self,
+      users: args[:users],
+      teams: args[:teams],
+      correct: args[:correct],
+      limit: 1
+    ).empty?
   end
 
   # Select dependencies according the informed operator.

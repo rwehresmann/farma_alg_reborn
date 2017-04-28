@@ -119,7 +119,7 @@ RSpec.describe Question, type: :model do
         end
 
         it "returns true" do
-          received = question.answered?(user: user, team: team, correctly: true)
+          received = question.answered?(users: user, teams: team, correct: true)
           expect(received).to be_truthy
         end
       end
@@ -128,7 +128,7 @@ RSpec.describe Question, type: :model do
         before { create(:answer, question: question, user: user, team: team) }
 
         it "returns false" do
-          received = question.answered?(user: user, team: team, correctly: true)
+          received = question.answered?(user: user, team: team, correct: true)
           expect(received).to be_falsey
         end
       end
