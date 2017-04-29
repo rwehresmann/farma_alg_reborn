@@ -61,8 +61,14 @@ class Question < ApplicationRecord
   end
 
   def last_correct_answer(team, user)
-    Answer.by_question(self).by_team(team).by_user(user).correct_status(true)
-          .order(created_at: :desc).limit(1).first
+    Answers::AnswersQuery.new.call(
+      questions: self,
+      teams: team,
+      users: user,
+      correct: true,
+      order: { created_at: :desc },
+      limit: 1
+    ).first
   end
 
     private

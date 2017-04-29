@@ -148,4 +148,28 @@ RSpec.describe Question, type: :model do
       expect(question.dependencies_of_operator("OR")).to eq([another_question])
     end
   end
+
+  describe '#last_correct_answer' do
+    let(:team) { create(:team) }
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    let!(:right_answers) {
+      create_pair(:answer, :correct, team: team, user: user, question: question)
+    }
+    let!(:wrong_answer) {
+      create(:answer, :incorrect, team: team, user: user, question: question)
+    }
+
+    subject { question.last_correct_answer(team, user) }
+
+    before do
+      # Create wrong answer that should be avoided.
+      create(:answer, :incorrect, team: team, user: user)
+      # Create right answer in another team who should be avoided.
+      create(:answer, :correct, user: user)
+    end
+
+    it { expect(subject).to eq(right_answers.last) }
+  end
 end
