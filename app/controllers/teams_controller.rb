@@ -1,3 +1,5 @@
+require 'utils/incentive_ranking/builder'
+
 class TeamsController < ApplicationController
   load_and_authorize_resource
 
@@ -153,8 +155,11 @@ class TeamsController < ApplicationController
     end
 
     def set_incentive_ranking_data
-      limits = { downto: 1, upto: 1, answers: 5 }
-      @incentive_ranking = current_user.incentive_ranking(@team, limits)
+      @incentive_ranking = IncentiveRanking::Builder.new(
+        target: UserScore.by_user(current_user).by_team(@team).first,
+        team: @team,
+        positions: { above: 1, below: 1 }
+      ).build
       @current_user_index = current_user_index
     end
 

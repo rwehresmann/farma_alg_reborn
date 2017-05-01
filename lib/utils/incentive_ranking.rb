@@ -8,6 +8,7 @@ module IncentiveRanking
     # hash argument) of the users of the ranking.
     def build(user, team, limits = {})
       ranking = rank(user, team, limits)
+
       ranking.each.inject([]) do |array, user_score|
         answers = Answer.by_team(team).by_user(user_score.user)
                   .created_last.limit(limits[:answers])
@@ -15,22 +16,27 @@ module IncentiveRanking
       end
     end
 
-    # Create the user score ranking.
-    def rank(user, team, limits = {})
-      team_records = UserScore.rank(team: team)
-      ranking = initialize_ranking(team_records, user)
-      selected_index = user_index(team_records, user)
+      private
 
-      DIRECTIONS_ORDER.each do |direction|
-        break if team_records.count == 1
-        half = desired_records(team_records, selected_index, direction, limits[direction])
-        ranking = join_records(ranking, half, direction) unless half.nil?
+      def needs_ghost_users?(user, ranking, limits)
+        return true if limits[:downto] != 0 && ranking.last.user_id == user.id
+        false
       end
 
-      ranking
-    end
+      # Create the user score ranking.
+      def rank(user, team, limits = {})
+        team_records = UserScore.rank(team: team)
+        ranking = initialize_ranking(team_records, user)
+        selected_index = user_index(team_records, user)
 
-      private
+        DIRECTIONS_ORDER.each do |direction|
+          break if team_records.count == 1
+          half = desired_records(team_records, selected_index, direction, limits[direction])
+          ranking = join_records(ranking, half, direction) unless half.nil?
+        end
+
+        ranking
+      end
 
       def last_placed?(user, ranking)
         ranking.last.user == user

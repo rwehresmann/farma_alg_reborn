@@ -1,8 +1,6 @@
 require 'utils/incentive_ranking'
 
 class User < ApplicationRecord
-  include IncentiveRanking
-
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
   before_validation :generate_anonymous_id
@@ -34,10 +32,6 @@ class User < ApplicationRecord
       team: team,
       correct: true
     ).empty?
-  end
-
-  def incentive_ranking(team, limits = {})
-    IncentiveRanking.build(self, team, limits)
   end
 
   # Check if the user is the owner of a specific team.
