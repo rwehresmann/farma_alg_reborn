@@ -1,4 +1,5 @@
 require 'utils/middlerizer'
+require 'utils/incentive_ranking/ghost_user/applier'
 
 module IncentiveRanking
   class Builder
@@ -10,43 +11,68 @@ module IncentiveRanking
     end
 
     def build
-      ranking = splited_ranking
-      ranking[:upper_half] = ranking[:upper_half].first(@positions[:above])
-      ranking[:lower_half] = ranking[:lower_half].first(@positions[:below])
-      formated_ranking = format_ranking(ranking)
-      join_ranking_with_answers(formated_ranking)
+      ranking = middlerized_incentive_ranking_object
+
+      ranking = IncentiveRanking::GhostUser::Applier.new(
+        incentive_ranking: ranking,
+        team: @team,
+        ghost_users_number: @positions[:below]
+      ).apply
+
+      ranking.to_array
     end
 
     private
 
-    def format_ranking(middlerized_ranking)
-      upper_half = middlerized_ranking[:upper_half].map { |user_score|
-        { user: user_score.user, score: user_score.score }
+    def format_ranking(ranking)
+      formated_ranking = []
+
+      ranking.lower_half.each { |user_score|
+        formated_ranking << user_score_hash(user_score)
       }
 
-      middle = [ { user: @target.user, score: @target.score } ]
+      middle = user_score_hash(ranking.middle)
+      formated_ranking << middle
 
-      lower_half = middlerized_ranking[:lower_half].map { |user_score|
-        { user: user_score.user, score: user_score.score }
+      ranking.upper_half.each { |user_score|
+        formated_ranking << user_score_hash(user_score)
       }
 
-      lower_half + middle + upper_half
+      Middlerizer.new(middle: middle, array: formated_ranking)
     end
 
-    def join_ranking_with_answers(formated_ranking)
-      formated_ranking.map do |user_score|
-        user_score.merge(
-          answers: Answer.by_user(user_score[:user])
-          .by_team(@team).limit(@answers_number)
-        )
+    def join_ranking_with_answers!(ranking)
+      [:upper_half, :lower_half].each do |half|
+        ranking.send(half).each { |user_score|
+          user_score.merge!(answers: select_answers(user_score[:user]))
+        }
       end
+
+      ranking.middle
+          .merge!(answers: select_answers(ranking.middle[:user]))
+
+      ranking
     end
 
-    def splited_ranking
-      Middlerizer.new(
-        target_object: @target,
-        array: UserScore.rank(team: @team)
-      ).middlerized
+    def select_answers(user)
+      Answer.by_user(user).by_team(@team).limit(@answers_number)
+    end
+
+    def user_score_hash(user_score)
+      { user: user_score.user, score: user_score.score }
+    end
+
+    def middlerized_incentive_ranking_object
+      ranking_data = UserScore.rank(team: @team)
+
+      ranking = Middlerizer.new(
+        middle: ranking_data.by_user(@target).first,
+        array: ranking_data,
+        limits: { upper: @positions[:above], lower: @positions[:below] }
+      )
+
+      formated_ranking = format_ranking(ranking)
+      join_ranking_with_answers!(formated_ranking)
     end
   end
 end

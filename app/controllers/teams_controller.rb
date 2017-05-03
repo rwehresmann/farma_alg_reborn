@@ -156,7 +156,7 @@ class TeamsController < ApplicationController
 
     def set_incentive_ranking_data
       @incentive_ranking = IncentiveRanking::Builder.new(
-        target: UserScore.by_user(current_user).by_team(@team).first,
+        target: current_user,
         team: @team,
         positions: { above: 1, below: 1 }
       ).build
