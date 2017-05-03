@@ -20,45 +20,61 @@
 =end
 
 class Middlerizer
-  def initialize(target_object:, array:, limits: {})
+  attr_reader :middle
+  attr_reader :lower_half
+  attr_reader :upper_half
+
+  def initialize(middle:, array:, limits: {})
     @array = array
     @limits = limits
-    @target_object = target_object
-    @target_object_index = set_middle_object_index
-    @lower_half = lower_half
-    @upper_half = upper_half
+    @middle = middle
+    @middle_index = set_middle_index
+    @lower_half = set_lower_half
+    @upper_half = set_upper_half
   end
 
-  def middlerized
-    {
-      middle: @target_object,
+  def to_hash
+    self.class.middlerized_hash(
       upper_half: @upper_half,
+      middle: @middle,
       lower_half: @lower_half
-    }
+    )
+  end
+
+  def to_array
+    @array
+  end
+
+  def size
+    @array.size
+  end
+
+  def self.middlerized_hash(middle: nil, upper_half: [], lower_half: [])
+    { middle: middle, upper_half: upper_half, lower_half: lower_half }
   end
 
   private
 
-  def set_middle_object_index
-    index = @array.index(@target_object)
-    raise "Targert object not found." unless index
+  def set_middle_index
+    index = @array.index(@middle)
+    raise ArgumentError, "Middle object not found." unless index
     index
   end
 
   def number_of_objects_to_get(direction)
     direction == :upper ?
-      @array.index(@array.last) - @target_object_index :
-      @target_object_index
+      @array.index(@array.last) - @middle_index :
+      @middle_index
   end
 
-  def lower_half
+  def set_lower_half
     direction = :lower
     objects_number = number_of_objects_to_get(direction)
     half = @array.first(objects_number)
     apply_limit(half, direction)
   end
 
-  def upper_half
+  def set_upper_half
     direction = :upper
     objects_number = number_of_objects_to_get(direction)
     half = @array.last(objects_number)
