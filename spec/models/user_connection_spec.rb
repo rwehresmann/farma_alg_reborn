@@ -20,16 +20,4 @@ RSpec.describe UserConnection, type: :model do
       expect(relationship_type(UserConnection, :user_2)).to eq(:belongs_to)
     end
   end
-
-  describe ".similarity" do
-    let(:user_1) { create(:user) }
-    let(:user_2) { create(:user) }
-    let(:result) { UserConnection.similarity(user_1, user_2) }
-
-    before { UserConnection.create!(user_1: user_1, user_2: user_2, similarity: 100) }
-
-    it "returns the similarity of a connection" do
-      expect(result).to eq(100)
-    end
-  end
 end
