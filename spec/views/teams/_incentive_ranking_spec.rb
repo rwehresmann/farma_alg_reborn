@@ -1,9 +1,7 @@
 require 'rails_helper'
-require 'utils/incentive_ranking'
+require 'utils/incentive_ranking/builder'
 
 describe 'teams/_incentive_ranking.html.erb' do
-  include IncentiveRanking
-
   let(:current_user) { create(:user) }
   let(:team) { create(:team, users: [current_user]) }
 
@@ -50,7 +48,7 @@ describe 'teams/_incentive_ranking.html.erb' do
     end
 
     def set_instace_variables
-      @incentive_ranking = IncentiveRanking.build(current_user, team)
+      @incentive_ranking = IncentiveRanking::Builder.new(target: current_user, team: team).build
       @team = team
       @current_user_index = current_user_index
     end
