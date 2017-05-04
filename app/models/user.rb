@@ -63,10 +63,9 @@ class User < ApplicationRecord
       or_dependencies = question.dependencies_of_operator("OR")
       return true if or_dependencies.empty?
 
-      or_dependencies.each do |dependency|
-        return true if dependency.answered?(teams: team, users: self,
-                                            correct: true)
-      end
+      or_dependencies.each { |dependency|
+        return true if dependency.correct_answered?(team: team, user: self)
+      }
 
       false
     end
@@ -76,10 +75,9 @@ class User < ApplicationRecord
       and_dependencies = question.dependencies_of_operator("AND")
       return true if and_dependencies.empty?
 
-      and_dependencies.each do |dependency|
-        return false unless dependency.answered?(teams: team, users: self,
-                                                 correct: true)
-      end
+      and_dependencies.each { |dependency|
+        return false unless dependency.correct_answered?(team: team, user: self)
+      }
 
       true
     end

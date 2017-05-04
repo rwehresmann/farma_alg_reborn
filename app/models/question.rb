@@ -41,13 +41,10 @@ class Question < ApplicationRecord
     operation == "task"
   end
 
-  def answered?(args = {})
-    !Answers::AnswersQuery.new.call(
-      select: 1,
-      questions: self,
-      users: args[:users],
-      teams: args[:teams],
-      correct: args[:correct],
+  def correct_answered?(user:, team:)
+    !AnswerQuery::UserCorrectAnswersToTeam.new.call(
+      user: user,
+      team: team,
       limit: 1
     ).empty?
   end

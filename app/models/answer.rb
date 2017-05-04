@@ -97,8 +97,7 @@ class Answer < ApplicationRecord
     private
 
     def increase_score?
-      return true if correct? && !question.answered?(teams: team, users: user,
-                                                     correct: true)
+      return true if correct? && !question.correct_answered?(team: team, user: user)
       false
     end
 

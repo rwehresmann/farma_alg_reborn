@@ -103,12 +103,14 @@ RSpec.describe Question, type: :model do
     end
   end
 
-  describe '#answered?' do
+  describe '#correct_answered?' do
     context "when 'user', 'team', and the 'correctly' parameters are informed -->" do
       let(:team) { create(:team) }
       let(:user) { create(:user) }
       let(:exercise) { create(:exercise) }
       let(:question) { create(:question, exercise: exercise) }
+
+      subject { question.correct_answered?(user: user, team: team) }
 
       before { team.exercises << exercise }
 
@@ -118,19 +120,13 @@ RSpec.describe Question, type: :model do
           create(:answer, :correct, question: question, user: user, team: team)
         end
 
-        it "returns true" do
-          received = question.answered?(users: user, teams: team, correct: true)
-          expect(received).to be_truthy
-        end
+        it { expect(subject).to be_truthy }
       end
 
       context "when isn't answered" do
         before { create(:answer, question: question, user: user, team: team) }
 
-        it "returns false" do
-          received = question.answered?(user: user, team: team, correct: true)
-          expect(received).to be_falsey
-        end
+        it { expect(subject).to be_falsey }
       end
     end
   end
