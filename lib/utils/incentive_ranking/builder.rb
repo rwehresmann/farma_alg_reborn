@@ -63,7 +63,7 @@ module IncentiveRanking
     end
 
     def middlerized_incentive_ranking_object
-      ranking_data = UserScoreQuery::Ranking.new.call(team: @team)
+      ranking_data = UserScoreQuery.new.ranking(team: @team)
 
       ranking = Middlerizer.new(
         middle: ranking_data.by_user(@target).first,

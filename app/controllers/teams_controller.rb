@@ -35,7 +35,7 @@ class TeamsController < ApplicationController
   end
 
   def show
-    records = UserScoreQuery::Ranking.new.call(team: @team, limit: 5)
+    records = UserScoreQuery.new.ranking(team: @team, limit: 5)
     set_general_ranking_data(records)
     set_weekly_ranking_data(records)
     set_incentive_ranking_data if @team.enrolled?(current_user)
