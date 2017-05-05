@@ -42,7 +42,7 @@ class Question < ApplicationRecord
   end
 
   def correct_answered?(user:, team:)
-    !AnswerQuery::UserCorrectAnswersToTeam.new.call(
+    !AnswerQuery.new.user_correct_answers_from_team(
       user: user,
       team: team,
       limit: 1
