@@ -57,17 +57,6 @@ class Question < ApplicationRecord
     ).map(&:question_2)
   end
 
-  def last_correct_answer(team, user)
-    Answers::AnswersQuery.new.call(
-      questions: self,
-      teams: team,
-      users: user,
-      correct: true,
-      order: { created_at: :desc },
-      limit: 1
-    ).first
-  end
-
     private
 
     # Destroy all dependencies (the symmetrical pair).
