@@ -103,28 +103,53 @@ RSpec.describe Question, type: :model do
     end
   end
 
-  describe '#correct_answered?' do
-    context "when 'user', 'team', and the 'correctly' parameters are informed -->" do
-      let(:team) { create(:team) }
-      let(:user) { create(:user) }
-      let(:exercise) { create(:exercise) }
-      let(:question) { create(:question, exercise: exercise) }
+  describe '#answered_by_user?' do
+    let(:user) { create(:user) }
+    let(:team) { create(:team) }
+    let(:question) { create(:question) }
 
-      subject { question.correct_answered?(user: user, team: team) }
+    context "when only correct answers can be considered" do
+      context "when user already answered correctly" do
+        subject { question.answered_by_user?(user, team: team, only_correct: true) }
 
-      before { team.exercises << exercise }
-
-      context "when is answered" do
-        before do
-          create(:answer, question: question, user: user, team: team)
-          create(:answer, :correct, question: question, user: user, team: team)
-        end
+        before { create(:answer, :correct, user: user, team: team, question: question) }
 
         it { expect(subject).to be_truthy }
       end
 
-      context "when isn't answered" do
-        before { create(:answer, question: question, user: user, team: team) }
+      context "when user didn't answered correctly yet" do
+        subject { question.answered_by_user?(user, team: team, only_correct: true) }
+
+        before do
+          # Answers who should be ignored.
+          create(:answer, :incorrect, user: user, team: team, question: question)
+          create(:answer, :correct, user: user, team: team)
+          create(:answer, :correct, user: user, question: question) 
+        end
+
+        it { expect(subject).to be_falsey }
+      end
+    end
+
+    context "when any answer can be considered" do
+      context "when user answered already" do
+        subject { question.answered_by_user?(user, team: team) }
+
+        before { create(:answer, user: user, team: team, question: question) }
+
+        it { expect(subject).to be_truthy }
+      end
+
+      context "when user didn'y answered yet" do
+        subject { question.answered_by_user?(user, team: team) }
+
+        before do
+          # Answers who should be ignored.
+          create(:answer, user: user, team: team)
+          create(:answer, user: user, question: question)
+          create(:answer, team: team, question: question)
+          create(:answer)
+        end
 
         it { expect(subject).to be_falsey }
       end

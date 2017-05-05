@@ -41,10 +41,10 @@ class Question < ApplicationRecord
     operation == "task"
   end
 
-  def correct_answered?(user:, team:)
-    !AnswerQuery.new.user_correct_answers(user,
-      to: { team: team },
-      limit: 1
+  def answered_by_user?(user, team:, only_correct: false)
+    query_method = only_correct ? :user_correct_answers : :user_answers
+    !AnswerQuery.new.send(
+      query_method, user, to: { team: team, question: self }, limit: 1
     ).empty?
   end
 

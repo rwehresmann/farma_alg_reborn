@@ -64,7 +64,7 @@ class User < ApplicationRecord
       return true if or_dependencies.empty?
 
       or_dependencies.each { |dependency|
-        return true if dependency.correct_answered?(team: team, user: self)
+        return true if dependency.answered_by_user?(self, team: team, only_correct: true)
       }
 
       false
@@ -76,7 +76,7 @@ class User < ApplicationRecord
       return true if and_dependencies.empty?
 
       and_dependencies.each { |dependency|
-        return false unless dependency.correct_answered?(team: team, user: self)
+        return false unless dependency.answered_by_user?(self, team: team, only_correct: true)
       }
 
       true
