@@ -110,32 +110,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#answered_question?' do
-    let(:user) { create(:user) }
-    let(:team) { create(:team) }
-    let(:question) { create(:question) }
-
-    subject { user.answered_question?(question, team) }
-
-    context "when answered" do
-      before { create(:answer, user: user, question: question, team: team) }
-
-      it { expect(subject).to be_truthy }
-    end
-
-    context "when unanswered" do
-      it { expect(subject).to be_falsey }
-    end
-
-    context "when answered but in another team" do
-      let(:team_2) { create(:team) }
-
-      before { create(:answer, user: user, question: question, team: team_2) }
-
-      it { expect(subject).to be_falsey }
-    end
-  end
-
   describe '#owner?' do
     let(:user) { create(:user) }
 

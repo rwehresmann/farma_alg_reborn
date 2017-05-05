@@ -1,73 +1,163 @@
 require 'rails_helper'
 
 describe AnswerQuery do
-  describe '#user_correct_answers_from_team' do
-    let(:team) { create(:team) }
+  describe '#user_correct_answers' do
     let(:user) { create(:user) }
-    let!(:user_team_answers) {
-      create_list(:answer, 3, :correct, user: user, team: team)
-    }
 
-    subject {
-      described_class.new.user_correct_answers_from_team(
-        user: user, team: team, limit: limit
-      )
-    }
+    context "when filter by team" do
+      let(:team) { create(:team) }
+      let!(:answers_to_return) {
+        create_list(:answer, 2, :correct, user: user, team: team)
+      }
 
-    before do
-      # Answers that should not return.
-      create(:answer, :correct, user: user)
-      create(:answer, :incorrect, user: user, team: team)
+      subject {
+        described_class.new.user_correct_answers(user, to: { team: team })
+      }
+
+      # Answers who should not return.
+      before do
+        create(:answer, :incorrect, team: team, user: user)
+        create(:answer, :correct, user: user)
+        create(:answer, :correct, team: team)
+      end
+
+      it { expect(subject).to eq(answers_to_return) }
     end
 
-    context "when limit is specified" do
-      let(:limit) { 1 }
+    context "when filter by question" do
+      let(:question) { create(:question) }
+      let!(:answers_to_return) {
+        create_list(:answer, 2, :correct, user: user, question: question)
+      }
 
-      it { expect(subject).to eq([user_team_answers.first]) }
+      subject {
+        described_class.new.user_correct_answers(user, to: { question: question })
+      }
+
+      # Answers who should not return.
+      before do
+        create(:answer, :incorrect, question: question, user: user)
+        create(:answer, :correct, user: user)
+        create(:answer, :correct, question: question)
+      end
+
+      it { expect(subject).to eq(answers_to_return) }
     end
 
-    context "when no limit is specified" do
-      let(:limit) { nil }
+    context "when limit the number of results" do
+      let!(:answers) { create_pair(:answer, :correct, user: user) }
 
-      it { expect(subject).to eq(user_team_answers) }
+      subject { described_class.new.user_correct_answers(user, limit: 1) }
+
+      it { expect(subject).to eq([answers.first]) }
     end
   end
 
-  describe '#user_last_correct_answer_from_team' do
+  describe '#user_last_correct_answer' do
     let(:user) { create(:user) }
-    let(:team) { create(:team) }
-    let(:question) { create(:question) }
-    let(:answer_1) {
-      create(:answer, :correct, user: user, team: team, question: question)
-    }
-    let(:answer_2) {
-      create(:answer, :correct, user: user, team: team, question: question)
-    }
-    let(:answer_3) {
-      create(:answer, :correct, user: user, team: team, question: question)
-    }
-    let(:answer_4) {
-      create(:answer, :incorrect, user: user, team: team, question: question)
-    }
-    let(:answer_5) { create(:answer, :correct, user: user, team: team) }
-    let(:answer_6) { create(:answer, user: user, question: question) }
-    let(:answer_7) { create(:answer, team: team, question: question) }
 
-    subject {
-      described_class.new.user_last_correct_answer_from_team(
-        user: user, team: team, question: question
-      )
-    }
-
-    before do
-      answer_2.update_attribute(:created_at, Time.now + 2.day)
-      # Update answers to be "created earlier" that the correct answer to return,
-      # but they are inconsistent with the query args and should not be returned.
-      [answer_4, answer_5, answer_6, answer_7].each { |answer|
-        answer_2.update_attribute(:created_at, Time.now + 3.day)
+    context "when filter by team" do
+      let(:team) { create(:team) }
+      let!(:answer_to_select) {
+        create(:answer, :correct, team: team, user: user)
       }
+
+      subject {
+        described_class.new.user_last_correct_answer(user, to: { team: team })
+      }
+
+      before do
+        answer_to_select.update_attribute(:created_at, Time.now + 2.day)
+        # Answers who should not return.
+        a1 = create(:answer, :incorrect, team: team, user: user)
+        a2 = create(:answer, :correct, team: team)
+        a3 = create(:answer, :correct, user: user)
+        [a1, a2, a3].each { |answer|
+          answer.update_attribute(:created_at, Time.now + 3.day)
+        }
+        a4 = create(:answer, :correct, team: team, user: user)
+        a4.update_attribute(:created_at, Time.now + 1.day)
+      end
+
+      it { expect(subject).to eq([answer_to_select]) }
     end
 
-    it { expect(subject).to eq([answer_2]) }
+    context "when filtered by question" do
+      let(:question) { create(:question) }
+      let!(:answer_to_select) {
+        create(:answer, :correct, question: question, user: user)
+      }
+
+      subject {
+        described_class.new.user_last_correct_answer(
+          user, to: { question: question }
+        )
+      }
+
+      before do
+        answer_to_select.update_attribute(:created_at, Time.now + 2.day)
+        # Answers who should not return.
+        a1 = create(:answer, :incorrect, question: question, user: user)
+        a2 = create(:answer, :correct, question: question)
+        a3 = create(:answer, :correct, user: user)
+        [a1, a2, a3].each { |answer|
+          answer.update_attribute(:created_at, Time.now + 3.day)
+        }
+        a4 = create(:answer, :correct, question: question, user: user)
+        a4.update_attribute(:created_at, Time.now + 1.day)
+      end
+
+      it { expect(subject).to eq([answer_to_select]) }
+    end
+  end
+
+  describe "user_answers" do
+    let(:user) { create(:user) }
+
+    context "when filter by team" do
+      let(:team) { create(:team) }
+      let!(:answers_to_return) {
+        create_list(:answer, 2, user: user, team: team)
+      }
+
+      subject {
+        described_class.new.user_answers(user, to: { team: team })
+      }
+
+      # Answers who should not return.
+      before do
+        create(:answer, user: user)
+        create(:answer, team: team)
+      end
+
+      it { expect(subject).to eq(answers_to_return) }
+    end
+
+    context "when filter by question" do
+      let(:question) { create(:question) }
+      let!(:answers_to_return) {
+        create_list(:answer, 2, user: user, question: question)
+      }
+
+      subject {
+        described_class.new.user_answers(user, to: { question: question })
+      }
+
+      # Answers who should not return.
+      before do
+        create(:answer, :correct, user: user)
+        create(:answer, :correct, question: question)
+      end
+
+      it { expect(subject).to eq(answers_to_return) }
+    end
+
+    context "when limit the number of results" do
+      let!(:answers) { create_pair(:answer, user: user) }
+
+      subject { described_class.new.user_answers(user, limit: 1) }
+
+      it { expect(subject).to eq([answers.first]) }
+    end
   end
 end

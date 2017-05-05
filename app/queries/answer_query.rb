@@ -1,15 +1,40 @@
 class AnswerQuery
   def initialize(relation = Answer.all)
-    @relation = relation
+    @relation = relation.extending(Scopes)
   end
 
-  def user_correct_answers_from_team(user:, team:, limit: nil)
-    @relation.where(user: user, team: team, correct: true).limit(limit)
+  def user_answers(user, to: {}, limit: nil)
+    @relation.where(user: user)
+    .by_team(to[:team])
+    .by_question(to[:question])
+    .limit(limit)
   end
 
-  def user_last_correct_answer_from_team(user:, team:, question:)
-    @relation.where(
-      user: user, team: team, question: question, correct: true
-    ).limit(1)
+  def user_correct_answers(user, to: {}, limit: nil)
+    @relation.where(user: user, correct: true)
+    .by_team(to[:team])
+    .by_question(to[:question])
+    .limit(limit)
+  end
+
+  def user_last_correct_answer(user, to: {})
+    user_correct_answers(user, to: to, limit: 1).order(created_at: :desc)
+  end
+
+  module Scopes
+    def by_correct_status(correct = nil)
+      return all unless correct.present?
+      where(correct: correct)
+    end
+
+    def by_team(team = nil)
+      return all unless team.present?
+      where(team: team)
+    end
+
+    def by_question(question = nil)
+      return all unless question.present?
+      where(question: question)
+    end
   end
 end

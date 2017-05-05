@@ -10,9 +10,9 @@ class AnswersController < ApplicationController
   def new
     @answer = Answer.new
     @team = Team.find(params[:team_id])
-    @correct_answer = AnswerQuery.user_last_correct_answer_from_team(
-      team: @team, user: current_user, question: @question
-    )
+    @correct_answer = AnswerQuery.new.user_last_correct_answer(
+      current_user, to: { team: @team, question: @question }
+    ).first
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
                        vontade para realizar novas tentativas, mas a partir de
                        agora, elas não incrementarão seu score nem surtirão

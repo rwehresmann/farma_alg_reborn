@@ -42,9 +42,8 @@ class Question < ApplicationRecord
   end
 
   def correct_answered?(user:, team:)
-    !AnswerQuery.new.user_correct_answers_from_team(
-      user: user,
-      team: team,
+    !AnswerQuery.new.user_correct_answers(user,
+      to: { team: team },
       limit: 1
     ).empty?
   end
