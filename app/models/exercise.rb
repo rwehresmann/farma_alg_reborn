@@ -10,10 +10,12 @@ class Exercise < ApplicationRecord
     progress_per_question = 100.fdiv(questions.count)
     total_progress = 0
 
-    questions.each { |question|
-      total_progress += progress_per_question if user.answered_correctly?(question, team)
-    }
-    
+    questions.each do |question|
+      answered_correctly = question.answered_by_user?(
+        user, team: team, only_correct: true)
+      total_progress += progress_per_question if answered_correctly 
+    end
+
     total_progress
   end
 end

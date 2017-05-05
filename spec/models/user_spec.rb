@@ -79,37 +79,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#answered_correctly?' do
-    let(:user) { create(:user) }
-    let(:team) { create(:team, users: [user]) }
-    let(:exercise) { create(:exercise, teams: [team]) }
-    let(:question) { create(:question, exercise: exercise) }
-
-    context "when is answered right" do
-      before do
-        # Create an incorrect answer only to check if is ignored in the query.
-        create(:answer, :incorrect, team: team, user: user, question: question)
-        create(:answer, :correct, team: team, user: user, question: question)
-      end
-
-      it { expect(user.answered_correctly?(question, team)).to be_truthy }
-    end
-
-    context "when isn't answered right" do
-      before { create(:answer, :incorrect, team: team, user: user, question: question) }
-
-      it { expect(user.answered_correctly?(question, team)).to be_falsey }
-    end
-
-    context "when is answered right but in another team" do
-      let(:team_2) { create(:team, exercises: [exercise], users: [user]) }
-
-      before { create(:answer, :correct, question: question, user: user, team: team_2) }
-
-      it { expect(user.answered_correctly?(question, team)).to be_falsey }
-    end
-  end
-
   describe '#owner?' do
     let(:user) { create(:user) }
 

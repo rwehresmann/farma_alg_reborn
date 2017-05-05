@@ -27,9 +27,9 @@ module ExercisesHelper
 
   # Returns a span tag with the right label.
   def question_status(question, team)
-    if current_user.answered_correctly?(question, team)
+    if question.answered_by_user?(current_user, team: team, only_correct: true)
       '<span class="badge bg-green">Correta</span>'
-    elsif current_user.answered_question?(question, team)
+    elsif question.answered_by_user?(current_user, team: team)
       '<span class="badge bg-red text-center" style="width=70px">Errada</span>'
     else
       '<span class="badge bg-gray">Sem resposta</span>'

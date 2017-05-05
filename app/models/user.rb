@@ -20,18 +20,6 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :comments
 
-  def answered_question?(question, team)
-    !common_answer_query_call(question: question, team: team).empty?
-  end
-
-  def answered_correctly?(question, team)
-    !common_answer_query_call(
-      question: question,
-      team: team,
-      correct: true
-    ).empty?
-  end
-
   # Check if the user is the owner of a specific team.
   def owner?(team)
     teams_created.include?(team)
@@ -46,17 +34,6 @@ class User < ApplicationRecord
   end
 
   private
-
-    def common_answer_query_call(team:, question:, correct: nil)
-      Answers::AnswersQuery.new.call(
-        users: self,
-        questions: question,
-        teams: team,
-        correct: correct,
-        limit: 1,
-        select: 1
-      )
-    end
 
     # Check if the user answered the 'OR' dependencies of a specific question.
     def or_dependencies_completed?(question, team)
