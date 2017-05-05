@@ -1,24 +1,24 @@
-User.find_or_create_by!(name: "Indiana Jones", teacher: true, email: "indiana@mail.com") do |user|
+User.find_or_create_by!(name: "Winston", teacher: true, email: "winston@mail.com") do |user|
   user.password = "foobar"
 end
 
-User.find_or_create_by!(name: "Emmett Brown", teacher: true, email: "emmet@mail.com") do |user|
+User.find_or_create_by!(name: "Angela Ziegler", teacher: true, email: "ziegler@mail.com") do |user|
   user.password = "foobar"
 end
 
-User.find_or_create_by!(name: "Marty McFly", teacher: false, email: "marty@mail.com") do |user|
+User.find_or_create_by!(name: "Genji Shimada", teacher: false, email: "genji@mail.com") do |user|
   user.password = "foobar"
 end
 
-User.find_or_create_by!(name: "Genji", teacher: false, email: "genji@mail.com") do |user|
+User.find_or_create_by!(name: "Hanzo Shimada", teacher: false, email: "hanzo@mail.com") do |user|
   user.password = "foobar"
 end
 
-User.find_or_create_by!(name: "Hanzo", teacher: false, email: "hanzo@mail.com") do |user|
+User.find_or_create_by!(name: "Lena Oxton", teacher: false, email: "oxton@mail.com") do |user|
   user.password = "foobar"
 end
 
-User.find_or_create_by!(name: "Roadhog", teacher: false, email: "roadhog@mail.com") do |user|
+User.find_or_create_by!(name: "Amélie Lacroix", teacher: false, email: "lacroix@mail.com") do |user|
   user.password = "foobar"
 end
 
