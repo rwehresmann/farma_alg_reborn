@@ -25,6 +25,10 @@ class User < ApplicationRecord
     teams_created.include?(team)
   end
 
+  def teams_from_where_belongs
+    teams + teams_created
+  end
+
   # Check if the user answered all dependencies of a specific question, and so
   # is able to answer this question.
   def able_to_answer?(question, team)

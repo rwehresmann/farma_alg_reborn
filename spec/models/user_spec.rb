@@ -249,6 +249,17 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#teams_to_where_belongs' do
+    let(:user) { create(:user) }
+
+    before do
+      create(:team, owner: user)
+      create(:team, users: [user])
+    end
+
+    it { expect(user.teams_from_where_belongs.count).to eq(2) }
+  end
+
     private
 
     def skip_before_validation_callback(user)

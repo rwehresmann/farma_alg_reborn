@@ -113,7 +113,7 @@ class TeamsController < ApplicationController
 
     # Return all teams or only the user teams.
     def find_teams
-      teams = params[:my_teams] ? Users::UserTeamsQuery.new(current_user).call :
+      teams = params[:my_teams] ? current_user.teams_from_where_belongs :
                                   Team.active_teams
       teams.paginate(page: params[:page], per_page: 5)
     end
