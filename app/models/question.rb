@@ -30,11 +30,8 @@ class Question < ApplicationRecord
 
   # Check what is the dependency operator between two questions.
   def dependency_with(question)
-    QuestionDependencies::DependenciesQuery.new.call(
-      select: :operator,
-      question_1: self,
-      question_2: question
-    ).first.operator
+    QuestionDependencyQuery.new.dependency_operator(
+      question_1: self, question_2: question).first.operator
   end
 
   def task?
@@ -50,10 +47,8 @@ class Question < ApplicationRecord
 
   # Select dependencies according the informed operator.
   def dependencies_of_operator(operator)
-    QuestionDependencies::DependenciesQuery.new(question_dependencies).call(
-      select: :question_2_id,
-      operator: operator
-    ).map(&:question_2)
+    QuestionDependencyQuery.new(question_dependencies)
+      .dependencies_by_operator(operator).map(&:question_2)
   end
 
     private
