@@ -130,19 +130,16 @@ module SimilarityMachine
     # Get the common questions answered between two users of a team.
     def common_questions_answered(users, team)
       groups = []
-      answered_questions_query = Questions::AnsweredQuestionsQuery.new
       each_object(users, groups) do |user_1, user_2|
-        user_1_questions = answered_questions_query.call(
-          users: user_1,
-          teams: team
+        user_1_questions = QuestionQuery.new.questions_answered_by_user(
+          user_1, team: team
         ).to_a
-        user_2_questions = answered_questions_query.call(
-          users: user_2,
-          teams: team
+        user_2_questions = QuestionQuery.new.questions_answered_by_user(
+          user_2, team: team
         ).to_a
         groups << user_1_questions.common_values(user_2_questions)
       end
-
+      
       groups.common_arrays_values
     end
 
