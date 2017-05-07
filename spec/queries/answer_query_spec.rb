@@ -160,4 +160,64 @@ describe AnswerQuery do
       it { expect(subject).to eq([answers.first]) }
     end
   end
+
+  describe '#team_answers' do
+    let(:team) { create(:team) }
+
+    context "when filtered by question" do
+      let(:question) { create(:question) }
+      let!(:answers_to_select) {
+        create_pair(:answer, team: team, question: question) }
+
+      subject { described_class.new.team_answers(team, question: question) }
+
+      before do
+        # Answers show should not return.
+        create(:answer, question: question)
+        create(:answer, team: team)
+      end
+
+      it { is_expected.to eq(answers_to_select) }
+    end
+
+    context "when limit the results" do
+      let!(:answers_to_select) { create_pair(:answer, team: team) }
+
+      subject { described_class.new.team_answers(team, limit: 1).count }
+
+      it { is_expected.to eq(1) }
+    end
+  end
+
+  describe '#team_correct_answers' do
+    let(:team) { create(:team) }
+
+    context "when filter by question" do
+      let(:question) { create(:question) }
+      let!(:answers_to_return) {
+        create_list(:answer, 2, :correct, question: question, team: team)
+      }
+
+      subject {
+        described_class.new.team_correct_answers(team, question: question)
+      }
+
+      # Answers who should not return.
+      before do
+        create(:answer, :incorrect, question: question, team: team)
+        create(:answer, :correct, team: team)
+        create(:answer, :correct, question: question)
+      end
+
+      it { is_expected.to eq(answers_to_return) }
+    end
+
+    context "when limit the number of results" do
+      let!(:answers) { create_pair(:answer, :correct, team: team) }
+
+      subject { described_class.new.team_correct_answers(team, limit: 1) }
+
+      it { is_expected.to eq([answers.first]) }
+    end
+  end
 end

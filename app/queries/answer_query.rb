@@ -21,6 +21,19 @@ class AnswerQuery
     user_correct_answers(user, to: to, limit: 1).order(created_at: :desc)
   end
 
+  def team_answers(team, options = {})
+    @relation.where(team: team)
+      .by_question(options[:question]).limit(options[:limit])
+  end
+
+  def team_correct_answers(team, options = {})
+    @relation.where(team: team, correct: true)
+    .by_question(options[:question])
+    .limit(options[:limit])
+  end
+
+  private
+
   module Scopes
     def by_correct_status(correct = nil)
       return all unless correct.present?

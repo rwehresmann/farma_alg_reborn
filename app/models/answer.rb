@@ -140,7 +140,7 @@ class Answer < ApplicationRecord
       if question.operation == "challenge"
         question.score
       else
-        answers = Answer.by_team(team).by_question(question)
+        answers = AnswerQuery.new.team_answers(team, question: question)
         return question.score if answers.count < LIMIT_TO_START_VARIATION
         question_level = difficult_level(answers)
         score_variation = SCORE_VARIATION[question_level]
@@ -170,15 +170,17 @@ class Answer < ApplicationRecord
     # Build an array of hashes, where a hash contains the answers object,
     # connection id and the similarity between both answers.
     def answers_similarity_data(connections, threshold, field_name)
-      connections.where("answer_connections.similarity >= ?", threshold).map do |connection|
-        { answer: connection.send(field_name), connection_id: connection.id,
-          similarity: connection.similarity }
-      end
+      AnswerConnectionQuery.new(connections)
+        .connections_by_threshold(min: threshold).map { |connection|
+          { answer: connection.send(field_name), connection_id: connection.id,
+            similarity: connection.similarity }
+        }
     end
 
     # Set answer attempt number.
     def set_attempt
-      attempts_count = Answer.by_question(question).by_user(user).count
+      attempts_count = AnswerQuery.new.user_answers(
+        user, to: { question: question }).count
       self.attempt = attempts_count + 1
     end
 end
