@@ -13,5 +13,13 @@ FactoryGirl.define do
         create_list(:team, evaluator.users_count, user: user)
       end
     end
+
+    trait :active do
+      active true
+    end
+
+    trait :inactive do
+      active false
+    end
   end
 end

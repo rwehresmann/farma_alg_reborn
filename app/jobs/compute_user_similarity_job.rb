@@ -6,7 +6,7 @@ class ComputeUserSimilarityJob < ApplicationJob
   queue_as :users_similarity
 
   def perform
-    Team.active_teams.each do |team|
+    TeamQuery.new.active_teams.each do |team|
       compare_team_users(team)
     end
   end

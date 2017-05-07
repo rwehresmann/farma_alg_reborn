@@ -9,11 +9,6 @@ class Team < ApplicationRecord
   has_and_belongs_to_many :users
   has_and_belongs_to_many :exercises
 
-  # Return only the active teams.
-  def self.active_teams
-    Team.where(active: true)
-  end
-
   # Check if the user is enrolled in the team (if is the owner, it's considered
   # automatically enrolled).
   def enrolled?(user)
