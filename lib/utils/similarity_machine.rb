@@ -99,7 +99,7 @@ module SimilarityMachine
 
     similarities = Hash.new(0)
     each_object(answers, similarities) do |answer_1, answer_2|
-      similarity = AnswerConnection.similarity(answer_1, answer_2)
+      similarity = answer_1.similarity_with(answer_2)
       similarities[answer_1] += similarity unless similarity.nil?
     end
 
@@ -115,9 +115,9 @@ module SimilarityMachine
 
       similarities = []
       user_1_answers.each do |user_1_answer|
-        user_2_answers.each do |user_2_answer|
-          similarities << AnswerConnection.similarity(user_1_answer, user_2_answer)
-        end
+        user_2_answers.each { |user_2_answer|
+          similarities << user_1_answer.similarity_with(user_2_answer)
+        }
       end
 
       # If the similarity between the two answers isn't already computed, returns
@@ -139,7 +139,7 @@ module SimilarityMachine
         ).to_a
         groups << user_1_questions.common_values(user_2_questions)
       end
-      
+
       groups.common_arrays_values
     end
 

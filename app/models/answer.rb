@@ -94,6 +94,12 @@ class Answer < ApplicationRecord
     self.correct = is_correct?
   end
 
+  # Get similarity between two users, if already calculated.
+  def similarity_with(answer)
+    query_result = AnswerConnectionQuery.new.get_similarity(self, answer).first
+    if query_result then query_result.similarity else nil end
+  end
+
     private
 
     def increase_score?

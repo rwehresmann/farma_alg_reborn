@@ -39,8 +39,8 @@ class AnswersController < ApplicationController
   end
 
   def connections
-    connections = AnswerConnection.connections(params[:answers],
-                                               params[:type].to_sym)
+    connections = AnswerConnectionQuery.new.connections_group(
+      answers: params[:answers], type: params[:type].to_sym)
 
     @connections = connections.each.inject([]) do |array, connection|
       hash = {}

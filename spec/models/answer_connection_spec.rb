@@ -21,54 +21,6 @@ RSpec.describe AnswerConnection, type: :model do
     end
   end
 
-  describe ".similarity" do
-    let(:answer_1) { create(:answer) }
-    let(:answer_2) { create(:answer) }
-    let(:result) { AnswerConnection.similarity(answer_1, answer_2) }
-
-    before { AnswerConnection.create!(answer_1: answer_1, answer_2: answer_2, similarity: 100) }
-
-    it "returns the similarity of a connection" do
-      expect(result).to eq(100)
-    end
-
-    context "when the similarity need to be caught from the simetrical record" do
-      before { AnswerConnection.create!(answer_1: answer_2, answer_2: answer_1, similarity: 100) }
-
-      it "returns the correct similarity" do
-        expect(result).to eq(100)
-      end
-    end
-  end
-
-  describe ".by_threshold" do
-    let(:connection_1) { create(:answer_connection, similarity: 100) }
-    let(:connection_2) { create(:answer_connection, similarity: 90) }
-    let(:connection_3) { create(:answer_connection, similarity: 80) }
-
-    context "when answers are specified" do
-      it "returns the connections that belongs to these answers" do
-        answers = (connection_1.answers + connection_2.answers)
-        received = described_class.by_threshold(100, answers).to_a
-        expect(received).to eq([connection_1])
-      end
-    end
-
-    context "when answers aren't specified" do
-      it "searches in all connections" do
-        received = described_class.by_threshold(80)
-        expect(received).to eq([connection_1, connection_2, connection_3])
-      end
-    end
-
-    context "when doesn't exists connections bigger or equal the threshold" do
-      it "returns an empty result" do
-        received = described_class.by_threshold(101)
-        expect(received.empty?).to be_truthy
-      end
-    end
-  end
-
   describe '#answers' do
     let(:connection) { create(:answer_connection) }
 
@@ -96,43 +48,6 @@ RSpec.describe AnswerConnection, type: :model do
       let(:answer_connection) { create(:answer_connection) }
 
       it { expect(subject).to be_falsey }
-    end
-  end
-
-  describe '.connections' do
-    let(:team) { create(:team) }
-    let(:answer_1) { create(:answer, team: team) }
-    let(:answer_2) { create(:answer, team: team) }
-    let(:answer_3) { create(:answer, team: team) }
-
-    context "when should search by connections with the specified answers" do
-      let!(:connection_1) { create(:answer_connection, answer_1: answer_1,
-                                   answer_2: answer_2) }
-      let!(:connection_2) { create(:answer_connection, answer_1: answer_2,
-                                   answer_2: answer_1) }
-      let!(:connection_3) { create(:answer_connection, answer_1: answer_1,
-                                   answer_2: answer_3) }
-
-      it "searches by connections where one of the two answers is equal to the specified answers" do
-        received = AnswerConnection.connections(answer_2)
-        expect(received.count).to eq(2)
-        expect(received).to include(connection_1, connection_2)
-      end
-    end
-
-    context "when should search connections between the specified answers" do
-      let!(:connection_1) { create(:answer_connection, answer_1: answer_3,
-                                   answer_2: answer_2) }
-      let!(:connection_2) { create(:answer_connection, answer_1: answer_2,
-                                   answer_2: answer_1) }
-      let!(:connection_3) { create(:answer_connection, answer_1: answer_2,
-                                   answer_2: answer_3) }
-
-      it "searches by connections where both answers should be between the specified answers" do
-        received = AnswerConnection.connections([answer_3, answer_2], :between)
-        expect(received.count).to eq(2)
-        expect(received).to include(connection_1, connection_3)
-      end
     end
   end
 end

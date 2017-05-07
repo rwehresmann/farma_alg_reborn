@@ -277,6 +277,24 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+  describe '#similarity_with' do
+    let(:answer_1) { create(:answer) }
+    let(:answer_2) { create(:answer) }
+
+    subject { answer_1.similarity_with(answer_2) }
+
+    context "when similarity wasn't calculated yet" do
+      it { is_expected.to be_nil }
+    end
+
+    context "when similarity was calculated" do
+      let!(:connection) {
+        create(:answer_connection, answer_1: answer_1, answer_2: answer_2) }
+
+      it { is_expected.to eq(connection.similarity) }
+    end
+  end
+
     private
 
     def create_or_build_right_answer(operation)
