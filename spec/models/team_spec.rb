@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Team, type: :model do
-
   describe "Validations -->" do
     let(:team) { build(:team) }
 
@@ -93,21 +92,7 @@ RSpec.describe Team, type: :model do
 
     before { team.enroll(user) }
 
-    it "enroll the user and create an UserScore record" do
-      expect(team.enrolled?(user)).to be_truthy
-      expect(UserScore.find_by(user: user, team: team)).to_not be_nil
-    end
-
-    context "when UserScore record already exists" do
-      before do
-        team.unenroll(user)
-        team.enroll(user)
-      end
-
-      it "doesn't recreate it" do
-        expect(UserScore.where(user: user, team: team).count).to eq(1)
-      end
-    end
+    it { expect(team.enrolled?(user)).to be_truthy }
   end
 
   describe '#add_exercise' do
@@ -122,11 +107,11 @@ RSpec.describe Team, type: :model do
 
     context "when exercise is already associated to the team" do
       let(:exercise) { create(:exercise) }
-      let(:team) { create(:team, exercises: [team]) }
+      let(:team) { create(:team, exercises: [exercise]) }
 
       subject { team.add_exercise(exercise) }
 
-      it { expect{ subject }.to raise_error }
+      it { expect{ subject }.to raise_error(RuntimeError) }
     end
   end
 
@@ -140,18 +125,42 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#have_exercise?' do
-    context "when yes" do
+    context "when have" do
       let(:exercise) { create(:exercise) }
       let(:team) { create(:team, exercises: [exercise]) }
 
       it { expect(team.have_exercise?(exercise)).to be_truthy }
     end
 
-    context "when no" do
+    context "when haven't" do
       let(:exercise) { create(:exercise) }
       let(:team) { create(:team) }
 
       it { expect(team.have_exercise?(exercise)).to be_falsey }
     end
+  end
+
+  describe '#initialize_user_score' do
+    let(:team) { create(:team) }
+
+    subject { team.send(:initialize_user_score) }
+
+    before { team.instance_variable_set("@user", create(:user)) }
+
+    context "when it wasn't initialized already" do
+      it { expect { subject }.to change(UserScore, :count).by(1) }
+    end
+
+    context "when it was initialized already" do
+      before {
+        create(:user_score, user: team.instance_variable_get("@user"), team: team)
+      }
+
+      it { expect { subject }.to_not change(UserScore, :count) }
+    end
+  end
+
+  describe "Callbacks -->" do
+    it { is_expected.to callback(:initialize_user_score).after(:enroll) }
   end
 end
