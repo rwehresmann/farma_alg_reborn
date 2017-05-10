@@ -7,7 +7,6 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 require './lib/extensions/array'
-require './lib/utils/similarity_machine/answers/calculator'
 
 module IntegrationRailsAdminlte2
   class Application < Rails::Application

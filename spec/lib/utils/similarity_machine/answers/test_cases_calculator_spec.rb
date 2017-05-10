@@ -1,4 +1,5 @@
 require 'rails_helper'
+require './lib/utils/similarity_machine/answers/test_cases_calculator'
 
 describe SimilarityMachine::Answers::TestCasesCalculator do
   describe '#calculate' do
