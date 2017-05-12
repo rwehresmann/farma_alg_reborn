@@ -1,16 +1,16 @@
 require 'rails_helper'
-require 'utils/similarity_machine/users/calculator'
+require 'utils/similarity_machine/users_calculator'
 
-describe SimilarityMachine::Users::Calculator do
+describe SimilarityMachine::UsersCalculator do
   before { @team = create(:team) }
 
-  describe '#calculator' do
+  describe '#calculate_similarity' do
     context "when users haven't common questions answered" do
       subject do
         users = users_without_common_questions
         described_class.new(
           user_1: users[0], user_2: users[1], team: @team
-        ).calculate
+        ).calculate_similarity
       end
 
       it { is_expected.to be_nil }
@@ -21,7 +21,7 @@ describe SimilarityMachine::Users::Calculator do
         users = users_with_similar_answers
         described_class.new(
           user_1: users[0], user_2: users[1], team: @team
-        ).calculate
+        ).calculate_similarity
       end
 
       it { is_expected.to eq 75 }

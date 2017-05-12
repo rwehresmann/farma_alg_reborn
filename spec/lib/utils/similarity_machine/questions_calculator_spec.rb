@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'utils/similarity_machine/users/users_questions_calculator'
+require 'utils/similarity_machine/questions_calculator'
 
-describe SimilarityMachine::Users::UsersQuestionsCalculator do
+describe SimilarityMachine::QuestionsCalculator do
   before do
     @question = create(:question)
     @team = create(:team)
@@ -10,7 +10,7 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
   describe '#questions_similarity' do
     context "when questions aren't informed" do
       subject {
-        stubbed_calculator(*create_pair(:user)).questions_similarity([])
+        calculator(*create_pair(:user)).calculate_similarity([])
       }
 
       it { expect { subject }.to raise_error(ArgumentError) }
@@ -19,9 +19,9 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
     context "when questions are informed" do
       context "when none answers of the users have its similarity calculated already" do
         subject {
-          stubbed_calculator(
+          calculator(
             *users_without_answers_similarity_calculated
-          ).questions_similarity([@question])
+          ).calculate_similarity([@question])
         }
 
         it { is_expected.to eq 0 }
@@ -30,9 +30,9 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
       context "when some users answers have its similarity calculated already" do
         context "when they're completely similar" do
           subject {
-            stubbed_calculator(
+            calculator(
               *users_with_completely_similar_answers
-            ).questions_similarity([@question])
+            ).calculate_similarity([@question])
           }
 
           it { is_expected.to eq 100 }
@@ -40,9 +40,9 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
 
         context "when they're similar in some level" do
           subject {
-            stubbed_calculator(
+            calculator(
               *users_with_similar_answers
-            ).questions_similarity([@question])
+            ).calculate_similarity([@question])
           }
 
           it { is_expected.to eq 75 }
@@ -50,9 +50,9 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
 
         context "when they're completely different" do
           subject {
-            stubbed_calculator(
+            calculator(
               *users_with_completely_different_answers
-            ).questions_similarity([@question])
+            ).calculate_similarity([@question])
           }
 
           it { is_expected.to eq 0 }
@@ -61,12 +61,8 @@ describe SimilarityMachine::Users::UsersQuestionsCalculator do
     end
   end
 
-  def stubbed_calculator(user_1, user_2)
-    object = Object.new.extend(described_class)
-    object.instance_variable_set(:@user_1, user_1)
-    object.instance_variable_set(:@user_2, user_2)
-    object.instance_variable_set(:@team, @team)
-    object
+  def calculator(user_1, user_2)
+    described_class.new(user_1: user_1, user_2: user_2, team: @team)
   end
 
   def users_without_common_questions(team)
