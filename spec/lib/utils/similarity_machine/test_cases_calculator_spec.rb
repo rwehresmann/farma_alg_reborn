@@ -1,23 +1,34 @@
 require 'rails_helper'
-require './lib/utils/similarity_machine/answers/test_cases_calculator'
+require './lib/utils/similarity_machine/test_cases_calculator'
 
-describe SimilarityMachine::Answers::TestCasesCalculator do
-  describe '#calculate' do
+describe SimilarityMachine::TestCasesCalculator do
+  describe '#calculate_similarity' do
     context "when answers have common test cases" do
       context "when test cases results are identical" do
-        subject { call_calculator(*answers_with_identical_result) }
+        subject {
+          described_class.new(
+            *answers_with_identical_result
+          ).calculate_similarity
+        }
 
         it { is_expected.to eq 100 }
       end
 
       context "when test cases results are completely different" do
-        subject { call_calculator(*answers_with_completely_different_results) }
-
+        subject {
+          described_class.new(
+            *answers_with_completely_different_results
+          ).calculate_similarity
+        }
         it { is_expected.to eq 0 }
       end
 
       context "when test cases results aren't identical neither completely different" do
-        subject { call_calculator(*answers_with_similar_results) }
+        subject {
+          described_class.new(
+            *answers_with_similar_results
+          ).calculate_similarity
+        }
 
         it "returns a value between 0 and 100" do
           is_expected.to be < 100
@@ -27,17 +38,13 @@ describe SimilarityMachine::Answers::TestCasesCalculator do
     end
 
     context "when answers haven't common test cases" do
-      subject { call_calculator(*answers_without_common_test_cases) }
-
+      subject {
+        described_class.new(
+          *answers_without_common_test_cases
+        ).calculate_similarity
+      }
       it { is_expected.to be_nil }
     end
-  end
-
-  def call_calculator(answer_1, answer_2)
-    object = Object.new.extend(described_class)
-    object.instance_variable_set(:@answer_1, answer_1)
-    object.instance_variable_set(:@answer_2, answer_2)
-    object.test_cases_similarity
   end
 
   def answers_with_identical_result

@@ -1,8 +1,8 @@
 require 'rails_helper'
-require 'utils/similarity_machine/answers/calculator'
+require 'utils/similarity_machine/answers_calculator'
 
-describe SimilarityMachine::Answers::Calculator do
-  describe '#calculate' do
+describe SimilarityMachine::AnswersCalculator do
+  describe '#calculate_similarity' do
     context "when answers haven't common test cases" do
       context "when answers are identical" do
         subject { call_mocking(build_pair(:answer, :hello_world), 100) }
@@ -65,6 +65,6 @@ describe SimilarityMachine::Answers::Calculator do
   def call_mocking(answers, return_value)
     calculator = described_class.new(*answers)
     allow_any_instance_of(MossMatcher).to receive(:call).with(no_args) { return_value }
-    calculator.calculate
+    calculator.calculate_similarity
   end
 end
