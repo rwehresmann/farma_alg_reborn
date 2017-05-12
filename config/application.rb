@@ -7,6 +7,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 require './lib/extensions/array'
+require './lib/extensions/hash'
 
 module IntegrationRailsAdminlte2
   class Application < Rails::Application
