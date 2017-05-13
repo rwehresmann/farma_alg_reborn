@@ -57,11 +57,6 @@ class Answer < ApplicationRecord
     where("created_at BETWEEN datetime(?) AND datetime(?)", start_date, end_date)
   end
 
-  # Returns the answers which one the specified answer should be compared.
-  scope :to_compare_similarity, -> (answer) do
-    by_team(answer.team).by_question(answer.question).where.not(id: answer)
-  end
-
   scope :created_last, -> do
     order(created_at: :desc)
   end
