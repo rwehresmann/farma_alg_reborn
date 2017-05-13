@@ -220,4 +220,17 @@ describe AnswerQuery do
       it { is_expected.to eq([answers.first]) }
     end
   end
+
+  describe '#answers_to_compare' do
+
+    it "returns all answers from the informed answer team and question, except itself" do
+      team = create(:team)
+      question = create(:question)
+      answers = create_list(:answer, 3, question: question, team: team)
+
+      result = described_class.new.answers_to_compare(answers.first)
+
+      expect(result).to eq(answers.last(2))
+    end
+  end
 end

@@ -32,6 +32,14 @@ class AnswerQuery
     .limit(options[:limit])
   end
 
+  def answers_to_compare(answer)
+    @relation.where(
+      team: answer.team,
+      question:
+      answer.question
+    ).where.not(id: answer)
+  end
+
   private
 
   module Scopes
