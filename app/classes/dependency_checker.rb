@@ -7,13 +7,22 @@ class DependencyChecker
     @questions = questions_blocked_and_unblocked
   end
 
-  def questions_able_to_answer
+  def unblocked_questions
     @questions[:unblocked]
   end
 
-  def user_able_to_answer?(question)
+  def blocked_questions
+    @questions[:blocked]
+  end
+
+  def able_to_answer?(question)
     raise "This questions doesn't belongs to the specified exercise." unless belongs_to_exercise?(question)
     @questions[:unblocked].include?(question)
+  end
+
+  def dependencies_by_operator(question:, operator:)
+    QuestionDependencyQuery.new(question.question_dependencies)
+      .dependencies_by_operator(operator).map(&:question_2)
   end
 
   private
@@ -44,7 +53,7 @@ class DependencyChecker
   end
 
   def or_dependencies_completed?(question)
-    or_dependencies = dependencies_by_operator(question, "OR")
+    or_dependencies = dependencies_by_operator(question: question, operator: "OR")
     return true if or_dependencies.empty?
 
     or_dependencies.each { |dependency|
@@ -59,7 +68,7 @@ class DependencyChecker
   end
 
   def and_dependencies_completed?(question)
-    and_dependencies = dependencies_by_operator(question, "AND")
+    and_dependencies = dependencies_by_operator(question: question, operator: "AND")
     return true if and_dependencies.empty?
 
     and_dependencies.each { |dependency|
@@ -71,10 +80,5 @@ class DependencyChecker
     }
 
     true
-  end
-
-  def dependencies_by_operator(question, operator)
-    QuestionDependencyQuery.new(question.question_dependencies)
-      .dependencies_by_operator(operator).map(&:question_2)
   end
 end

@@ -28,14 +28,14 @@ describe DependencyChecker do
     end
   end
 
-  describe '#user_able_to_answer?' do
+  describe '#able_to_answer?' do
     context "when question doesn't belongs to the specified exercise" do
       subject {
         described_class.new(
           team: build(:team),
           user: build(:user),
           exercise: build(:exercise)
-        ).user_able_to_answer?(build(:question))
+        ).able_to_answer?(build(:question))
       }
 
       it { expect { subject }.to raise_error(RuntimeError) }
@@ -54,7 +54,7 @@ describe DependencyChecker do
             team: args[:team],
             user: args[:user],
             exercise: args[:exercise]
-          ).user_able_to_answer?(questions[1])
+          ).able_to_answer?(questions[1])
 
           expect(result).to be_truthy
         end
@@ -73,7 +73,7 @@ describe DependencyChecker do
               team: args[:team],
               user: args[:user],
               exercise: args[:exercise]
-            ).user_able_to_answer?(questions[1])
+            ).able_to_answer?(questions[1])
 
             expect(result).to be_falsey
           end
@@ -91,7 +91,7 @@ describe DependencyChecker do
               team: args[:team],
               user: args[:user],
               exercise: args[:exercise]
-            ).user_able_to_answer?(questions[1])
+            ).able_to_answer?(questions[1])
 
             expect(result).to be_falsey
           end
@@ -108,7 +108,7 @@ describe DependencyChecker do
               team: args[:team],
               user: args[:user],
               exercise: args[:exercise]
-            ).user_able_to_answer?(questions[1])
+            ).able_to_answer?(questions[1])
 
             expect(result).to be_falsey
           end
@@ -117,8 +117,29 @@ describe DependencyChecker do
     end
   end
 
-  describe 'questions_able_to_answer' do
-    it "returns questions without dependency issues" do
+  describe '#unblocked_questions / #blocked_questions' do
+    it "returns the right questions associated to each situation" do
+      args = related_args
+      questions = create_list(:question, 5, exercise: args[:exercise])
+
+      set_dependencies(questions)
+
+      dependency_checker = described_class.new(
+        team: args[:team],
+        user: args[:user],
+        exercise: args[:exercise]
+      )
+
+      unblocked = [questions[0], questions[2], questions[3], questions[4]]
+      blocked = [questions[1]]
+
+      expect(dependency_checker.unblocked_questions).to eq unblocked
+      expect(dependency_checker.blocked_questions).to eq blocked
+    end
+  end
+
+  describe '#dependencies_by_operator' do
+    it "returns the question objects of the dependencies" do
       args = related_args
       questions = create_list(:question, 5, exercise: args[:exercise])
 
@@ -128,11 +149,9 @@ describe DependencyChecker do
         team: args[:team],
         user: args[:user],
         exercise: args[:exercise]
-      ).questions_able_to_answer
+      ).dependencies_by_operator(question: questions[1], operator: "OR")
 
-      expected = [questions[0], questions[2], questions[3], questions[4]]
-
-      expect(result).to eq expected
+      expect(result).to eq [questions[0], questions[2]]
     end
   end
 
