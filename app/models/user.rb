@@ -29,42 +29,10 @@ class User < ApplicationRecord
     teams + teams_created
   end
 
-  # Check if the user answered all dependencies of a specific question, and so
-  # is able to answer this question.
-  def able_to_answer?(question, team)
-    return true if or_dependencies_completed?(question, team) &&
-            and_dependencies_completed?(question, team)
-    false
-  end
-
   private
 
-    # Check if the user answered the 'OR' dependencies of a specific question.
-    def or_dependencies_completed?(question, team)
-      or_dependencies = question.dependencies_of_operator("OR")
-      return true if or_dependencies.empty?
-
-      or_dependencies.each { |dependency|
-        return true if dependency.answered_by_user?(self, team: team, only_correct: true)
-      }
-
-      false
-    end
-
-    # Check if the user answered the 'AND' dependencies of a specific question.
-    def and_dependencies_completed?(question, team)
-      and_dependencies = question.dependencies_of_operator("AND")
-      return true if and_dependencies.empty?
-
-      and_dependencies.each { |dependency|
-        return false unless dependency.answered_by_user?(self, team: team, only_correct: true)
-      }
-
-      true
-    end
-
-    # Generate random anonymous id.
-    def generate_anonymous_id
-      self.anonymous_id = SecureRandom.hex(4)
-    end
+  # Generate random anonymous id.
+  def generate_anonymous_id
+    self.anonymous_id = SecureRandom.hex(4)
+  end
 end
