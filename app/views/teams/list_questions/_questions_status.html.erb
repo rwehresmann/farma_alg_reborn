@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <th style="width: 10px">#</th>
+      <th>Questão</th>
+      <th style="width: 70px">Resposta</th>
+    </tr>
+    <% exercise.questions.each_with_index do |question, index| %>
+      <tr>
+        <td><%= index %>.</td>
+        <td><%= link_to_if(dependency_checker.able_to_answer?(question), question.title, new_answer_question_url(question, team)) %></td>
+        <td>
+          <%= raw question_status(question, team) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
