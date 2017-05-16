@@ -370,6 +370,7 @@ RSpec.describe TeamsController, type: :controller do
     it "sets the instance variables" do
       subject
       expect(assigns(:exercise)).to_not be_nil
+      expect(assigns(:dependency_checker)).to_not be_nil
     end
   end
 end

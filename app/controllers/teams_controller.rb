@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update,
-                                   :destroy, :add_or_remove_exercise]
+                                   :destroy, :add_or_remove_exercise, :list_questions]
   before_action :find_exercise, only: [:add_or_remove_exercise]
   before_action :find_exercises, only: [:show]
 
@@ -82,6 +82,11 @@ class TeamsController < ApplicationController
 
   def list_questions
     @exercise = Exercise.find(params[:exercise_id])
+    @dependency_checker = DependencyChecker.new(
+      exercise: @exercise,
+      team: @team,
+      user: current_user
+    )
   end
 
   def answers
