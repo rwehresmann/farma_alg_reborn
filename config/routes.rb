@@ -18,8 +18,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :teams do
+  resources :teams, except: [:show] do
     member do
+      get :rankings
+      get :exercises
+      get :users
+      get :graph
       post :enroll
       post :unenroll
       post 'add_or_remove_exercise/:exercise_id', to: 'teams#add_or_remove_exercise', as: :add_or_remove_exercise
