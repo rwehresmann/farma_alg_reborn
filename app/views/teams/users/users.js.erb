@@ -1,0 +1,12 @@
+window.history.pushState('', '', '<%= users_team_path(@team) %>')
+
+$('li.active').removeClass('active');
+$('li:has(a[href="#enrolled-students"])').addClass('active');
+$('.tab-content').html(
+  '<%= j( \
+    render( \
+      partial: "teams/users/users", \
+      locals: { enrolled_users: @enrolled_users } \
+    ) \
+  ) %>'
+)

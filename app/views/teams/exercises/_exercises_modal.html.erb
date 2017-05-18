@@ -3,7 +3,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4>Meus exercícios</h>
-        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button
+          id="close"
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
 
@@ -15,12 +20,15 @@
               <th style="width: 50px"></th>
             </tr>
 
-            <% @teacher_exercises.each_with_index do |exercise, index| %>
+            <% teacher_exercises.each_with_index do |exercise, index| %>
               <tr>
                 <td><%= index %>.</td>
                 <td><%= exercise.title %></td>
                 <td id="add-exercise-<%= exercise.id %>">
-                  <%= render partial: 'add_exercise', locals: { exercise: exercise } %>
+                  <%= render(
+                    partial: 'teams/exercises/add_exercise',
+                    locals: { exercise: exercise, team: team }
+                  ) %>
                 </td>
               </tr>
             <% end %>

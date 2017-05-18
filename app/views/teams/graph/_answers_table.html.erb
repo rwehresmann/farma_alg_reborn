@@ -56,7 +56,6 @@
   <% end %>
 
   $(document).on('click', '#add-all-answers', function() {
-    alert("oi")
     <% @answers.each do |answer| %>
       addAnswer(<%= answer[:id] %>, <%= raw(answer.to_json) %>);
     <% end %>

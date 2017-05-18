@@ -1,0 +1,35 @@
+<div class="tab-pane active" id="rankings">
+  <div class="row">
+    <div class="col-md-6">
+      <%= render(
+        partial: 'teams/rankings/ranking',
+        locals: {
+          title: "Ranking geral",
+          ranking: general_ranking,
+          base_score: general_base_score
+        }
+      ) %>
+    </div>
+    <div class="col-md-6">
+      <%= render(
+        partial: 'teams/rankings/ranking',
+        locals: {
+          title: "Ranking da semana",
+          ranking: weekly_ranking,
+          base_score: weekly_base_score
+        }
+      ) %>
+    </div>
+  </div>
+
+  <% if @team.enrolled?(current_user) %>
+    <br></br>
+    <%= render(
+      partial: 'incentive_ranking',
+      locals: {
+        incentive_ranking: incentive_ranking,
+        current_user_index: current_user_index
+      }
+    ) %>
+  <% end %>
+</div>

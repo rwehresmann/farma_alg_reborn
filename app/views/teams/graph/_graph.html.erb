@@ -48,7 +48,14 @@
        var div = $(document.createElement('div'));
        div.attr('id', modalName + '-container');
        $('body').append(div);
-       $(div).html("<%= escape_javascript(render 'teams/graph/search_modal') %>");
+       $(div).html(
+         "<%= j( \
+           render(
+             partial: 'teams/graph/search_modal',
+             locals: { team: team }
+           )
+         ) %>"
+       );
        $('body').append(div);
      });
    });

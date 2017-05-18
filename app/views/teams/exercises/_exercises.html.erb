@@ -1,0 +1,23 @@
+<div class="tab-pane active" id="exercises-list">
+  <div class="box-body">
+    <button id="add-exercise" class="btn btn-primary pull-right">
+      Adicionar exercício
+    </button>
+
+    <br></br>
+
+    <div id="exercises-table">
+      <% if current_user.owner?(team) %>
+        <%= render(
+          partial: 'teams/exercises/teacher_exercises_table',
+          locals: { team_exercises: team_exercises, team: team }
+        )%>
+      <% else %>
+        <%= render(
+          partial: 'teams/exercises/student_exercises_table',
+          locals: { team_exercises: team_exercises, team: team }
+        ) %>
+      <% end %>
+    </div>
+  </div>
+</div>

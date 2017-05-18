@@ -1,0 +1,29 @@
+<%= render layout: 'teams/nav_tabs', locals: { team: @team } do %>
+  <%= render(
+    partial: 'teams/exercises/exercises',
+    locals: {
+      team: @team,
+      teacher_exercises: @teacher_exercises,
+      team_exercises: @team_exercises
+    }
+  ) %>
+<% end %>
+
+<script text="text/javascript">
+  function createModal(modalName) {
+    var div = $(document.createElement('div'))
+    div.attr('id', modalName + '-container');
+    $('body').append(div);
+    $(div).html(
+      '<%= j( \
+        render(
+          partial: 'teams/exercises/exercises_modal',
+          locals: { teacher_exercises: @teacher_exercises, team: @team }
+        )
+      ) %>'
+    );
+    $('body').append(div);
+  }
+
+  createModal('exercises')
+</script>

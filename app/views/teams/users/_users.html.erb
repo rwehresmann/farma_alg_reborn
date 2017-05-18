@@ -1,0 +1,16 @@
+<div class="tab-pane active" id="enrolled-students">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th style="width: 10px">#</th>
+        <th>Usuário</th>
+      </tr>
+      <% enrolled_users.each_with_index do |user, index| %>
+        <tr>
+          <td><%= index %>.</td>
+          <td><%= user.name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

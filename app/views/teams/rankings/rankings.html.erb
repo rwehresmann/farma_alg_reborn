@@ -1,0 +1,13 @@
+<%= render layout: 'teams/nav_tabs', locals: { team: @team } do %>
+  <%= render(
+    partial: 'teams/rankings/rankings',
+    locals: {
+      general_ranking: @general_ranking,
+      general_base_score: @general_base_score,
+      weekly_ranking: @weekly_ranking,
+      weekly_base_score: @weekly_base_score,
+      incentive_ranking: @incentive_ranking,
+      current_user_index: @current_user_index
+    }
+  ) %>
+<% end %>

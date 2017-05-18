@@ -11,7 +11,7 @@
       <% end %>
 
       <div class="pull-right">
-        <%= link_to "Ver", team %>
+        <%= link_to "Ver", rankings_team_path(team) %>
           <% if can? :update, team %>
             | <%= link_to "Editar", edit_team_path(team) %>
           <% end %>
