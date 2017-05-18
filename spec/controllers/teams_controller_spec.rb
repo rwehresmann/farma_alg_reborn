@@ -104,68 +104,203 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  describe "GET #show" do
-    subject(:show_team) { get :show, params: { id: team } }
+  describe 'GET #rankings' do
+    context "when logged in" do
+      context "with an ajax request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :rankings, xhr: true, params: { id: team }
 
-    context "when logged-in -->" do
-      context "when is a student" do
-        let(:user) { create(:user) }
-        let(:team) { create(:team) }
-
-        before do
-          create(:earned_score, team: team)
-          create(:user_score, user: user)
-          team.enroll(user)
-          sign_in user
-          show_team
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("teams/rankings/rankings")
         end
-
-        it { expect(response).to have_http_status(:ok) }
-        it { expect(response.content_type).to eq("text/html") }
-        it { expect(response).to render_template("teams/show") }
-        it { expect(assigns(:team)).to_not be_nil }
-        it { expect(assigns(:team_exercises)).to_not be_nil }
-        it { expect(assigns(:general_ranking)).to_not be_nil }
-        it { expect(assigns(:general_base_score)).to_not be_nil }
-        it { expect(assigns(:weekly_ranking)).to_not be_nil }
-        it { expect(assigns(:weekly_base_score)).to_not be_nil }
-        it { expect(assigns(:incentive_ranking)).to_not be_nil }
-        it { expect(assigns(:current_user_index)).to_not be_nil }
-        it { expect(assigns(:enrolled_users)).to_not be_nil }
       end
 
-      context "when is the owner of the team" do
-        let(:user) { create(:user, :teacher) }
-        let!(:team) { create(:team, owner: user) }
+      context "with an html request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :rankings, params: { id: team }
 
-        before do
-          create(:earned_score, team: team)
-          create(:user_score, team: team)
-          sign_in user
-          show_team
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to render_template("teams/rankings/rankings")
         end
-
-        it { expect(response).to have_http_status(:ok) }
-        it { expect(response.content_type).to eq("text/html") }
-        it { expect(response).to render_template("teams/show") }
-        it { expect(assigns(:team)).to_not be_nil }
-        it { expect(assigns(:team_exercises)).to_not be_nil }
-        it { expect(assigns(:teacher_exercises)).to_not be_nil }
-        it { expect(assigns(:general_ranking)).to_not be_nil }
-        it { expect(assigns(:general_base_score)).to_not be_nil }
-        it { expect(assigns(:weekly_ranking)).to_not be_nil }
-        it { expect(assigns(:weekly_base_score)).to_not be_nil }
-        it { expect(assigns(:enrolled_users)).to_not be_nil }
       end
     end
 
-    context "when not logged-in" do
-      let(:team) { create(:team) }
-      before { show_team }
+    context "when logged out" do
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          get :rankings, xhr: true, params: { id: create(:team) }
 
-      it { expect(response).to have_http_status(:found) }
-      it { expect(flash[:warning]).to_not be_nil }
-      it { expect(response).to redirect_to(root_url) }
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("shared/unauthorized")
+        end
+      end
+
+      context "with an html request" do
+        it "redirects to sign in page" do
+          get :rankings, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:found)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+  end
+
+  describe 'GET #exercises' do
+    context "when logged in" do
+      context "with an ajax request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :exercises, xhr: true, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("teams/exercises/exercises")
+        end
+      end
+
+      context "with an html request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :exercises, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to render_template("teams/exercises/exercises")
+        end
+      end
+    end
+
+    context "when logged out" do
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          get :rankings, xhr: true, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("shared/unauthorized")
+        end
+      end
+
+      context "with an html request" do
+        it "redirects to sign in page" do
+          get :rankings, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:found)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+  end
+
+  describe 'GET #users' do
+    context "when logged in" do
+      context "with an ajax request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :users, xhr: true, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("teams/users/users")
+        end
+      end
+
+      context "with an html request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user
+          team = create(:team, users: [user])
+          get :users, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to render_template("teams/users/users")
+        end
+      end
+    end
+
+    context "when logged out" do
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          get :users, xhr: true, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("shared/unauthorized")
+        end
+      end
+
+      context "with an html request" do
+        it "redirects to sign in page" do
+          get :users, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:found)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+  end
+
+  describe 'GET #graph' do
+    context "when logged in" do
+      context "with an ajax request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user(teacher: true)
+          team = create(:team, owner: user)
+          get :graph, xhr: true, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("teams/graph/graph")
+        end
+      end
+
+      context "with an html request" do
+        it "renders the right template" do
+          user = sign_in_and_return_user(teacher: true)
+          team = create(:team, owner: user)
+          get :graph, params: { id: team }
+
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to render_template("teams/graph/graph")
+        end
+      end
+    end
+
+    context "when logged out" do
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          get :graph, xhr: true, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:unauthorized)
+          expect(response.content_type).to eq("text/javascript")
+          expect(response).to render_template("shared/unauthorized")
+        end
+      end
+
+      context "with an html request" do
+        it "redirects to sign in page" do
+          get :graph, params: { id: create(:team) }
+
+          expect(response).to have_http_status(:found)
+          expect(response.content_type).to eq("text/html")
+          expect(response).to redirect_to(root_path)
+        end
+      end
     end
   end
 
@@ -372,5 +507,11 @@ RSpec.describe TeamsController, type: :controller do
       expect(assigns(:exercise)).to_not be_nil
       expect(assigns(:dependency_checker)).to_not be_nil
     end
+  end
+
+  def sign_in_and_return_user(teacher: false)
+    user = teacher ? create(:user, :teacher) : create(:user)
+    sign_in user
+    user
   end
 end

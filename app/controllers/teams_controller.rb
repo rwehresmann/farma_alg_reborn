@@ -6,13 +6,15 @@ class TeamsController < ApplicationController
   include AnswerObjectToGraph
 
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :unenroll, :show, :edit, :update,
+  before_action :find_team, only: [:enroll, :unenroll, :edit, :update,
                                    :destroy, :add_or_remove_exercise, :list_questions]
   before_action :find_exercise, only: [:add_or_remove_exercise]
   before_action :find_exercises, only: [:show]
 
   def index
-    @teams = find_teams
+    @teams = params[:my_teams] ? current_user.teams_from_where_belongs :
+                                TeamQuery.new.active_teams
+    @teams = @teams.paginate(page: params[:page], per_page: 5)
 
     respond_to do |format|
       format.html
@@ -26,6 +28,7 @@ class TeamsController < ApplicationController
 
   def create
     @team = current_user.teams_created.build(team_params)
+
     if @team.save
       flash[:success] =  "Turma criada!"
       redirect_to @team
@@ -34,12 +37,54 @@ class TeamsController < ApplicationController
     end
   end
 
-  def show
-    records = UserScoreQuery.new.ranking(team: @team, limit: 5)
-    set_general_ranking_data(records)
-    set_weekly_ranking_data(records)
-    set_incentive_ranking_data if @team.enrolled?(current_user)
+  def users
+    @team = Team.find(params[:id])
     @enrolled_users = @team.users
+
+    respond_to do |format|
+      format.html { render 'teams/users/users' }
+      format.js { render 'teams/users/users' }
+    end
+  end
+
+  def exercises
+    @team = Team.find(params[:id])
+    @team_exercises = @team.exercises
+    @teacher_exercises = current_user.exercises
+
+    respond_to do |format|
+      format.html { render 'teams/exercises/exercises' }
+      format.js { render 'teams/exercises/exercises' }
+    end
+  end
+
+  def rankings
+    @team = Team.find(params[:id])
+
+    records = UserScoreQuery.new.ranking(team: @team, limit: 5)
+    @general_ranking = format_ranking(records)
+    @general_base_score = @general_ranking.first[:score] unless records.empty?
+
+    @weekly_ranking = EarnedScore.ranking(
+      team: @team,
+      starting_from: current_week_date,
+      limit: 5
+    )
+    @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
+
+    if @team.enrolled?(current_user)
+      @incentive_ranking = IncentiveRanking::Builder.new(
+        target: current_user,
+        team: @team,
+        positions: { above: 1, below: 1 }
+      ).build
+      @current_user_index = current_user_index
+    end
+
+    respond_to do |format|
+      format.html { render 'teams/rankings/rankings' }
+      format.js { render 'teams/rankings/rankings' }
+    end
   end
 
   def edit
@@ -89,6 +134,15 @@ class TeamsController < ApplicationController
     )
   end
 
+  def graph
+    @team = Team.find(params[:id])
+
+    respond_to do |format|
+      format.html { render 'teams/graph/graph' }
+      format.js { render 'teams/graph/graph' }
+    end
+  end
+
   def answers
     date_range = split_date_range
     answers = Answer.by_team(params[:id]).by_user(params[:users])
@@ -107,20 +161,15 @@ class TeamsController < ApplicationController
     @team.send("#{params[:operation]}_exercise", @exercise)
     find_exercises
 
-    respond_to { |format| format.js }
+    respond_to { |format|
+      format.js { render 'teams/exercises/add_or_remove_exercise' }
+    }
   end
 
     private
 
     def team_params
       params.require(:team).permit(:name, :active, :password, :password_confirmation)
-    end
-
-    # Return all teams or only the user teams.
-    def find_teams
-      teams = params[:my_teams] ? current_user.teams_from_where_belongs :
-                                  TeamQuery.new.active_teams
-      teams.paginate(page: params[:page], per_page: 5)
     end
 
     def find_team
@@ -145,27 +194,6 @@ class TeamsController < ApplicationController
 
     def current_week_date
       Date.today.at_beginning_of_week
-    end
-
-    def set_general_ranking_data(records)
-      @general_ranking = format_ranking(records)
-      @general_base_score = @general_ranking.first[:score] unless records.empty?
-    end
-
-    def set_weekly_ranking_data(records)
-      @weekly_ranking = EarnedScore.ranking(team: @team,
-                                              starting_from: current_week_date,
-                                              limit: 5)
-      @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
-    end
-
-    def set_incentive_ranking_data
-      @incentive_ranking = IncentiveRanking::Builder.new(
-        target: current_user,
-        team: @team,
-        positions: { above: 1, below: 1 }
-      ).build
-      @current_user_index = current_user_index
     end
 
     def current_user_index

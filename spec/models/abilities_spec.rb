@@ -14,6 +14,7 @@ describe "User" do
       it { should be_able_to(:read, Question) }
       it { should be_able_to(:create, TestCase) }
       it { should be_able_to(:read, TestCase) }
+      it { should be_able_to(:read, Team) }
       it { should be_able_to(:create, Team) }
       it { should be_able_to(:list_questions, Team) }
       it { should be_able_to(:show, AnswerConnection) }
@@ -37,6 +38,10 @@ describe "User" do
         it { should be_able_to(:destroy, team) }
         it { should be_able_to(:answers, team) }
         it { should be_able_to(:add_or_remove_exercise, team) }
+        it { should be_able_to(:users, team) }
+        it { should be_able_to(:exercises, team) }
+        it { should be_able_to(:rankings, team) }
+        it { should be_able_to(:graph, team) }
 
         it { should be_able_to(:create, comment) }
         it { should be_able_to(:update, comment) }
@@ -51,19 +56,36 @@ describe "User" do
         let(:comment) { create(:comment) }
         let(:proibited_abilities) { [:update, :destroy] }
 
-        it { should_not be_able_to(proibited_abilities, exercise) }
-        it { should_not be_able_to(proibited_abilities, question) }
-        it { should_not be_able_to(proibited_abilities, test_case) }
-        it { should_not be_able_to(proibited_abilities + [:unenroll, :read], team) }
-        it { should_not be_able_to(proibited_abilities, comment) }
+        it { should_not be_able_to(:update, exercise) }
+        it { should_not be_able_to(:destroy, exercise) }
+
+        it { should_not be_able_to(:update, question) }
+        it { should_not be_able_to(:destroy, question) }
+
+        it { should_not be_able_to(:update, test_case) }
+        it { should_not be_able_to(:destroy, test_case) }
+
+        it { should_not be_able_to(:update, team) }
+        it { should_not be_able_to(:destroy, team) }
+        it { should_not be_able_to(:unenroll, team) }
+        it { should_not be_able_to(:destroy, team) }
+        it { should_not be_able_to(:users, team) }
+        it { should_not be_able_to(:exercises, team) }
+        it { should_not be_able_to(:rankings, team) }
+        it { should_not be_able_to(:graph, team) }
         it { should_not be_able_to(:add_or_remove_exercise, team) }
+
+        it { should_not be_able_to(:update, comment) }
+        it { should_not be_able_to(:destroy, comment) }
 
         context "when is enrolled in a team" do
           before { team.enroll(user) }
 
           it { should be_able_to(:unenroll, team) }
-          it { should be_able_to(:read, team) }
           it { should_not be_able_to(:enroll, team) }
+          it { should be_able_to(:users, team) }
+          it { should be_able_to(:exercises, team) }
+          it { should be_able_to(:rankings, team) }
         end
       end
     end
@@ -86,6 +108,9 @@ describe "User" do
       it { should_not be_able_to(:destroy, Team) }
       it { should_not be_able_to(:answers, Team) }
       it { should_not be_able_to(:add_or_remove_exercise, Team) }
+      it { should_not be_able_to(:graph, Team) }
+      it { should be_able_to(:index, Team) }
+
 
       it { should_not be_able_to(:show, AnswerConnection) }
       it { should_not be_able_to(:destroy, AnswerConnection) }
@@ -94,12 +119,17 @@ describe "User" do
       it { should_not be_able_to(:update, Comment) }
       it { should_not be_able_to(:destroy, Comment) }
 
+
+
       context "when unenrolled in the team" do
         let(:team) { create(:team) }
 
         it { should be_able_to(:enroll, team) }
         it { should_not be_able_to(:unenroll, team) }
         it { should_not be_able_to(:list_questions, team) }
+        it { should_not be_able_to(:users, team) }
+        it { should_not be_able_to(:exercises, team) }
+        it { should_not be_able_to(:rankings, team) }
       end
 
       context "when enrolled in the team" do
@@ -109,6 +139,9 @@ describe "User" do
         it { should_not be_able_to(:enroll, team) }
         it { should be_able_to(:unenroll, team) }
         it { should be_able_to(:list_questions, team) }
+        it { should be_able_to(:users, team) }
+        it { should be_able_to(:exercises, team) }
+        it { should be_able_to(:rankings, team) }
       end
     end
   end

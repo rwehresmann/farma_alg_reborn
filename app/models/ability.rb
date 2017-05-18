@@ -24,7 +24,7 @@ class Ability
         question.exercise.user == user
       end
 
-      can [:update, :destroy, :answers, :add_or_remove_exercise], Team do |team|
+      can [:update, :destroy, :answers, :add_or_remove_exercise, :graph], Team do |team|
         user.owner?(team)
       end
 
@@ -35,20 +35,18 @@ class Ability
       end
     end
 
-    can :read, Team do |team|
-      team.enrolled?(user) || team.owner == user
-    end
+    can :read, Team
 
-    can :list_questions, Team do |team|
-      team.enrolled?(user)
-    end
-
-    can [:enroll], Team do |team|
+    can :enroll, Team do |team|
       !team.enrolled?(user)
     end
 
-    can [:unenroll], Team do |team|
+    can [:unenroll, :list_questions], Team do |team|
       team.enrolled?(user)
+    end
+
+    can [:rankings, :exercises, :users], Team do |team|
+      team.enrolled?(user) || user.owner?(team)
     end
   end
 end
