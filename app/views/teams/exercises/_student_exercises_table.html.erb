@@ -5,18 +5,18 @@
       <th>Exercício</th>
       <th>Progresso</th>
     </tr>
-    <% team_exercises.each_with_index do |exercise, index| %>
+    <% @team.exercises.each_with_index do |exercise, index| %>
       <tr>
         <td><%= index %>.</td>
         <td>
           <%= link_to(
             exercise.title,
-            list_exercise_questions_team_path(team, exercise)
+            list_exercise_questions_team_path(@team, exercise)
           )%>
         </td>
         <td>
           <div class="progress progress-xs">
-            <div class="progress-bar progress-bar-alert" style="<%= progress(exercise, team) %>"></div>
+            <div class="progress-bar progress-bar-alert" style="<%= progress(exercise, @team) %>"></div>
           </div>
         </td>
       </tr>

@@ -39,7 +39,7 @@ class TeamsController < ApplicationController
 
   def users
     @team = Team.find(params[:id])
-    
+
     respond_to do |format|
       format.html { render 'teams/users/users' }
       format.js { render 'teams/users/users' }
@@ -48,9 +48,7 @@ class TeamsController < ApplicationController
 
   def exercises
     @team = Team.find(params[:id])
-    @team_exercises = @team.exercises
-    @teacher_exercises = current_user.exercises
-
+  
     respond_to do |format|
       format.html { render 'teams/exercises/exercises' }
       format.js { render 'teams/exercises/exercises' }

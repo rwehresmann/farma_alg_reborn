@@ -20,15 +20,12 @@
               <th style="width: 50px"></th>
             </tr>
 
-            <% teacher_exercises.each_with_index do |exercise, index| %>
+            <% current_user.exercises.each_with_index do |exercise, index| %>
               <tr>
                 <td><%= index %>.</td>
                 <td><%= exercise.title %></td>
                 <td id="add-exercise-<%= exercise.id %>">
-                  <%= render(
-                    partial: 'teams/exercises/add_exercise',
-                    locals: { exercise: exercise, team: team }
-                  ) %>
+                  <%= render 'teams/exercises/add_exercise', exercise: exercise %>
                 </td>
               </tr>
             <% end %>

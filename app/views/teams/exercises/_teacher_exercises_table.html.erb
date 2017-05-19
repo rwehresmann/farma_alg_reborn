@@ -6,13 +6,13 @@
       <th style="width: 50px"></th>
     </tr>
 
-    <% team_exercises.each_with_index do |exercise, index| %>
+    <% @team.exercises.each_with_index do |exercise, index| %>
       <tr id="team-exercise-<%= exercise.id %>">
         <td><%= index %>.</td>
         <td><%= link_to exercise.title, exercises_url(exercise) %></td>
         <td>
           <%= link_to(
-            add_or_remove_exercise_team_path(team, exercise, operation: :remove),
+            add_or_remove_exercise_team_path(@team, exercise, operation: :remove),
             method: :post,
             id: "remove-exercise-#{exercise.id}",
             title: "Remover exercício",

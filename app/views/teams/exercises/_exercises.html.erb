@@ -7,11 +7,8 @@
     <br></br>
 
     <div id="exercises-table">
-      <% if current_user.owner?(team) %>
-        <%= render(
-          partial: 'teams/exercises/teacher_exercises_table',
-          locals: { team_exercises: team_exercises, team: team }
-        )%>
+      <% if current_user.owner?(@team) %>
+        <%= render 'teams/exercises/teacher_exercises_table' %>
       <% else %>
         <%= render(
           partial: 'teams/exercises/student_exercises_table',
