@@ -37,6 +37,24 @@ class TeamsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @team.update_attributes(team_params)
+      flash[:success] = "Turma atualizada!"
+      redirect_to @team
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @team.destroy
+    flash[:success] = "Turma deletada!"
+    redirect_to teams_url
+  end
+
   def rankings
     @team = Team.find(params[:id])
 
@@ -61,8 +79,8 @@ class TeamsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render 'teams/rankings/rankings' }
-      format.js { render 'teams/rankings/rankings' }
+      format.html
+      format.js
     end
   end
 
@@ -70,8 +88,8 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
 
     respond_to do |format|
-      format.html { render 'teams/exercises/exercises' }
-      format.js { render 'teams/exercises/exercises' }
+      format.html
+      format.js
     end
   end
 
@@ -79,8 +97,8 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
 
     respond_to do |format|
-      format.html { render 'teams/users/users' }
-      format.js { render 'teams/users/users' }
+      format.html
+      format.js
     end
   end
 
@@ -88,27 +106,9 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
 
     respond_to do |format|
-      format.html { render 'teams/graph/graph' }
-      format.js { render 'teams/graph/graph' }
+      format.html
+      format.js
     end
-  end
-
-  def edit
-  end
-
-  def update
-    if @team.update_attributes(team_params)
-      flash[:success] = "Turma atualizada!"
-      redirect_to @team
-    else
-      render 'edit'
-    end
-  end
-
-  def destroy
-    @team.destroy
-    flash[:success] = "Turma deletada!"
-    redirect_to teams_url
   end
 
   def enroll
@@ -158,9 +158,7 @@ class TeamsController < ApplicationController
     @team.send("#{params[:operation]}_exercise", @exercise)
     find_exercises
 
-    respond_to { |format|
-      format.js { render 'teams/exercises/add_or_remove_exercise' }
-    }
+    respond_to { |format| format.js }
   end
 
     private

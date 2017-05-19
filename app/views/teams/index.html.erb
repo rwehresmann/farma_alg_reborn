@@ -27,7 +27,7 @@
 <br></br>
 
 <div id="teams">
-  <%= render partial: 'teams', locals: { teams: @teams } %>
+  <%= render 'teams/index/teams', teams: @teams %>
 </div>
 
 <%= render "shared/paginate", object: @teams %>
