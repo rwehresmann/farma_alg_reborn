@@ -39,8 +39,7 @@ class TeamsController < ApplicationController
 
   def users
     @team = Team.find(params[:id])
-    @enrolled_users = @team.users
-
+    
     respond_to do |format|
       format.html { render 'teams/users/users' }
       format.js { render 'teams/users/users' }

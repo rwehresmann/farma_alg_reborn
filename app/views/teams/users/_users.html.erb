@@ -5,7 +5,7 @@
         <th style="width: 10px">#</th>
         <th>Usuário</th>
       </tr>
-      <% enrolled_users.each_with_index do |user, index| %>
+      <% @team.users.each_with_index do |user, index| %>
         <tr>
           <td><%= index %>.</td>
           <td><%= user.name %></td>
