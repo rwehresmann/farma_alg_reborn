@@ -11,7 +11,9 @@ module IncentiveRanking
     end
 
     def build
-      ranking = middlerized_incentive_ranking_object
+      ranking_data = UserScoreQuery.new.ranking(team: @team)
+      return [] if ranking_data.empty?
+      ranking = middlerized_incentive_ranking_object(ranking_data)
 
       ranking = IncentiveRanking::GhostUser::Applier.new(
         incentive_ranking: ranking,
@@ -62,9 +64,7 @@ module IncentiveRanking
       { user: user_score.user, score: user_score.score }
     end
 
-    def middlerized_incentive_ranking_object
-      ranking_data = UserScoreQuery.new.ranking(team: @team)
-
+    def middlerized_incentive_ranking_object(ranking_data)
       ranking = Middlerizer.new(
         middle: ranking_data.by_user(@target).first,
         array: ranking_data,
