@@ -155,9 +155,9 @@ class TeamsController < ApplicationController
   end
 
   def add_or_remove_exercise
+    @team = Team.find(params[:id])
     @team.send("#{params[:operation]}_exercise", @exercise)
-    find_exercises
-
+  
     respond_to { |format| format.js }
   end
 

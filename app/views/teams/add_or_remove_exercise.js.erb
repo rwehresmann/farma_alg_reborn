@@ -1,23 +1,7 @@
 $('#exercises-table').html(
-  '<%= j( \
-    render( \
-      partial: "teams/exercises/teacher_exercises_table", \
-      locals: { \
-        team: @team, \
-        team_exercises: @team_exercises \
-      } \
-    ) \
-  )%>'
+  '<%= j(render "teams/exercises/teacher_exercises_table", team: @team) %>'
 );
 
 $('#add-exercise-<%= @exercise.id %>').html(
-  '<%= j( \
-    render( \
-      partial: "teams/exercises/add_exercise", \
-      locals: { \
-        exercise: @exercise, \
-        team: @team \
-      } \
-    ) \
-  ) %>'
+  '<%= j(render "teams/exercises/add_exercise", exercise: @exercise) %>'
 );
