@@ -6,10 +6,6 @@ class TeamsController < ApplicationController
   include AnswerObjectToGraph
 
   before_action :authenticate_user!
-  before_action :find_team, only: [:enroll, :unenroll, :edit, :update,
-                                   :destroy, :add_or_remove_exercise, :list_questions]
-  before_action :find_exercise, only: [:add_or_remove_exercise]
-  before_action :find_exercises, only: [:show]
 
   def index
     @teams = params[:my_teams] ? current_user.teams_from_where_belongs :
@@ -38,9 +34,12 @@ class TeamsController < ApplicationController
   end
 
   def edit
+    @team = Team.find(params[:id])
   end
 
   def update
+    @team = Team.find(params[:id])
+
     if @team.update_attributes(team_params)
       flash[:success] = "Turma atualizada!"
       redirect_to @team
@@ -50,7 +49,7 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    @team.destroy
+    Team.find(params[:id]).destroy
     flash[:success] = "Turma deletada!"
     redirect_to teams_url
   end
@@ -112,6 +111,8 @@ class TeamsController < ApplicationController
   end
 
   def enroll
+    @team = Team.find(params[:id])
+
     if @team.authenticate(params[:password])
       @team.enroll(current_user)
       flash[:success] = "Matrícula realizada!"
@@ -126,12 +127,15 @@ class TeamsController < ApplicationController
   end
 
   def unenroll
+    @team = Team.find(params[:id])
     @team.unenroll(current_user)
     flash[:success] = "Matrícula cancelada!"
+
     redirect_to teams_url
   end
 
   def list_questions
+    @team = Team.find(params[:id])
     @exercise = Exercise.find(params[:exercise_id])
     @dependency_checker = DependencyChecker.new(
       exercise: @exercise,
@@ -156,47 +160,36 @@ class TeamsController < ApplicationController
 
   def add_or_remove_exercise
     @team = Team.find(params[:id])
+    @exercise = Exercise.find(params[:exercise_id])
+
     @team.send("#{params[:operation]}_exercise", @exercise)
-  
+
     respond_to { |format| format.js }
   end
 
-    private
+  private
 
-    def team_params
-      params.require(:team).permit(:name, :active, :password, :password_confirmation)
-    end
+  def team_params
+    params.require(:team).permit(:name, :active, :password, :password_confirmation)
+  end
 
-    def find_team
-      @team = Team.find(params[:id])
-    end
+  # Format to an array of hashes, where the first key is the user object, and
+  # the second is the score (this format is needed to use in the ranking
+  # partial, shared with the weekly ranking).
+  def format_ranking(records)
+    records.map.inject([]) { |array, obj| array << { user: obj.user, score: obj.score } }
+  end
 
-    def find_exercise
-      @exercise = Exercise.find(params[:exercise_id])
-    end
+  def current_week_date
+    Date.today.at_beginning_of_week
+  end
 
-    def find_exercises
-      @team_exercises = @team.exercises
-      @teacher_exercises = current_user.exercises
-    end
+  def current_user_index
+    record = @incentive_ranking.select { |data| data[:user] == current_user }.first
+    @incentive_ranking.index(record)
+  end
 
-    # Format to an array of hashes, where the first key is the user object, and
-    # the second is the score (this format is needed to use in the ranking
-    # partial, shared with the weekly ranking).
-    def format_ranking(records)
-      records.map.inject([]) { |array, obj| array << { user: obj.user, score: obj.score } }
-    end
-
-    def current_week_date
-      Date.today.at_beginning_of_week
-    end
-
-    def current_user_index
-      record = @incentive_ranking.select { |data| data[:user] == current_user }.first
-      @incentive_ranking.index(record)
-    end
-
-    def split_date_range
-      params[:date_range] ? params[:date_range].split("_") : []
-    end
+  def split_date_range
+    params[:date_range] ? params[:date_range].split("_") : []
+  end
 end
