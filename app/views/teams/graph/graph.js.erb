@@ -2,14 +2,4 @@ window.history.pushState('', '', '<%= graph_team_path(@team) %>')
 
 $('li.active').removeClass('active')
 $('li:has(a[href="#graph"])').addClass('active')
-$('.tab-content').html(
-  '<%= j( \
-    render( \
-      partial: "teams/graph/graph", \
-      locals: { \
-        team: @team, \
-        enrolled_users: @enrolled_users \
-      } \
-    ) \
-  )%>'
-);
+$('.tab-content').html('<%= j(render "teams/graph/graph") %>');

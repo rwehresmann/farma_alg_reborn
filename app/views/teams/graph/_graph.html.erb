@@ -20,45 +20,11 @@
 </div>
 
 <script text="text/javascript">
-  initialize_graph();
-
-  $('#pause-resume').click(function() {
-     if ($('#pause-resume i').attr('class') == "fa fa-pause") {
-       pause();
-       $('#pause-resume i').attr('class', 'fa fa-play');
-       $('#pause-resume i').attr('title', 'Resume graph animation');
-     }
-     else {
-       resume();
-       $('#pause-resume i').attr('class', 'fa fa-pause');
-       $('#pause-resume i').attr('title', "Stop graph animation");
-     }
-   });
-
-   $('#back-center').click(function() {
-     reset();
-   });
-
-   $('#remove-graph').click(function() {
-     dispose();
-   });
-
-   $('#add-nodes').click(function() {
-     showModal("search", false, function(modalName) {
-       var div = $(document.createElement('div'));
-       div.attr('id', modalName + '-container');
-       $('body').append(div);
-       $(div).html(
-         "<%= j( \
-           render(
-             partial: 'teams/graph/search_modal',
-             locals: { team: team }
-           )
-         ) %>"
-       );
-       $('body').append(div);
-     });
-   });
-
-
+  function createModal(modalName) {
+    var div = $(document.createElement('div'));
+    div.attr('id', modalName + '-container');
+    $('body').append(div);
+    $(div).html("<%= j(render 'teams/graph/search_modal') %>");
+    $('body').append(div);
+  }
 </script>

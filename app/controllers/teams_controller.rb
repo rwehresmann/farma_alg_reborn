@@ -37,24 +37,6 @@ class TeamsController < ApplicationController
     end
   end
 
-  def users
-    @team = Team.find(params[:id])
-
-    respond_to do |format|
-      format.html { render 'teams/users/users' }
-      format.js { render 'teams/users/users' }
-    end
-  end
-
-  def exercises
-    @team = Team.find(params[:id])
-  
-    respond_to do |format|
-      format.html { render 'teams/exercises/exercises' }
-      format.js { render 'teams/exercises/exercises' }
-    end
-  end
-
   def rankings
     @team = Team.find(params[:id])
 
@@ -81,6 +63,33 @@ class TeamsController < ApplicationController
     respond_to do |format|
       format.html { render 'teams/rankings/rankings' }
       format.js { render 'teams/rankings/rankings' }
+    end
+  end
+
+  def exercises
+    @team = Team.find(params[:id])
+
+    respond_to do |format|
+      format.html { render 'teams/exercises/exercises' }
+      format.js { render 'teams/exercises/exercises' }
+    end
+  end
+
+  def users
+    @team = Team.find(params[:id])
+
+    respond_to do |format|
+      format.html { render 'teams/users/users' }
+      format.js { render 'teams/users/users' }
+    end
+  end
+
+  def graph
+    @team = Team.find(params[:id])
+
+    respond_to do |format|
+      format.html { render 'teams/graph/graph' }
+      format.js { render 'teams/graph/graph' }
     end
   end
 
@@ -129,15 +138,6 @@ class TeamsController < ApplicationController
       team: @team,
       user: current_user
     )
-  end
-
-  def graph
-    @team = Team.find(params[:id])
-
-    respond_to do |format|
-      format.html { render 'teams/graph/graph' }
-      format.js { render 'teams/graph/graph' }
-    end
   end
 
   def answers

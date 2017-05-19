@@ -1,6 +1,3 @@
-<%= render layout: 'teams/nav_tabs', locals: { team: @team } do %>
-  <%= render(
-    partial: 'teams/graph/graph',
-    locals: { team: @team }
-  ) %>
+<%= render 'teams/nav_tabs', team: @team do %>
+  <%= render 'teams/graph/graph' %>
 <% end %>
