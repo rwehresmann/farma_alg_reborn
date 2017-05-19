@@ -5,8 +5,8 @@
         partial: 'teams/rankings/ranking',
         locals: {
           title: "Ranking geral",
-          ranking: general_ranking,
-          base_score: general_base_score
+          ranking: @general_ranking,
+          base_score: @general_base_score
         }
       ) %>
     </div>
@@ -15,8 +15,8 @@
         partial: 'teams/rankings/ranking',
         locals: {
           title: "Ranking da semana",
-          ranking: weekly_ranking,
-          base_score: weekly_base_score
+          ranking: @weekly_ranking,
+          base_score: @weekly_base_score
         }
       ) %>
     </div>
@@ -27,8 +27,8 @@
     <%= render(
       partial: 'incentive_ranking',
       locals: {
-        incentive_ranking: incentive_ranking,
-        current_user_index: current_user_index
+        incentive_ranking: @incentive_ranking,
+        current_user_index: @current_user_index
       }
     ) %>
   <% end %>

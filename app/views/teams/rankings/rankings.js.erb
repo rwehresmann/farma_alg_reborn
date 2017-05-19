@@ -1,19 +1,5 @@
-window.history.pushState('', '', '<%= rankings_team_path(@team) %>')
+window.history.pushState('', '', '<%= rankings_team_path(@team) %>');
 
 $('li.active').removeClass('active');
 $('li:has(a[href="#rankings"])').addClass('active');
-$('.tab-content').html(
-  '<%= j( \
-    render( \
-      partial: "teams/rankings/rankings", \
-      locals: { \
-        general_ranking: @general_ranking, \
-        general_base_score: @general_base_score, \
-        weekly_ranking: @weekly_ranking, \
-        weekly_base_score: @weekly_base_score, \
-        incentive_ranking: @incentive_ranking, \
-        current_user_index: @current_user_index \
-      } \
-    ) \
-  ) %>'
-)
+$('.tab-content').html('<%= j(render "teams/rankings/rankings") %>');
