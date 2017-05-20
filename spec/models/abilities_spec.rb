@@ -42,6 +42,8 @@ describe "User" do
         it { should be_able_to(:exercises, team) }
         it { should be_able_to(:rankings, team) }
         it { should be_able_to(:graph, team) }
+        it { should_not be_able_to(:enroll, team) }
+        it { should_not be_able_to(:enroll, team) }
 
         it { should be_able_to(:create, comment) }
         it { should be_able_to(:update, comment) }

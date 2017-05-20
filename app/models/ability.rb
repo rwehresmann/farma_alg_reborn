@@ -38,7 +38,7 @@ class Ability
     can :read, Team
 
     can :enroll, Team do |team|
-      !team.enrolled?(user)
+      !team.enrolled?(user) && team.owner != user
     end
 
     can [:unenroll, :list_questions], Team do |team|
