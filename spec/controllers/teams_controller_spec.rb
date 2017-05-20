@@ -1,154 +1,523 @@
 require 'rails_helper'
 
 RSpec.describe TeamsController, type: :controller do
-  describe "GET #index" do
-    subject { get :index }
+  describe 'GET #index' do
+    context "when logged in" do
+      context "with an html request" do
+        it "renders the right template" do
+          sign_in create(:user)
+          get :index
 
-    context "when logged-in" do
-      before do
-        sign_in create(:user, :teacher)
-        subject
-      end
-
-      it "renders index view" do
-        expect(response).to render_template(:index)
-      end
-    end
-
-    context "when not logged-in" do
-      before { subject }
-
-      it "redirects to sign in page" do
-        expect(response).to redirect_to(root_url)
-      end
-    end
-  end
-
-  describe "GET #new" do
-    subject { get :new }
-
-    context "when logged-in" do
-      before do
-        sign_in create(:user, :teacher)
-        subject
-      end
-
-      it "renders new view" do
-        expect(response).to render_template(:new)
-      end
-    end
-
-    context "when not logged-in" do
-      before { subject }
-
-      it "redirects to sign in page" do
-        expect(response).to redirect_to(root_url)
-      end
-    end
-  end
-
-  describe "POST #create" do
-    subject(:post_with_valid_attributes) { post :create,
-             params: { team: attributes_for(:team) } }
-
-    context "when logged-in -->" do
-      before { sign_in create(:user, :teacher) }
-
-      context "whit valid attributes" do
-        it "creates a new object" do
-          expect{ post_with_valid_attributes }.to change(Team, :count).by(1)
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/index"
+          )
         end
       end
 
-      context "whit invalid attributes" do
-        subject(:post_with_invalid_attributes) { post :create,
-                params: { team: attributes_for(:team, name: nil) } }
+      context "with an ajax request" do
+        it "renders the right template" do
+          sign_in create(:user)
+          get :index, xhr: true
 
-        it "does not save the new object" do
-          expect{ post_with_invalid_attributes }.to_not change(Team, :count)
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/javascript",
+            template: "teams/index"
+          )
         end
       end
     end
 
-    context "when not logged-in" do
-      before { post_with_valid_attributes }
+    context "when logged out" do
+      context "with an html request" do
+        it "does an redirect" do
+          get :index
 
-      it "redirects to root page" do
-        expect(response).to redirect_to(root_url)
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
+      end
+
+      context "with an ajax request" do
+        it "returns code 401 (unauthorized)" do
+          get :index, xhr: true
+
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
+        end
       end
     end
   end
 
-  describe "DELETE #destroy" do
-    let(:team) { create(:team) }
-    subject { delete :destroy, params: { id: team } }
+  describe 'GET #new' do
+    context "when logged in" do
+      context "when is a normal user" do
+        it "does an redirect" do
+          sign_in create(:user)
+          get :new
 
-    context "when logged-in" do
-      before do
-        user = create(:user, :teacher)
-        team.update_attributes(owner: user)
-        sign_in user
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
       end
 
-      it "deletes the object" do
-        expect { subject }.to change(Team, :count).by(-1)
+      context "when is a teacher" do
+        it "renders the right template" do
+          sign_in create(:user, :teacher)
+          get :new
+
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/new"
+          )
+        end
       end
     end
 
-    context "when not logged-in" do
-      before { subject }
+    context "when logged out" do
+      it "does an redirect" do
+        get :new
 
-      it "redirects to root page" do
-        expect(response).to redirect_to(root_url)
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+      end
+    end
+  end
+
+  describe 'POST #create' do
+    context "when logged in" do
+      context "with a normal user" do
+        it "doesn't create the team" do
+          before_count = Team.count
+
+          sign_in create(:user)
+          post :create, params: { team: attributes_for(:team) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+
+          expect(Team.count).to eq before_count
+        end
+      end
+
+      context "with a teacher user" do
+        context "and team is valid" do
+          it "creates the team" do
+            before_count = Team.count
+
+            sign_in create(:user, :teacher)
+            post :create, params: { team: attributes_for(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: teams_url
+            )
+
+            expect(Team.count).to eq(before_count + 1)
+          end
+        end
+
+        context "and team is invalid" do
+          it "doesn't create the team" do
+            before_count = Team.count
+
+            sign_in create(:user, :teacher)
+            post :create, params: { team: attributes_for(:team, name: "") }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/new"
+            )
+
+            expect(Team.count).to eq before_count
+          end
+        end
+      end
+    end
+
+    context "when logged out" do
+      it "does a redirect" do
+        post :create, params: { team: attributes_for(:team) }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+      end
+    end
+  end
+
+  describe 'GET #edit' do
+    context "when logged in" do
+      context "with a normal user" do
+        it "does a redirect" do
+          sign_in create(:user)
+          get :edit, params: { id: create(:team) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
+      end
+
+      context "with a teacher user" do
+        context "when the team belongs to him" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :edit, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/edit"
+            )
+          end
+        end
+
+        context "when the team doesn't belongs to him" do
+          it "does a redirect" do
+            sign_in create(:user, :teacher)
+            get :edit, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+      end
+    end
+
+    context "when logged out" do
+      it "does a redirect" do
+        get :edit, params: { id: create(:team) }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+      end
+    end
+  end
+
+  describe 'PUT update' do
+    context "when logged in" do
+      context "with a normal user" do
+        it "doesn't update the team" do
+          team = create(:team)
+
+          sign_in create(:user)
+          put :update, params: { id: team, team: attributes_for(:team, name: "new name") }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+
+          expect(team.name).to eq team.reload.name
+        end
+      end
+
+      context "with a teacher user" do
+        context "when the team belongs to him" do
+          context "and is valid" do
+            it "updates the team" do
+              user = create(:user, :teacher)
+              team = create(:team, owner: user)
+
+              sign_in user
+              put :update, params: { id: team, team: attributes_for(:team, name: "new name") }
+
+              common_expectations(
+                http_status: :found,
+                content_type: "text/html",
+                redirect: teams_url
+              )
+
+              expect(team.name).to_not eq team.reload.name
+            end
+          end
+
+          context "and is invalid" do
+            it "doesn't updates the team" do
+              user = create(:user, :teacher)
+              team = create(:team, owner: user)
+
+              sign_in user
+              put :update, params: { id: team, team: attributes_for(:team, name: "") }
+
+              common_expectations(
+                http_status: :ok,
+                content_type: "text/html",
+                template: "teams/edit"
+              )
+
+              expect(team.name).to eq team.reload.name
+            end
+          end
+        end
+
+        context "when the team doesn't belongs to him" do
+          it "doesn't updates the team" do
+            team = create(:team)
+
+            sign_in create(:user, :teacher)
+            put :update, params: { id: team, team: attributes_for(:team, name: "new name") }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+
+            expect(team.name).to eq team.reload.name
+          end
+        end
+      end
+    end
+
+    context "when logged out" do
+      it "doesn't updates the team" do
+        team = create(:team, owner: create(:user, :teacher))
+
+        put :update, params: { id: team, team: attributes_for(:team, name: "new name") }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+
+        expect(team.name).to eq team.reload.name
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    context "when logged in" do
+      context "with a normal user" do
+        it "doesn't deletes the team" do
+          team = create(:team)
+          before_count = Team.count
+
+          sign_in create(:user)
+          delete :destroy, params: { id: team }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+
+          expect(Team.count).to eq before_count
+        end
+      end
+
+      context "with a teacher user" do
+        context "when team belogns to him" do
+          it "deletes the team" do
+            user =  create(:user, :teacher)
+
+            sign_in user
+            delete :destroy, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: teams_url
+            )
+
+            expect(Team.count).to eq 0
+          end
+        end
+
+        context "when team doesn't belongs to him" do
+          it "doesn't deletes the team" do
+            team = create(:team)
+            before_count = Team.count
+
+            sign_in create(:user, :teacher)
+            delete :destroy, params: { id: team }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+
+            expect(Team.count).to eq before_count
+          end
+        end
+      end
+    end
+
+    context "when logged out" do
+      it "doesn't deletes the team" do
+        team =  create(:team)
+        before_count = Team.count
+
+        delete :destroy, params: { id: team }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+
+        expect(Team.count).to eq before_count
       end
     end
   end
 
   describe 'GET #rankings' do
     context "when logged in" do
-      context "with an ajax request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :rankings, xhr: true, params: { id: team }
+      context "when user is the owner of the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("teams/rankings/rankings")
+            sign_in user
+            get :rankings, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/rankings"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :rankings, xhr: true, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/rankings"
+            )
+          end
         end
       end
 
-      context "with an html request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :rankings, params: { id: team }
+      context "when user is enrolled in the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to render_template("teams/rankings/rankings")
+            sign_in user
+            get :rankings, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/rankings"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user)
+
+            sign_in user
+            get :rankings, xhr: true, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/rankings"
+            )
+          end
+        end
+      end
+
+      context "when user doesn't belongs to the team" do
+        context "with an html request" do
+          it "does a redirect" do
+            sign_in create(:user)
+            get :rankings, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "returns status 401 (unauthorized)" do
+            sign_in create(:user)
+            get :rankings, xhr: true, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+          end
         end
       end
     end
 
     context "when logged out" do
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          get :rankings, xhr: true, params: { id: create(:team) }
+      context "with an html request" do
+        it "does a redirect" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:unauthorized)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("shared/unauthorized")
+          get :rankings, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
         end
       end
 
-      context "with an html request" do
-        it "redirects to sign in page" do
-          get :rankings, params: { id: create(:team) }
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:found)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to redirect_to(root_path)
+          get :rankings, xhr: true, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
         end
       end
     end
@@ -156,49 +525,125 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'GET #exercises' do
     context "when logged in" do
-      context "with an ajax request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :exercises, xhr: true, params: { id: team }
+      context "when user is the owner of the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("teams/exercises/exercises")
+            sign_in user
+            get :exercises, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/exercises"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :exercises, xhr: true, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/exercises"
+            )
+          end
         end
       end
 
-      context "with an html request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :exercises, params: { id: team }
+      context "when user is enrolled in the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to render_template("teams/exercises/exercises")
+            sign_in user
+            get :exercises, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/exercises"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user)
+
+            sign_in user
+            get :exercises, xhr: true, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/exercises"
+            )
+          end
+        end
+      end
+
+      context "when user doesn't belongs to the team" do
+        context "with an html request" do
+          it "does a redirect" do
+            sign_in create(:user)
+            get :exercises, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "returns status 401 (unauthorized)" do
+            sign_in create(:user)
+            get :exercises, xhr: true, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+          end
         end
       end
     end
 
     context "when logged out" do
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          get :rankings, xhr: true, params: { id: create(:team) }
+      context "with an html request" do
+        it "does a redirect" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:unauthorized)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("shared/unauthorized")
+          get :exercises, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
         end
       end
 
-      context "with an html request" do
-        it "redirects to sign in page" do
-          get :rankings, params: { id: create(:team) }
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:found)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to redirect_to(root_path)
+          get :exercises, xhr: true, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
         end
       end
     end
@@ -206,49 +651,125 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'GET #users' do
     context "when logged in" do
-      context "with an ajax request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :users, xhr: true, params: { id: team }
+      context "when user is the owner of the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("teams/users/users")
+            sign_in user
+            get :users, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/users"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :users, xhr: true, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/users"
+            )
+          end
         end
       end
 
-      context "with an html request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user
-          team = create(:team, users: [user])
-          get :users, params: { id: team }
+      context "when user is enrolled in the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to render_template("teams/users/users")
+            sign_in user
+            get :users, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/users"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user)
+
+            sign_in user
+            get :users, xhr: true, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/users"
+            )
+          end
+        end
+      end
+
+      context "when user doesn't belongs to the team" do
+        context "with an html request" do
+          it "does a redirect" do
+            sign_in create(:user)
+            get :users, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "returns status 401 (unauthorized)" do
+            sign_in create(:user)
+            get :users, xhr: true, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+          end
         end
       end
     end
 
     context "when logged out" do
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          get :users, xhr: true, params: { id: create(:team) }
+      context "with an html request" do
+        it "does a redirect" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:unauthorized)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("shared/unauthorized")
+          get :users, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
         end
       end
 
-      context "with an html request" do
-        it "redirects to sign in page" do
-          get :users, params: { id: create(:team) }
+      context "with an ajax request" do
+        it "returns status 401 (unauthorized)" do
+          user = create(:user)
 
-          expect(response).to have_http_status(:found)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to redirect_to(root_path)
+          get :users, xhr: true, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
         end
       end
     end
@@ -256,171 +777,333 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'GET #graph' do
     context "when logged in" do
-      context "with an ajax request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user(teacher: true)
-          team = create(:team, owner: user)
-          get :graph, xhr: true, params: { id: team }
+      context "when user is the owner of the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("teams/graph/graph")
+            sign_in user
+            get :graph, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/html",
+              template: "teams/graph"
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :graph, xhr: true, params: { id: create(:team, owner: user) }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/graph"
+            )
+          end
         end
       end
 
-      context "with an html request" do
-        it "renders the right template" do
-          user = sign_in_and_return_user(teacher: true)
-          team = create(:team, owner: user)
-          get :graph, params: { id: team }
+      context "when user is enrolled in the team" do
+        context "with an html request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
 
-          expect(response).to have_http_status(:ok)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to render_template("teams/graph/graph")
+            sign_in user
+            get :graph, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "renders the right template" do
+            user = create(:user, :teacher)
+
+            sign_in user
+            get :graph, xhr: true, params: { id: create(:team, users: [user]) }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+          end
+        end
+      end
+
+      context "when user doesn't belongs to the team" do
+        context "with an html request" do
+          it "does a redirect" do
+            sign_in create(:user)
+            get :graph, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :found,
+              content_type: "text/html",
+              redirect: root_url
+            )
+          end
+        end
+
+        context "with an ajax request" do
+          it "returns status 401 (unauthorized)" do
+            sign_in create(:user)
+            get :graph, xhr: true, params: { id: create(:team) }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+          end
         end
       end
     end
 
     context "when logged out" do
+      context "with an html request" do
+        it "does a redirect" do
+          user = create(:user)
+
+          get :graph, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
+      end
+
       context "with an ajax request" do
         it "returns status 401 (unauthorized)" do
-          get :graph, xhr: true, params: { id: create(:team) }
+          user = create(:user)
 
-          expect(response).to have_http_status(:unauthorized)
-          expect(response.content_type).to eq("text/javascript")
-          expect(response).to render_template("shared/unauthorized")
+          get :graph, xhr: true, params: { id: create(:team, users: [user]) }
+
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
         end
-      end
-
-      context "with an html request" do
-        it "redirects to sign in page" do
-          get :graph, params: { id: create(:team) }
-
-          expect(response).to have_http_status(:found)
-          expect(response.content_type).to eq("text/html")
-          expect(response).to redirect_to(root_path)
-        end
-      end
-    end
-  end
-
-  describe "GET #edit" do
-    let(:team) { create(:team) }
-    subject { get :edit,
-              params: { id: team, team: attributes_for(:team) } }
-
-    context "when logged-in" do
-      before do
-        user = create(:user, :teacher)
-        team.update_attributes(owner: user)
-        sign_in user
-        subject
-      end
-
-      it "renders edit view" do
-        expect(response).to render_template(:edit)
-      end
-    end
-
-    context "when not logged-in" do
-      before { subject }
-
-      it "redirects to root page" do
-        expect(response).to redirect_to(root_url)
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "when logged-in -->" do
-      let(:team) { create(:team, owner: user) }
-      let(:user) { create(:user, :teacher) }
-
-      before { sign_in user }
-
-      context "whit valid attributes" do
-        subject { put :update, params: { id: team,
-                  team: attributes_for(:team, name: "New name") } }
-
-        it "updates object attributes" do
-          subject
-          expect(team.reload.name).to eq("New name")
-        end
-      end
-
-      context "whit invalid attributes" do
-        before { put :update, params: {
-                 id: team,
-                 team: attributes_for(:team, name: nil) } }
-
-        it "does not update object attributes" do
-          expect(team.reload.name).to_not be_nil
-        end
-      end
-    end
-
-    context "when not logged-in" do
-      before { put :update, params: { id: create(:team),
-               team: attributes_for(:team, name: "New name") } }
-
-      it "redirects to root page" do
-        expect(response).to redirect_to(root_url)
       end
     end
   end
 
   describe 'POST #enroll' do
-    let(:user) { create(:user) }
-    let(:team) { create(:team) }
-    subject(:post_with_right_password) { post :enroll, xhr: true,
-             params: { id: team, password: team.password } }
+    context "when logged in" do
+      context "when user is the owner of the team" do
+        it "doesn't enroll the user" do
+          user = create(:user, :teacher)
+          team = create(:team, owner: user)
 
-    context "when logged-in -->" do
-      context "when the password is right" do
-        before do
-          sign_in(user)
-          post_with_right_password
-        end
+          sign_in user
+          post :enroll, xhr: true, params: { id: team }
 
-        it "enroll the user with the team" do
-          expect(team.enrolled?(user)).to be_truthy
+          common_expectations(
+            http_status: :unauthorized,
+            content_type: "text/javascript",
+            template: "shared/unauthorized"
+          )
+
+          expect(team.users).to be_empty
         end
       end
 
-      context "when the password is wrong" do
-        before do
-          sign_in user
-          post :enroll, xhr: true, params: { id: team }
+      context "when user isn't the owner of the team" do
+        context "when user isn't enrolled yet" do
+          context "when passwords match"
+          it "enroll the user" do
+            user = create(:user, :teacher)
+            team = create(:team)
+            before_count = team.users.count
+
+            sign_in user
+            post :enroll, xhr: true, params: { id: team, password: team.password }
+
+            common_expectations(
+              http_status: :ok,
+              content_type: "text/javascript",
+              template: "teams/enroll"
+            )
+
+            expect(team.users.count).to eq(before_count + 1)
+          end
         end
 
-        it "doesn't enroll the user with the team" do
-          expect(team.enrolled?(user)).to be_falsey
+        context "when user is already enrolled" do
+          it "doesn't enroll him again" do
+            user = create(:user)
+            team = create(:team, users: [user])
+
+            sign_in user
+            post :enroll, xhr: true, params: { id: team }
+
+            common_expectations(
+              http_status: :unauthorized,
+              content_type: "text/javascript",
+              template: "shared/unauthorized"
+            )
+
+            expect(team.users.count).to eq 1
+          end
         end
+      end
+    end
+
+    context "when logged out" do
+      it "doesn't enroll the user" do
+        team = create(:team)
+        post :enroll, xhr: true, params: { id: team, password: team.password }
+
+        common_expectations(
+          http_status: :unauthorized,
+          content_type: "text/javascript",
+          template: "shared/unauthorized"
+        )
+
+        expect(team.users).to be_empty
       end
     end
   end
 
   describe 'POST #unenroll' do
-    let(:user) { create(:user) }
-    let(:team) { create(:team) }
-    subject { post :unenroll, params: { id: team } }
+    context "when logged in" do
+      context "when user is enrolled in the team" do
+        it "unenrolls him" do
+          user = create(:user)
+          team = create(:team, users: [user])
 
-    context "when logged-in -->" do
-      it "unenroll the user with the team" do
-        expect(team.enrolled?(user)).to be_falsey
+          sign_in user
+          post :unenroll, params: { id: team }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: teams_url
+          )
+
+          expect(team.reload.users).to be_empty
+        end
+      end
+
+      context "when user isn't enrolled in the team" do
+        it "does a redirect" do
+          team = create(:team)
+
+          sign_in create(:user)
+          post :unenroll, params: { id: team }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+
+          expect(team.reload.users).to be_empty
+        end
       end
     end
 
-    context "when not logged-in" do
-      before { put :update, params: { id: create(:team),
-               team: attributes_for(:team, name: "New name") } }
+    context "when logged out" do
+      it "doesn't unenroll the user" do
+        user = create(:user)
+        team = create(:team, users: [user])
 
-      it "redirects to root page" do
-        expect(response).to redirect_to(root_url)
+        post :unenroll, params: { id: team }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+
+        expect(team.reload.users.count).to eq 1
       end
     end
   end
 
+  describe 'GET #list_questions' do
+    context "when logged in" do
+      context "when is enrolled in the team" do
+        it "renders the right template" do
+          user = create(:user)
+          exercise = create(:exercise)
+          team = create(:team, users: [user], exercises: [exercise])
+
+          sign_in user
+          get :list_questions, params: { id: team, exercise_id: exercise }
+
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/list_questions"
+          )
+        end
+      end
+
+      context "when isn't enrolled in the team" do
+        it "does a redirect" do
+          exercise = create(:exercise)
+          team = create(:team, exercises: [exercise])
+
+          sign_in create(:user)
+          get :list_questions, params: { id: team, exercise_id: exercise }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
+      end
+
+      context "when is the owner of the team" do
+        it "does a redirect" do
+          user = create(:user, :teacher)
+          exercise = create(:exercise)
+          team = create(:team, owner: user, exercises: [exercise])
+
+          sign_in user
+          get :list_questions, params: { id: team, exercise_id: exercise }
+
+          common_expectations(
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
+          )
+        end
+      end
+    end
+
+    context "when logged out" do
+      it "does a redirect" do
+        exercise = create(:exercise)
+        team = create(:team, exercises: [exercise])
+
+        get :list_questions, params: { id: team, exercise_id: exercise }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
+      end
+    end
+  end
+
+  # TODO: rewrite tests after action reimplementation.
   describe 'GET #answers' do
     let(:user) { create(:user, :teacher) }
     let(:team) { create(:team, owner: user) }
@@ -446,6 +1129,7 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  # TODO: Break this action in two and rewrite the tests.
   describe 'POST #add_or_remove_exercise' do
     let(:user) { create(:user, :teacher) }
     let(:team) { create(:team, owner: user) }
@@ -461,10 +1145,6 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
       it { expect(response.content_type).to eq("text/javascript") }
       it { expect(response).to render_template("teams/add_or_remove_exercise") }
-      it { expect(assigns(:team)).to_not be_nil }
-      it { expect(assigns(:exercise)).to_not be_nil }
-      it { expect(assigns(:team_exercises)).to_not be_nil }
-      it { expect(assigns(:teacher_exercises)).to_not be_nil }
       it { expect(team.exercises.count).to eq(1) }
     end
 
@@ -479,39 +1159,14 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
       it { expect(response.content_type).to eq("text/javascript") }
       it { expect(response).to render_template("teams/add_or_remove_exercise") }
-      it { expect(assigns(:team)).to_not be_nil }
-      it { expect(assigns(:exercise)).to_not be_nil }
-      it { expect(assigns(:team_exercises)).to_not be_nil }
-      it { expect(assigns(:teacher_exercises)).to_not be_nil }
       it { expect(team.exercises.count).to eq(0) }
     end
   end
 
-  describe "GET #list_questions" do
-    let(:user) { create(:user) }
-    let(:team) { create(:team, users: [user]) }
-    let!(:exercise) { create(:exercise, teams: [team]) }
-
-    subject { get :list_questions, params: { id: team, exercise_id: exercise } }
-
-    before { sign_in user }
-
-    it { expect(subject).to have_http_status(:ok) }
-
-    it { expect(subject.content_type).to eq("text/html") }
-
-    it { expect(subject).to render_template("teams/list_questions") }
-
-    it "sets the instance variables" do
-      subject
-      expect(assigns(:exercise)).to_not be_nil
-      expect(assigns(:dependency_checker)).to_not be_nil
-    end
-  end
-
-  def sign_in_and_return_user(teacher: false)
-    user = teacher ? create(:user, :teacher) : create(:user)
-    sign_in user
-    user
+  def common_expectations(args = {})
+    expect(response).to have_http_status args[:http_status] if args[:http_status]
+    expect(response.content_type).to eq args[:content_type] if args[:content_type]
+    expect(response).to render_template args[:template] if args[:template]
+    expect(response).to redirect_to args[:redirect] if args[:redirect]
   end
 end

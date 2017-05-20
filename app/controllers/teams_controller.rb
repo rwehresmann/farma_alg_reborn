@@ -27,7 +27,7 @@ class TeamsController < ApplicationController
 
     if @team.save
       flash[:success] =  "Turma criada!"
-      redirect_to @team
+      redirect_to teams_url
     else
       render 'new'
     end
@@ -42,7 +42,7 @@ class TeamsController < ApplicationController
 
     if @team.update_attributes(team_params)
       flash[:success] = "Turma atualizada!"
-      redirect_to @team
+      redirect_to teams_url
     else
       render 'edit'
     end
@@ -121,9 +121,7 @@ class TeamsController < ApplicationController
       @enrolled = false
     end
 
-    respond_to do |format|
-      format.js
-    end
+    respond_to { |format| format.js }
   end
 
   def unenroll
@@ -155,7 +153,9 @@ class TeamsController < ApplicationController
                  array << answer_object_to_graph(answer)
               }
 
-    respond_to { |format| format.js { render "teams/graph/answers" } }
+    respond_to { |format|
+      format.js { render "teams/graph/answers" }
+    }
   end
 
   def add_or_remove_exercise
