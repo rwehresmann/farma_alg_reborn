@@ -69,6 +69,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
+    coffee_routes (1.1.1)
+      actionpack (>= 3.2)
     concurrent-ruby (1.0.4)
     database_cleaner (1.5.3)
     debug_inspector (0.0.2)
@@ -261,6 +263,7 @@ DEPENDENCIES
   capybara (~> 2.0)
   coderay (~> 1.1)
   coffee-rails (~> 4.2)
+  coffee_routes
   database_cleaner (~> 1.0)
   delayed_job_active_record (~> 4.1)
   devise (~> 4.2)
