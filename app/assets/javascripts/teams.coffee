@@ -38,6 +38,8 @@ class Teams
     createModal("exercises");
 
   users: ->
+    this.nav_tabs_ajax_calls()
+
     window.history.pushState(
       '',
       '',
@@ -48,6 +50,8 @@ class Teams
     $('li:has(a[href="#enrolled-students"])').addClass('active')
 
   graph: ->
+    this.nav_tabs_ajax_calls()
+
     window.history.pushState(
       '',
       '',
@@ -81,6 +85,7 @@ class Teams
        showModal('search', false, createModal)
 
      $(document).on 'click', '#search-btn', ->
+       $('#loading-modal').remove()
        div = $(document.createElement('div'))
        div.attr('id', 'loading-modal')
        $('.modal-content').append(div)
