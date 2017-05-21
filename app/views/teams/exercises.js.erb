@@ -1,7 +1,5 @@
-window.history.pushState('', '', '<%= exercises_team_path(@team) %>')
+<%= render 'shared/add_controller_js' %>
 
-$('li.active').removeClass('active')
-$('li:has(a[href="#exercises-list"])').addClass('active')
 $('.tab-content').html(
   '<%= j( \
     render( \
@@ -12,21 +10,20 @@ $('.tab-content').html(
         team_exercises: @team_exercises \
       } \
     ) \
-  ) %>')
+  ) %>'
+)
 
-  function createModal(modalName) {
-    var div = $(document.createElement('div'))
-    div.attr('id', modalName + '-container');
-    $('body').append(div);
-    $(div).html(
-      '<%= j( \
-        render( \
-          partial: 'teams/exercises/exercises_modal', \
-          locals: { teacher_exercises: @teacher_exercises, team: @team } \
-        ) \
-      ) %>'
-    );
-    $('body').append(div);
-  }
-
-createModal("exercises");
+function createModal(modalName) {
+  var div = $(document.createElement('div'))
+  div.attr('id', modalName + '-container');
+  $('body').append(div);
+  $(div).html(
+    '<%= j( \
+      render( \
+        partial: 'teams/exercises/exercises_modal', \
+        locals: { teacher_exercises: @teacher_exercises, team: @team } \
+      ) \
+    ) %>'
+  );
+  $('body').append(div);
+}

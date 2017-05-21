@@ -1,3 +1,5 @@
+<%= render 'shared/add_controller_js' %>
+
 $('#teams').empty();
 $('#teams').html('<%= j(render "teams/index/teams", teams: @teams) %>');
 $('#pagination').html('<%= j(render "shared/paginate", object: @teams) %>')

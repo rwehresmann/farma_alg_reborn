@@ -22,3 +22,13 @@ function showModal(modalName, recreate, createModalFunc) {
 
   $('#' + modalName + '-modal').modal('show');
 }
+
+function addControllerJS() {
+  controller = $('body').data('controller');
+  action = $('body').data('action');
+
+  if (window.APP[controller]) {
+    klass = new window.APP[controller];
+    if (klass[action]) klass[action]();
+  }
+}

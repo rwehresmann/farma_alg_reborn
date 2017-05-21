@@ -25,6 +25,11 @@
 //= require ace-builds/src-min/mode-pascal
 //= require vivagraphjs/dist/vivagraph
 //= require js-routes
+//= require coffee_routes
 //= require jsdifflib/difflib
 //= require jsdifflib/diffview
 //= require_tree .
+
+$(document).ready(function() {
+  addControllerJS();
+});

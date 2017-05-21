@@ -1,5 +1,3 @@
-window.history.pushState('', '', '<%= users_team_path(@team) %>')
+<%= render 'shared/add_controller_js' %>
 
-$('li.active').removeClass('active');
-$('li:has(a[href="#enrolled-students"])').addClass('active');
 $('.tab-content').html('<%= j(render "teams/users/users") %>');

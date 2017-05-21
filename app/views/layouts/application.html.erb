@@ -11,7 +11,7 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body class="skin-blue sidebar-mini">
+  <body class="skin-blue sidebar-mini" data-controller="<%= controller_name.camelize %>" data-action="<%= action_name %>">
     <div class="wrapper">
       <%= render "shared/header" %>
 
