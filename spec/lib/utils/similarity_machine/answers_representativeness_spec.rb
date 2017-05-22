@@ -5,7 +5,7 @@ describe SimilarityMachine::AnswersRepresentativeness do
   describe '#most_representative' do
     context "when there are no answers" do
       it "returns nil" do
-        question = create(:question)
+        questions = create_pair(:question)
         users = create_pair(:user)
         teams = create_pair(:team)
 
@@ -13,7 +13,7 @@ describe SimilarityMachine::AnswersRepresentativeness do
         answers = answers_hash(
           users: users,
           teams: [teams[1]],
-          questions: [question]
+          questions: questions
         )
 
         create(
@@ -22,10 +22,16 @@ describe SimilarityMachine::AnswersRepresentativeness do
           answer_2: answers[:user_1][:team_0][:question_0],
           similarity: 100
         )
+        create(
+          :answer_connection,
+          answer_1: answers[:user_0][:team_0][:question_1],
+          answer_2: answers[:user_1][:team_0][:question_1],
+          similarity: 100
+        )
 
         selected = described_class.new(
           users: users,
-          question: [question],
+          question: questions[0],
           team: teams[0]
         ).most_representative
 
@@ -35,7 +41,7 @@ describe SimilarityMachine::AnswersRepresentativeness do
 
     context "when there are answers" do
       it "returns the most representative answers of the specified questions and users group" do
-        question = create(:question)
+        questions = create_pair(:question)
         users = create_list(:user, 4)
         teams = create_pair(:team)
 
@@ -43,14 +49,14 @@ describe SimilarityMachine::AnswersRepresentativeness do
         answers = answers_hash(
           users: users,
           teams: teams,
-          questions: [question]
+          questions: questions
         )
 
         create(
           :answer_connection,
           answer_1: answers[:user_0][:team_0][:question_0],
           answer_2: answers[:user_1][:team_0][:question_0],
-          similarity: 50
+          similarity: 30
         )
         create(
           :answer_connection,
@@ -68,6 +74,12 @@ describe SimilarityMachine::AnswersRepresentativeness do
         # These answers must be ignored >>
         create(
           :answer_connection,
+          answer_1: answers[:user_1][:team_0][:question_1],
+          answer_2: answers[:user_2][:team_0][:question_1],
+          similarity: 100
+        )
+        create(
+          :answer_connection,
           answer_1: answers[:user_0][:team_0][:question_0],
           answer_2: answers[:user_3][:team_0][:question_0],
           similarity: 100
@@ -81,7 +93,7 @@ describe SimilarityMachine::AnswersRepresentativeness do
 
         selected = described_class.new(
           users: users.first(3),
-          question: question,
+          question: questions[0],
           team: teams[0]
         ).most_representative
 

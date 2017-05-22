@@ -5,7 +5,7 @@ module SimilarityMachine
     include Utils
 
     def initialize(question:, users:, team:)
-      @questions = question
+      @question = question
       @users = users
       @team = team
     end
@@ -26,7 +26,9 @@ module SimilarityMachine
       similarities = Hash.new(0)
       compare_and_shift_each(answers, similarities) do |answer_1, answer_2|
         similarity = answer_1.similarity_with(answer_2)
-        similarities[answer_1] += similarity unless similarity.nil?
+        [answer_1, answer_2].each { |answer|
+          similarities[answer] += similarity
+        } unless similarity.nil?
       end
 
       similarities
