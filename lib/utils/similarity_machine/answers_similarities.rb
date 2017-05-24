@@ -1,28 +1,29 @@
 require 'utils/similarity_machine/utils'
 
 module SimilarityMachine
-  class AnswersRepresentativeness
+  class AnswersSimilarities
     include Utils
 
     def initialize(question:, users:, team:)
       @question = question
       @users = users
       @team = team
+      @similarities = search
     end
 
-    def most_representative
-      answers = AnswerQuery.new.user_answers(
-        @users,
-        to: { question: @question, team: @team }
-      ).to_a
-
-      return if answers.empty?
-      answers_similarities(answers).key_of_biggest_value
+    def more_similar(limit = nil)
+      limit ? @similarities.first(limit) : @similarities
     end
 
     private
 
-    def answers_similarities(answers)
+    def search
+      answers = AnswerQuery.new.user_answers(
+        @users,
+        to: { question: @question, team: @team }
+      ).to_a
+      return if answers.empty?
+
       similarities = Hash.new(0)
       compare_and_shift_each(answers, similarities) do |answer_1, answer_2|
         similarity = answer_1.similarity_with(answer_2)
@@ -31,7 +32,7 @@ module SimilarityMachine
         } unless similarity.nil?
       end
 
-      similarities
+      sort_similarities_desc(similarities)
     end
   end
 end
