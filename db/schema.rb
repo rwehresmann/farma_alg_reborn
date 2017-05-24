@@ -155,9 +155,11 @@ ActiveRecord::Schema.define(version: 20170406005128) do
   create_table "user_connections", force: :cascade do |t|
     t.integer  "user_1_id"
     t.integer  "user_2_id"
+    t.integer  "team_id"
     t.float    "similarity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_user_connections_on_team_id"
     t.index ["user_1_id"], name: "index_user_connections_on_user_1_id"
     t.index ["user_2_id"], name: "index_user_connections_on_user_2_id"
   end

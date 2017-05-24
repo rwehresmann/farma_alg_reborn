@@ -3,6 +3,7 @@ class CreateUserConnections < ActiveRecord::Migration[5.0]
     create_table :user_connections do |t|
       t.references :user_1, references: :answer
       t.references :user_2, references: :answer
+      t.references :team
       t.float :similarity, null: false
       t.timestamps
     end

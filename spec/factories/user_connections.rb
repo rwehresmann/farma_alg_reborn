@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :user_connection do
     association :user_1, factory: :user
     association :user_2, factory: :user
+    team
     similarity 5.0
 
     trait :high_similarity do
