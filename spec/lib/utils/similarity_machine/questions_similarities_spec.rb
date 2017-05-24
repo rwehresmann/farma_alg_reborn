@@ -14,25 +14,25 @@ describe SimilarityMachine::QuestionsSimilarities do
           create(:answer, user: user, team: teams[1], question: question)
         }
 
-        selected = described_class.new(
+        similarities = described_class.new(
           users: users,
           team: teams[0]
         ).more_similar
 
-        expect(selected).to be_nil
+        expect(similarities).to be_nil
       end
     end
 
     context "when users have common questions answered" do
       context "when limiting the number of results to return" do
-        it "returns all results" do
+        it "returns results respecting the limit specified" do
           users = create_list(:user, 3)
           teams = create_list(:team, 2)
           questions = create_list(:question, 3)
 
           set_common_sample_data(users, teams, questions)
 
-          selected = described_class.new(
+          similarities = described_class.new(
             users: users.first(2),
             team: teams[0]
           ).more_similar(2)
@@ -42,19 +42,19 @@ describe SimilarityMachine::QuestionsSimilarities do
             [questions[0], 70.3]
           ]
 
-          expect(selected).to eq expected_result
+          expect(similarities).to eq expected_result
         end
       end
 
       context "without limiting the number of results to return" do
-        it "returns the results respecting the limit informed" do
+        it "returns all results" do
           users = create_list(:user, 3)
           teams = create_list(:team, 2)
           questions = create_list(:question, 3)
 
           set_common_sample_data(users, teams, questions)
 
-          selected = described_class.new(
+          similarities = described_class.new(
             users: users.first(2),
             team: teams[0]
           ).more_similar
@@ -65,7 +65,7 @@ describe SimilarityMachine::QuestionsSimilarities do
             [questions[2], 10]
           ]
 
-          expect(selected).to eq expected_result
+          expect(similarities).to eq expected_result
         end
       end
     end
