@@ -128,11 +128,11 @@ RSpec.describe User, type: :model do
     it { expect(user.teams_from_where_belongs.count).to eq(2) }
   end
 
-    private
+  private
 
-    def skip_before_validation_callback(user)
-      class << user
-        def generate_anonymous_id; end
-      end
+  def skip_before_validation_callback(user)
+    class << user
+      def generate_anonymous_id; end
     end
+  end
 end
