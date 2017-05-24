@@ -26,7 +26,11 @@ module SimilarityMachine
       users = @team.users.to_a
 
       compare_and_shift_each(users, similarities) do |user_1, user_2|
-        similarity = user_1.similarity_with(user_2)
+        similarity = UserConnectionQuery.new.similarity_in_team(
+          user_1: user_1,
+          user_2: user_2,
+          team: @team
+        )
 
         [user_1, user_2].each { |user|
           similarities[user] += similarity

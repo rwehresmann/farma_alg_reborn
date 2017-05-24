@@ -3,18 +3,22 @@ class UserConnectionQuery
     @relation = relation
   end
 
-  def similarity(args = {})
-   @relation.select(:similarity)
+  def similarity_in_team(user_1:, user_2:, team:)
+   record = @relation.select(:similarity)
     .where(
-      user_1: args[:user_1],
-      user_2: args[:user_2]
+      user_1: user_1,
+      user_2: user_2,
+      team: team
     )
     .or(
       @relation.select(:similarity)
       .where(
-        user_1: args[:user_2],
-        user_2: args[:user_1]
+        user_1: user_2,
+        user_2: user_1,
+        team: team
       )
-    ).limit(1)
+    ).limit(1).first
+
+    record.nil? ? nil : record.similarity
   end
 end

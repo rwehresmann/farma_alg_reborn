@@ -1,16 +1,42 @@
 require 'rails_helper'
 
 describe UserConnectionQuery do
-  describe '#similarity' do
-    let(:user_1) { create(:user) }
-    let(:user_2) { create(:user) }
-    let!(:user_connection_1) { create(:user_connection, similarity: 10) }
-    let!(:user_connection_2) {
-      create(:user_connection, user_1: user_1, user_2: user_2, similarity: 100)
-    }
+  describe '#similarity_in_team' do
+    context "when similarity already exists" do
+      it "returns the right similarity" do
+        users = create_pair(:user)
+        team = create(:team)
 
-    subject { described_class.new.similarity(user_1: user_1, user_2: user_2).first }
+        create(
+          :user_connection,
+          user_1: users[0],
+          user_2: users[1],
+          team: team,
+          similarity: 76
+        )
 
-    it { expect(subject.similarity).to eq(user_connection_2.similarity) }
+        result = described_class.new.similarity_in_team(
+          user_1: users[1],
+          user_2: users[0],
+          team: team
+        )
+
+        expect(result).to eq 76
+      end
+    end
+
+    context "when similarity doesn't exists already" do
+      it "returns nil" do
+        users = create_pair(:user)
+
+        result = described_class.new.similarity_in_team(
+          user_1: users[1],
+          user_2: users[0],
+          team: create(:team)
+        )
+
+        expect(result).to be_nil
+      end
+    end
   end
 end
