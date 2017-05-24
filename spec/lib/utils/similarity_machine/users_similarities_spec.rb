@@ -8,7 +8,7 @@ describe SimilarityMachine::UsersSimilarities do
         users = create_list(:user, 3)
         teams = create_pair(:team, users: users)
 
-        create_connection_who_must_be_avoided(users, teams)
+        set_common_sample_data(users, teams)
 
         users_similarities = described_class.new(teams[0]).more_similar
         expected_result = [
@@ -26,7 +26,7 @@ describe SimilarityMachine::UsersSimilarities do
         users = create_list(:user, 3)
         teams = create_pair(:team, users: users)
 
-        create_connection_who_must_be_avoided(users, teams)
+        set_common_sample_data(users, teams)
 
         users_similarities = described_class.new(teams[0]).more_similar(1)
         expected_result = [ [users[0], 170] ]
@@ -36,7 +36,7 @@ describe SimilarityMachine::UsersSimilarities do
     end
   end
 
-  def create_connection_who_must_be_avoided(users, teams)
+  def set_common_sample_data(users, teams)
     create(
       :user_connection,
       user_1: users[0],

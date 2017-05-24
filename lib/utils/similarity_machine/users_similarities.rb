@@ -12,11 +12,11 @@ module SimilarityMachine
     end
 
     def more_similar(limit = nil)
-      objects = @similarities.select { |_k, v|
-          v >= Figaro.env.similarity_threshold.to_f
+      similarities = @similarities.select { |_user, similarity|
+          similarity >= Figaro.env.similarity_threshold.to_f
       }
 
-      limit ? objects.first(limit) : objects
+      limit ? similarities.first(limit) : similarities
     end
 
     private
