@@ -20,5 +20,9 @@ module SimilarityMachine
         array_copy.each { |object_2| yield(object_1, object_2) }
       end
     end
+
+    def sort_similarities_desc(similarities)
+      similarities.sort_by { |_k, v| -v }
+    end
   end
 end

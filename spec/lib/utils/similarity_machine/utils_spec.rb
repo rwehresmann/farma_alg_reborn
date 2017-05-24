@@ -76,4 +76,14 @@ describe SimilarityMachine::Utils do
       end
     end
   end
+
+  describe '#sort_similarities_desc' do
+    it "returns an array of arrays with the similarities sorted desc" do
+      similarities = { a: 10, b: 30, c: 20 }
+
+      result = object.sort_similarities_desc(similarities)
+
+      expect(result).to eq [[:b, 30], [:c, 20], [:a, 10]]
+    end
+  end
 end

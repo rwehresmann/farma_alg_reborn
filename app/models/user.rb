@@ -29,6 +29,15 @@ class User < ApplicationRecord
     teams + teams_created
   end
 
+  # Get similarity between two users, if already calculated.
+  def similarity_with(user)
+    query_result = UserConnectionQuery.new.similarity(
+      user_1: self,
+      user_2: user
+    ).first
+    if query_result then query_result.similarity else nil end
+  end
+
   private
 
   # Generate random anonymous id.
