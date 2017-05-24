@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'utils/incentive_ranking/builder'
 
-describe 'teams/_incentive_ranking.html.erb' do
+describe 'teams/rankings/_incentive_ranking.html.erb', type: :view do
   let(:current_user) { create(:user) }
   let(:team) { create(:team, users: [current_user]) }
 
@@ -12,7 +12,7 @@ describe 'teams/_incentive_ranking.html.erb' do
     set_data
     set_instace_variables
 
-    render
+    render 'teams/rankings/incentive_ranking'
   end
 
   it "shows the user row" do
@@ -31,30 +31,30 @@ describe 'teams/_incentive_ranking.html.erb' do
     expect(rendered).to have_selector("td div.flex-box", count: users.count)
   end
 
-    private
+  private
 
-    def set_data
-      set_ranking_data
-      set_answers
-    end
+  def set_data
+    set_ranking_data
+    set_answers
+  end
 
-    def set_answers
-      User.all.each { |user| create(:answer, user: user, team: team) }
-    end
+  def set_answers
+    User.all.each { |user| create(:answer, user: user, team: team) }
+  end
 
-    def set_ranking_data
-      2.times { |i| create(:user_score, user: create(:user), team: team, score: i + 1) }
-      create(:user_score, user: current_user, team: team, score: 3)
-    end
+  def set_ranking_data
+    2.times { |i| create(:user_score, user: create(:user), team: team, score: i + 1) }
+    create(:user_score, user: current_user, team: team, score: 3)
+  end
 
-    def set_instace_variables
-      @incentive_ranking = IncentiveRanking::Builder.new(target: current_user, team: team).build
-      @team = team
-      @current_user_index = current_user_index
-    end
+  def set_instace_variables
+    @incentive_ranking = IncentiveRanking::Builder.new(target: current_user, team: team).build
+    @team = team
+    @current_user_index = current_user_index
+  end
 
-    def current_user_index
-      record = @incentive_ranking.select { |data| data[:user] == current_user }.first
-      @incentive_ranking.index(record)
-    end
+  def current_user_index
+    record = @incentive_ranking.select { |data| data[:user] == current_user }.first
+    @incentive_ranking.index(record)
+  end
 end
