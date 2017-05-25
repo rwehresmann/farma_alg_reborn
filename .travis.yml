@@ -1,7 +1,10 @@
 language: ruby
 rvm:
   - 2.3.1
+services:
+  - elasticsearch
 before_script:
   - bundle exec rake db:create
   - bundle exec rake db:migrate
   - sudo apt-get install fp-compiler
+  - sleep 10
