@@ -20,6 +20,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production.
 # gem 'redis', '~> 3.0'
 
+# Use Capistrano for deployment
+# gem 'capistrano-rails', group: :development
+
 gem 'devise', '~> 4.2'
 gem 'redcarpet', '~> 3.4'
 # To pretiffy markdown code blocks.
