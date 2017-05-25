@@ -12,14 +12,17 @@
 
 ActiveRecord::Schema.define(version: 20170406005128) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "answer_connections", force: :cascade do |t|
     t.integer  "answer_1_id"
     t.integer  "answer_2_id"
     t.float    "similarity",  null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["answer_1_id"], name: "index_answer_connections_on_answer_1_id"
-    t.index ["answer_2_id"], name: "index_answer_connections_on_answer_2_id"
+    t.index ["answer_1_id"], name: "index_answer_connections_on_answer_1_id", using: :btree
+    t.index ["answer_2_id"], name: "index_answer_connections_on_answer_2_id", using: :btree
   end
 
   create_table "answer_test_case_results", force: :cascade do |t|
@@ -29,9 +32,9 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.boolean  "correct",      default: false, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.index ["answer_id", "test_case_id"], name: "index_answer_test_case_results_on_answer_id_and_test_case_id", unique: true
-    t.index ["answer_id"], name: "index_answer_test_case_results_on_answer_id"
-    t.index ["test_case_id"], name: "index_answer_test_case_results_on_test_case_id"
+    t.index ["answer_id", "test_case_id"], name: "index_answer_test_case_results_on_answer_id_and_test_case_id", unique: true, using: :btree
+    t.index ["answer_id"], name: "index_answer_test_case_results_on_answer_id", using: :btree
+    t.index ["test_case_id"], name: "index_answer_test_case_results_on_test_case_id", using: :btree
   end
 
   create_table "answers", force: :cascade do |t|
@@ -43,9 +46,9 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "team_id"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["team_id"], name: "index_answers_on_team_id"
-    t.index ["user_id"], name: "index_answers_on_user_id"
+    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
+    t.index ["team_id"], name: "index_answers_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
@@ -54,8 +57,8 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.text     "content",    null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["answer_id"], name: "index_comments_on_answer_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["answer_id"], name: "index_comments_on_answer_id", using: :btree
+    t.index ["user_id"], name: "index_comments_on_user_id", using: :btree
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -70,7 +73,7 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.string   "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
   create_table "earned_scores", force: :cascade do |t|
@@ -80,9 +83,9 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "score"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["question_id"], name: "index_earned_scores_on_question_id"
-    t.index ["team_id"], name: "index_earned_scores_on_team_id"
-    t.index ["user_id"], name: "index_earned_scores_on_user_id"
+    t.index ["question_id"], name: "index_earned_scores_on_question_id", using: :btree
+    t.index ["team_id"], name: "index_earned_scores_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_earned_scores_on_user_id", using: :btree
   end
 
   create_table "exercises", force: :cascade do |t|
@@ -91,7 +94,7 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "user_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["user_id"], name: "index_exercises_on_user_id"
+    t.index ["user_id"], name: "index_exercises_on_user_id", using: :btree
   end
 
   create_table "exercises_teams", force: :cascade do |t|
@@ -99,8 +102,8 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "team_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["exercise_id"], name: "index_exercises_teams_on_exercise_id"
-    t.index ["team_id"], name: "index_exercises_teams_on_team_id"
+    t.index ["exercise_id"], name: "index_exercises_teams_on_exercise_id", using: :btree
+    t.index ["team_id"], name: "index_exercises_teams_on_team_id", using: :btree
   end
 
   create_table "question_dependencies", force: :cascade do |t|
@@ -109,8 +112,8 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.string   "operator",      default: ""
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.index ["question_1_id"], name: "index_question_dependencies_on_question_1_id"
-    t.index ["question_2_id"], name: "index_question_dependencies_on_question_2_id"
+    t.index ["question_1_id"], name: "index_question_dependencies_on_question_1_id", using: :btree
+    t.index ["question_2_id"], name: "index_question_dependencies_on_question_2_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
@@ -121,7 +124,7 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "exercise_id"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.index ["exercise_id"], name: "index_questions_on_exercise_id"
+    t.index ["exercise_id"], name: "index_questions_on_exercise_id", using: :btree
   end
 
   create_table "teams", force: :cascade do |t|
@@ -131,14 +134,14 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "owner_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.index ["owner_id"], name: "index_teams_on_owner_id"
+    t.index ["owner_id"], name: "index_teams_on_owner_id", using: :btree
   end
 
   create_table "teams_users", force: :cascade do |t|
     t.integer "team_id"
     t.integer "user_id"
-    t.index ["team_id"], name: "index_teams_users_on_team_id"
-    t.index ["user_id"], name: "index_teams_users_on_user_id"
+    t.index ["team_id"], name: "index_teams_users_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_teams_users_on_user_id", using: :btree
   end
 
   create_table "test_cases", force: :cascade do |t|
@@ -149,7 +152,7 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.integer  "question_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.index ["question_id"], name: "index_test_cases_on_question_id"
+    t.index ["question_id"], name: "index_test_cases_on_question_id", using: :btree
   end
 
   create_table "user_connections", force: :cascade do |t|
@@ -159,9 +162,9 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.float    "similarity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["team_id"], name: "index_user_connections_on_team_id"
-    t.index ["user_1_id"], name: "index_user_connections_on_user_1_id"
-    t.index ["user_2_id"], name: "index_user_connections_on_user_2_id"
+    t.index ["team_id"], name: "index_user_connections_on_team_id", using: :btree
+    t.index ["user_1_id"], name: "index_user_connections_on_user_1_id", using: :btree
+    t.index ["user_2_id"], name: "index_user_connections_on_user_2_id", using: :btree
   end
 
   create_table "user_scores", force: :cascade do |t|
@@ -171,8 +174,8 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.datetime "computed"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["team_id"], name: "index_user_scores_on_team_id"
-    t.index ["user_id"], name: "index_user_scores_on_user_id"
+    t.index ["team_id"], name: "index_user_scores_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_user_scores_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -192,8 +195,8 @@ ActiveRecord::Schema.define(version: 20170406005128) do
     t.boolean  "teacher",                default: false, null: false
     t.boolean  "admin",                  default: false, null: false
     t.string   "anonymous_id"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
 end

@@ -54,7 +54,7 @@ class Answer < ApplicationRecord
 
   scope :between_dates, -> (start_date, end_date) do
     return unless start_date.present? && end_date.present?
-    where("created_at BETWEEN datetime(?) AND datetime(?)", start_date, end_date)
+    where("created_at BETWEEN ? AND ?", start_date, end_date)
   end
 
   scope :created_last, -> do
