@@ -14,7 +14,7 @@ describe "Add exercise to a team", type: :feature, js: true do
     find("#remove-exercise-#{exercise.id}").trigger("click")
   end
 
-  it "replaces the add button and add the exercise to the table" do
+  xit "replaces the add button and add the exercise to the table" do
     expect(page).to have_selector("#add-exercise-#{exercise.id} a", text: "Adicionar")
     expect(page).to_not have_selector("#team-exercise-#{exercise.id} td a", text: exercise.title)
   end
