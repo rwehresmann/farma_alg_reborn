@@ -14,8 +14,8 @@ describe "Enroll in a team", type: :feature, js: true do
       find('[name=commit]').click
     end
 
-    it "redirects to team page" do
-      expect(page).to have_current_path(team_path(team))
+    it "redirects to team rankings page" do
+      expect(page).to have_current_path(rankings_team_path(team))
       expect(page).to have_selector("div.alert.alert-success")
     end
   end
