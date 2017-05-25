@@ -7,8 +7,9 @@ describe "Answer a question", type: :feature, js: true do
     exercise = create(:exercise)
     question = create(:question, exercise: exercise)
     create(:test_case, :hello_world, question: question)
+    team = create(:team, exercises: [exercise])
 
-    visit new_answer_path(question)
+    visit new_answer_question_path(question, team)
   end
 
   subject(:submit_answer) do
