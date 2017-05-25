@@ -28,9 +28,15 @@ function placeTestCasesResults() {
 // Remove form invalid submition message, if present.
 $('#error_explanation').remove();
 
-<% unless @answer.valid? %>
+<% if @answer.content.empty? %>
   $('.fa.fa-refresh.fa-spin').remove();
-  $('#new_answer').prepend('<%= j(render "shared/error_messages", object: @answer) %>');
+  $('#new_answer').prepend(
+    '<div id="error_explanation"> \
+      <div class="alert alert-danger"> \
+        Forneça uma resposta! \
+      </div> \
+    </div>'
+  );
 <% else %>
   <% if @answer.correct? %>
     $('.fa.fa-refresh.fa-spin').replaceWith('<div id="answer-result"><i class="fa fa-circle text-green"></i> <span>Resposta correta</span></div>');
