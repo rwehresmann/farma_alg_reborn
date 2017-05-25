@@ -29,173 +29,145 @@ RSpec.describe EarnedScore, type: :model do
   end
 
   describe ".by_user" do
-    let(:users) { create_pair(:user) }
-
-    before do
-      2.times { |i| create(:earned_score, user: users[i]) }
-    end
-
     it "returns data of the right user" do
-      expect(EarnedScore.by_user(users.first).map(&:user)).to eq([users.first])
+      users = create_list(:user, 3)
+
+      earned_scores_to_return = create_pair(:earned_score, user: users[0])
+      users[1..2].each { |user| create(:earned_score, user: user) }
+
+      expect(EarnedScore.by_user(users[0]).to_a).to eq earned_scores_to_return
     end
   end
 
   describe ".by_team" do
-    let(:teams) { create_pair(:team) }
-
-    before do
-      2.times { |i| create(:earned_score, team: teams[i]) }
-    end
-
     it "returns data of the right team" do
-      expect(EarnedScore.by_team(teams.first).map(&:team)).to eq([teams.first])
+      teams = create_list(:team, 3)
+
+      earned_scores_to_return = create_pair(:earned_score, team: teams[0])
+      teams[1..2].each { |team| create(:earned_score, team: team) }
+
+      expect(EarnedScore.by_team(teams[0]).to_a).to eq earned_scores_to_return
     end
   end
 
   describe ".by_question" do
-    let(:questions) { create_pair(:question) }
+    it "returns data of the right question" do
+      questions = create_list(:question, 3)
 
-    before { 2.times { |i| create(:earned_score, question: questions[i]) } }
+      earned_scores_to_return = create_pair(:earned_score, question: questions[0])
+      questions[1..2].each { |question| create(:earned_score, question: question) }
 
-    it "returns data of the right team" do
-      expect(EarnedScore.by_team(questions.first).map(&:question)).to eq([questions.first])
+      expect(EarnedScore.by_question(questions[0])).to eq earned_scores_to_return
     end
   end
 
   describe ".starting_from" do
-    let!(:time_now) { Time.now }
-    let!(:to_return_1) { create(:earned_score, created_at: time_now) }
-    let!(:to_return_2) { create(:earned_score, created_at: time_now + 1.day) }
-    let!(:to_let_out) { create(:earned_score, created_at: time_now - 1.day) }
+    it "returns earned score records starting from the informed date" do
+      current_date = Time.now
 
-    it "returns the right data" do
-      expected = [to_return_1, to_return_2]
-      expect(EarnedScore.starting_from(time_now).to_a).to eq(expected)
-    end
-  end
+      record_1 = create(:earned_score, created_at: current_date)
+      create(:earned_score, created_at: current_date - 1.day)
+      record_2 = create(:earned_score, created_at: current_date + 1.day)
 
-  describe ".select_users" do
-    let!(:records) { create_pair(:earned_score) }
-    let!(:another_record) { create(:earned_score) }
-    before { create_pair(:earned_score, user: EarnedScore.first.user) }
-
-    context "when all table records should be considered" do
-      let(:expected) { [records.first.user, records.last.user, another_record.user] }
-
-      it "returns all users registered in the table" do
-        received = EarnedScore.send(:select_users).to_a
-        expect(received).to eq(expected)
-      end
-    end
-
-    context "when records are specified" do
-      let(:expected) { [records.first.user, records.last.user] }
-
-      it "returns only the users from the records" do
-        earned_scores = EarnedScore.where(id: records.map(&:id))
-        received = EarnedScore.send(:select_users, earned_scores).to_a
-        expect(received).to eq(expected)
-      end
+      expect(
+        EarnedScore.starting_from(current_date).to_a
+      ).to eq [record_1, record_2]
     end
   end
 
   describe ".ranking" do
     context "when used to calculate the ranking of a team in a certain period of time" do
-      let(:users) { create_list(:user, 4) }
-      let(:teams) { create_pair(:team, users: users) }
-      let(:team_to_search) { teams.last }
-      let(:questions) { create_list(:question, 4, test_cases: [create(:test_case, :hello_world)]) }
-      let(:start_date) { Time.now }
-      let(:score_to_earn) { 20 }
+      context "when not limiting the results" do
+        it "returns the complet ranking from the team" do
+          current_date = Time.now
+          users = create_list(:user, 4)
+          teams = create_pair(:team)
 
-      subject(:set_data) do
-        # Create answers who whould be ignored.
-        # Answers from a team that will not be searched:
-        set_earned_score(questions, users.first, teams.first, start_date)
+          set_earned_scores(users, teams, current_date)
 
-        # Answer out of the date range to search:
-        set_earned_score(questions, users.third, team_to_search, start_date - 1.month)
+          result = described_class.ranking(
+            team: teams[0],
+            starting_from: current_date
+          )
+          expected_result = [
+            { user: users[1], score: 30 },
+            { user: users[2], score: 20 },
+            { user: users[0], score: 10 }
+          ]
 
-        # Create answer to the searched team.
-        # users.first score = 80:
-        set_earned_score(questions, users.first, team_to_search, start_date)
-
-        # users.second score = 60:
-        set_earned_score(questions[0..2], users.second, team_to_search, start_date)
-
-        # users.third score = 40:
-        set_earned_score([questions.first], users.third, team_to_search, start_date)
-        create(:earned_score, team: team_to_search, question: questions.second,
-               user: users.third, created_at: start_date + 3.day, score: score_to_earn)
-
-        # users.last score = 20:
-        set_earned_score([questions.first], users.last, team_to_search, start_date)
+          expect(result).to eq expected_result
+        end
       end
+    end
 
-      context "with a limit specified" do
-        let(:expected) {
-                        [
-                          { user: users.first, score: 80 },
-                          { user: users.second, score: 60 },
-                          { user: users.third, score: 40 }
-                        ]
-                      }
+    context "when limiting the results" do
+      it "returns the ranking from the team respecting the limit specified" do
+        current_date = Time.now
+        users = create_list(:user, 4)
+        teams = create_pair(:team)
 
-        subject { EarnedScore.ranking(team: teams.last, starting_from: start_date,
-                                      limit: 3) }
+        set_earned_scores(users, teams, current_date)
 
-        before { set_data }
+        result = described_class.ranking(
+          team: teams[0],
+          starting_from: current_date,
+          limit: 2
+        )
+        expected_result = [
+          { user: users[1], score: 30 },
+          { user: users[2], score: 20 }
+        ]
 
-        it { expect(subject).to eq(expected) }
-      end
-
-      context "without a limit specified" do
-        let(:expected) {
-                        [
-                          { user: users.first, score: 80 },
-                          { user: users.second, score: 60 },
-                          { user: users.third, score: 40 },
-                          { user: users.last, score: 20 }
-                        ]
-                      }
-
-        subject { EarnedScore.ranking(team: teams.last, starting_from: start_date) }
-
-        before { set_data }
-
-        it { expect(subject).to eq(expected) }
-      end
-
-      context "with a limit bigger than the quantity of students in the team" do
-        let(:expected) {
-                        [
-                          { user: users.first, score: 80 },
-                          { user: users.second, score: 60 },
-                          { user: users.third, score: 40 },
-                          { user: users.last, score: 20 }
-                        ]
-                      }
-
-        subject { EarnedScore.ranking(team: teams.last, starting_from: start_date,
-                                      limit: users.count + 10) }
-
-        before { set_data }
-
-        it { expect(subject).to eq(expected) }
-      end
-
-      context "without any data to rank" do
-        it { expect{ EarnedScore.ranking }.to_not raise_error }
+        expect(result).to eq expected_result
       end
     end
   end
 
-    private
+  def set_earned_scores(users, teams, current_date)
+    create(
+      :earned_score,
+      user: users[0],
+      team: teams[0],
+      score: 10,
+      created_at: current_date
+    )
+    create(
+      :earned_score,
+      user: users[1],
+      team: teams[0],
+      score: 30,
+      created_at: current_date + 1.day
+    )
+    create(
+      :earned_score,
+      user: users[2],
+      team: teams[0],
+      score: 20,
+      created_at: current_date + 2.day
+    )
 
-    def set_earned_score(questions, user, team, date)
-      questions.each { |question|
-        create(:earned_score, team: team, question: question,
-               user: user, created_at: date, score: score_to_earn)
-      }
-    end
+    # These records must be ignored >>
+
+    create(
+      :earned_score,
+      user: users[3],
+      team: teams[0],
+      score: 100,
+      created_at: current_date - 1.days
+    )
+    create(
+      :earned_score,
+      user: users[1],
+      team: teams[1],
+      score: 100,
+      created_at: current_date
+    )
+    create(
+      :earned_score,
+      user: users[0],
+      team: teams[1],
+      score: 100,
+      created_at: current_date
+    )
+  end
 end
