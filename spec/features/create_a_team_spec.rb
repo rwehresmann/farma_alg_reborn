@@ -17,7 +17,7 @@ describe "Create a team", type: :feature do
 
     it "creates the team" do
       expect{ subject }.to change(Team, :count).by(1)
-      expect(page).to have_current_path(team_path(Team.first.id))
+      expect(page).to have_current_path(teams_path)
     end
   end
 
