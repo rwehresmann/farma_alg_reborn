@@ -3,6 +3,9 @@ rvm:
   - 2.3.1
 services:
   - elasticsearch
+addons:
+  code_climate:
+    repo_token: f9e69f03a857f2193ad2ea8521566ccb03733dd5108b80c91c9c8cb804d956fa
 after_success:
   - bundle exec codeclimate-test-reporter
 before_script:
