@@ -58,6 +58,8 @@ group :test do
   gem 'database_cleaner', '~> 1.0'
   gem 'capybara', '~> 2.0'
   gem 'shoulda-callback-matchers', '~> 1.1.1'
+  gem 'simplecov'
+  gem 'codeclimate-test-reporter', '~> 1.0.0'
 end
 
 group :development do

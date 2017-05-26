@@ -3,6 +3,11 @@ rvm:
   - 2.3.1
 services:
   - elasticsearch
+addons:
+  code_climate:
+    repo_token: <%= Rails.application.secrets[:codeclimate_token] %>
+after_success:
+  - bundle exec codeclimate-test-reporter
 before_script:
   - bundle exec rake db:create
   - bundle exec rake db:migrate
