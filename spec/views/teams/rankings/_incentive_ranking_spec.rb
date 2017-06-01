@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/incentive_ranking/builder'
 
 describe 'teams/rankings/_incentive_ranking.html.erb', type: :view do
   let(:current_user) { create(:user) }

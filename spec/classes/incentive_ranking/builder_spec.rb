@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/incentive_ranking/builder'
 
 describe IncentiveRanking::Builder do
   describe '#build' do

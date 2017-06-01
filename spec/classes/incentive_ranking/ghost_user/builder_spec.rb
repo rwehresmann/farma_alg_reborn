@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/incentive_ranking/ghost_user/builder'
 
 describe IncentiveRanking::GhostUser::Builder do
   describe '#build' do

@@ -1,5 +1,4 @@
 require 'utils/middlerizer'
-require 'utils/incentive_ranking/ghost_user/builder'
 
 module IncentiveRanking::GhostUser
   class Applier

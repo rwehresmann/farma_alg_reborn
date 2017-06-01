@@ -1,7 +1,5 @@
 require 'rails_helper'
 require 'utils/middlerizer'
-require 'utils/incentive_ranking/ghost_user/builder'
-require 'utils/incentive_ranking/ghost_user/applier'
 
 describe IncentiveRanking::GhostUser::Applier do
   let(:target) { { user: build(:user), score: 100, answers: [] }}
