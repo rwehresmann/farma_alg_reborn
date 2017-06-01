@@ -28,3 +28,6 @@ doc/*.svg
 
 # Ignore application configuration
 /config/application.yml
+
+# Ignore simplecov
+/coverage/*
