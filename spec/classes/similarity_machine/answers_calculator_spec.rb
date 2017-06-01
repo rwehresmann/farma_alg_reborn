@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/similarity_machine/answers_calculator'
 
 describe SimilarityMachine::AnswersCalculator do
   describe '#calculate_similarity' do

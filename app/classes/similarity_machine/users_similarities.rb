@@ -1,5 +1,3 @@
-require 'utils/similarity_machine/utils'
-
 module SimilarityMachine
   class UsersSimilarities
     include Utils

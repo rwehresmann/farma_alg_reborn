@@ -1,6 +1,3 @@
-require 'utils/similarity_machine/questions_calculator'
-require 'utils/similarity_machine/utils'
-
 module SimilarityMachine
   class UsersCalculator
     include Utils

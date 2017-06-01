@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/similarity_machine/questions_calculator'
 
 describe SimilarityMachine::QuestionsCalculator do
   before do

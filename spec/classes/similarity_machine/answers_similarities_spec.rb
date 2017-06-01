@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/similarity_machine/answers_similarities'
 
 describe SimilarityMachine::AnswersSimilarities do
   describe '#more_similar' do

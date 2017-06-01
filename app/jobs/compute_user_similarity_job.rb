@@ -1,5 +1,3 @@
-require 'utils/similarity_machine/users_calculator'
-
 class ComputeUserSimilarityJob < ApplicationJob
   queue_as :users_similarity
 

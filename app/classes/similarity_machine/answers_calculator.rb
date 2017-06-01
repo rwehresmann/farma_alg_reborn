@@ -1,5 +1,3 @@
-require 'utils/similarity_machine/test_cases_calculator'
-
 module SimilarityMachine
   class AnswersCalculator
     include Amatch

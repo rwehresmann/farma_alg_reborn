@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/similarity_machine/users_calculator'
 
 describe SimilarityMachine::UsersCalculator do
   before { @team = create(:team) }

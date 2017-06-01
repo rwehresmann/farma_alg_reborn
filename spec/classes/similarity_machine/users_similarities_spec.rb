@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'utils/similarity_machine/users_similarities'
 
 describe SimilarityMachine::UsersSimilarities do
   describe '#more_similar' do
