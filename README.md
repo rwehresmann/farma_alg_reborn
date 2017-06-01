@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rwehresmann/farma_alg_reborn.svg?branch=master)](https://travis-ci.org/rwehresmann/farma_alg_reborn) [![Code Climate](https://codeclimate.com/github/rwehresmann/farma_alg_reborn/badges/gpa.svg)](https://codeclimate.com/github/rwehresmann/farma_alg_reborn) [![Test Coverage](https://codeclimate.com/github/rwehresmann/farma_alg_reborn/badges/coverage.svg)](https://codeclimate.com/github/rwehresmann/farma_alg_reborn/coverage) [![Issue Count](https://codeclimate.com/github/rwehresmann/farma_alg_reborn/badges/issue_count.svg)](https://codeclimate.com/github/rwehresmann/farma_alg_reborn)
+
 # Description
 
 FARMA-ALG it is an app for teaching algorithms, focused in error mediaton between teachers and students. 
