@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  app:
+    depends_on:
+      - 'postgres'
+      - 'elasticsearch'
+    build: .
+    command: bash scripts/start.sh
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/farma_alg_reborn'
+    volumes_from:
+    - box
+    environment:
+      ELASTICSEARCH_URL: elasticsearch:9200
+
+  postgres:
+    image: 'postgres:9.5'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+
+  elasticsearch:
+    image: 'elasticsearch:2'
+    ports:
+      - '9200:9200'
+    volumes:
+      - 'elasticsearch:/usr/share/elasticsearch/data'
+    environment:
+      - Des.network.host=0.0.0.0
+
+  box:
+    image: busybox
+    volumes:
+      - /box
+
+volumes:
+  postgres:
+  box:
+  elasticsearch:

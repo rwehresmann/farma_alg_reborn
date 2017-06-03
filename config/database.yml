@@ -1,30 +1,18 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
   adapter: postgresql
-  pool: 5
-  timeout: 5000
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: postgres
+  user: postgres
 
 development:
   <<: *default
-  database: farma_alg_development
-  username: postgres
+  database: farma_alg_reborn_development
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: farma_alg_test
-  username: postgres
+  database: farma_alg_reborn_test
 
 production:
   <<: *default
-  host: localhost
-  database: farma_alg_production
-  username: postgres
-  password: <%= Rails.application.secrets[:password] %>
+  database: farma_alg_reborn_production
