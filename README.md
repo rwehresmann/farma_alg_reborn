@@ -2,10 +2,10 @@
 
 # Description
 
-FARMA-ALG it is an app for teaching algorithms, focused in error mediaton between teachers and students. 
-We belive that the error is part of the learning process and should not be ignored. However, it is not unusual to see classes with a lot of students and only one teacher to handle with them. Specially when it envolves programming, think in the quantity of output errors generated in a class: it is impracticable to a teacher analise all these outputs.
+FARMA-ALG-REBORN it is an app for teaching algorithms, focused in error mediaton between teachers and students. 
+We belive that the error is part of the learning process and should not be ignored. However, it is not unusual to see classes with a lot of students and only one teacher to handle with them. Specially when it envolves programming, thinking in the quantity of output errors generated in a class: it is impracticable for a teacher analise all these outputs.
 
-So FARMA-ALG it is a tool to automatically save and analise these outputs, calculating the error similarity, exposing to the teacher the error cases pedagogically more relevant to the class. 
+So FARMA-ALG-REBORN it is a tool to automatically save and analise these outputs, calculating the error similarity, exposing to the teacher the error cases pedagogically more relevant to the class. 
 
 ## More about
 
@@ -15,18 +15,27 @@ The implementation is in course and constanttly updated in this repository.
 
 ## Dependencies
 
-* [Free Pascal Compiler](http://www.freepascal.org/)
-* [ElasticSearch](https://www.elastic.co/products/elasticsearch)
-* [PhantomJS](http://phantomjs.org/)
+This app is docker based. To avoid extra configurations, you should have `docker` and `docker-compose` installed in your machine.
+
+If you don't want to install these softwares, you will be able to use this app installing:
+  * Free Pascal Compiler;
+  * ElasticSearch (>= 2.4.5);
+  * PhantomJS (>= 1.9) - Used to run tests in development;
+  * Postgres (>= 9.5);
+  * Ruby (>= 2.3).
 
 ## Usage
 
-* Install dependencies;
-* Clone the repository;
-* Run `bundle install`;
-* Run `rake db:create` and `rake db:migrate`;
-* If you want populate the database with sample data, run `rake db:seed`;
-* Run `rspec`. If none test fails, you are ready to start!
+Clone the repository: `git clone https://github.com/rwehresmann/farma_alg_reborn.git`. 
+
+In the repository folder, run:
+* `docker-compose  build`;
+* `docker-compose  run --rm app rake db:create`;
+* `docker-compose  run --rm app rake db:migrate`;
+* `docker-compose  run --rm app rake db:seed` (only if you want to populate the db with sample data);
+* `docker-compose  run --rm app rspec`
+
+If rspec finish without errors, you're ready to start. Run `docker-compose up` and access `http://localhost:3000`.
 
 ## Whant to contribute?
 
