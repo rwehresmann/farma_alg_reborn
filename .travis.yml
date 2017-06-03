@@ -4,6 +4,8 @@ rvm:
 services:
 - elasticsearch
 addons:
+  hosts:
+    - postgres
   code_climate:
     repo_token:
         secure: "N/xLqmk0C82ynP4EWorwO4qTs4U8arve+l8QqehO4IAT8Iec3b9cZpRig7Sl6W1/2mmxfvScS4SJM9Yaz8/AyamPoD6tXI/V1Tx3U+QAyqPva7PgE6Aw7aP8YxZaKtOn3YrB4nvHCIQJcb/WW8Q6il20sPnOLGDkU9VIPcl57L+Z0PpAp+JrZyteX+VKxjLYJ8bz8VSBISt9ZuQ6j/0BrNKS9SfddwBYPAgbxhfncKZZ3ixXvuh9rarzEWTS4GX+SRQoFt3VAmefx63OZReEv2F0E/YFG4P6XMEoyCI92JT+KQ7mFqOEPr4ABwApLaKxZmhKc8k+YcqprSpo4MXPO3PyY5vKS19UATIsKdmE+W55YPMQfGyEs390pcqG3IMyQmj4YY2bnKVelm5Y/ZzVrPlgiQ+BR9pG79CunehAFWGdWVlKkqBy6eMl2r/dhUHEUN/eDwJb0cedAm3+Ml+V2eyi9BMQm1jwZIjLMm5auP4Dj8fPgtstqj2CoRc7FT1jTCYlN9Q/B93PL9cVtNuwfghaUbXtGUIAprBdOK50p+iAQM4igKs7Wnll9eChXHesH4FHLpwYV0DNawTmWrQlU854kjPndHpif4QfSnxO3J/FNGzcB5iRs7hceo70oC5CnNlbOYX3KeXNi2Q0zjlBR0HYyuM27vY1KSQdAoYbYYs="
