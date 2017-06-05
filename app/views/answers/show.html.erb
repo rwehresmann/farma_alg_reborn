@@ -33,30 +33,6 @@
 
 <div class="row">
   <div class="col-md-6">
-
-    <div class="box box-default">
-      <div class="box-header with-border">
-        <h3 class="box-title">Comentários</h3>
-        <div class="box-tools pull-right">
-          <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-        </div><!-- /.box-tools -->
-      </div><!-- /.box-header -->
-
-      <div class="box-body" style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
-        <div id="comments-timeline">
-          <%= render partial: 'comments/comments_timeline' %>
-        </div>
-      </div><!-- /.box-body -->
-
-      <div class="box-footer">
-        <div id="comments-form">
-          <%= render partial: "comments/form", locals: { answer: @answer, comment: @comment, btn_text: "Postar comentário" } %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6">
     <%= render layout: 'shared/structures/box_default',
                locals: { box_title: "Respostas semelhantes" } do %>
 

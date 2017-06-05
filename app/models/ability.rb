@@ -6,7 +6,7 @@ class Ability
 
     if user.teacher?
       can :read, [Exercise, Question, TestCase]
-      can :create, [Exercise, Question, TestCase, Team, Comment]
+      can :create, [Exercise, Question, TestCase, Team]
 
       can [:update, :destroy], Exercise do |exercise|
         exercise.user == user
@@ -29,10 +29,6 @@ class Ability
       end
 
       can [:show, :destroy], AnswerConnection
-
-      can [:update, :destroy], Comment do |comment|
-        comment.user == user
-      end
     end
 
     can :read, Team

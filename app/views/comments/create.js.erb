@@ -1,7 +1,0 @@
-<% if @comment.errors.any? %>
-  $('#new_comment').prepend('<%= escape_javascript(render "shared/error_messages", object: @comment) %>');
-<% else %>
-  // Add comment in the timeline.
-  $(".timeline").prepend("<%= escape_javascript(render partial: 'comment', locals: { comment: @comment }) %>")
-  $("#comment_content").val("");
-<% end %>
