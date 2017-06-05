@@ -9,28 +9,12 @@ class Teams
       $(this).addClass('active')
 
   rankings: ->
-    this.nav_tabs_ajax_calls()
-
-    window.history.pushState(
-      '',
-      '',
-      CoffeeRoutes.path('rankings_team', { 'id': this.team_id() })
-    )
-
     $('li.active').removeClass('active')
-    $('li:has(a[href="#rankings"])').addClass('active')
+    $('#rankings-item').addClass('active')
 
   exercises: ->
-    this.nav_tabs_ajax_calls()
-
-    window.history.pushState(
-      '',
-      '',
-      CoffeeRoutes.path('exercises_team', { 'id': this.team_id() })
-    )
-
     $('li.active').removeClass('active')
-    $('li:has(a[href="#exercises-list"])').addClass('active')
+    $('#exercises-item').addClass('active')
 
     $(document).on 'click', '#add-exercise', ->
       showModal("exercises", false, createModal);
@@ -38,28 +22,12 @@ class Teams
     createModal("exercises");
 
   users: ->
-    this.nav_tabs_ajax_calls()
-
-    window.history.pushState(
-      '',
-      '',
-      CoffeeRoutes.path('users_team', { 'id': this.team_id() })
-    )
-
     $('li.active').removeClass('active')
-    $('li:has(a[href="#enrolled-students"])').addClass('active')
+    $('#users-item').addClass('active')
 
   graph: ->
-    this.nav_tabs_ajax_calls()
-
-    window.history.pushState(
-      '',
-      '',
-      CoffeeRoutes.path('graph_team', { 'id': this.team_id() })
-    )
-
     $('li.active').removeClass('active')
-    $('li:has(a[href="#graph"])').addClass('active')
+    $('#graph-item').addClass('active')
 
     initialize_graph();
 
@@ -68,7 +36,6 @@ class Teams
         pause()
         $('#pause-resume i').attr('class', 'fa fa-play')
         $('#pause-resume i').attr('title', 'Resume graph animation')
-
       else
         resume()
         $('#pause-resume i').attr('class', 'fa fa-pause')
@@ -89,34 +56,6 @@ class Teams
        div = $(document.createElement('div'))
        div.attr('id', 'loading-modal')
        $('.modal-content').append(div)
-
-  team_id: ->
-    $('#show-team').data('team-id')
-
-  nav_tabs_ajax_calls: ->
-    $('a[href="#rankings"]').click =>
-      $.ajax
-        url: CoffeeRoutes.path('rankings_team', { 'id': this.team_id() }),
-        type: 'GET',
-        dataType: 'script'
-
-    $('a[href="#exercises-list"]').click =>
-      $.ajax
-        url: CoffeeRoutes.path('exercises_team', { 'id': this.team_id() }),
-        type: "GET",
-        dataType: 'script'
-
-    $('a[href="#enrolled-students"]').click =>
-      $.ajax
-        url: CoffeeRoutes.path('users_team', { 'id': this.team_id() }),
-        type: "GET",
-        dataType: 'script'
-
-    $('a[href="#graph"]').click =>
-      $.ajax
-        url: CoffeeRoutes.path('graph_team', { 'id': this.team_id() }),
-        type: "GET",
-        dataType: 'script'
 
 window.APP ?= {}
 window.APP.Teams = Teams

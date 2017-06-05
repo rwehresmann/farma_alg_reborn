@@ -75,37 +75,25 @@ class TeamsController < ApplicationController
       @current_user_index = current_user_index
     end
 
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    render 'rankings'
   end
 
   def exercises
     @team = Team.find(params[:id])
 
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    render 'exercises'
   end
 
   def users
     @team = Team.find(params[:id])
 
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    render 'users'
   end
 
   def graph
     @team = Team.find(params[:id])
 
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    render 'graph'
   end
 
   def enroll

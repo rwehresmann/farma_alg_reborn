@@ -1,0 +1,21 @@
+<div class="box">
+  <div class="box-header with-border">
+    <ul class="nav nav-pills">
+      <li id="rankings-item">
+        <%= link_to "Rankings", rankings_team_path(team) %>
+      </li>
+      <li id="exercises-item">
+        <%= link_to "Exercícios", exercises_team_path(team) %>
+      </li>
+      <li id="users-item">
+        <%= link_to "Users", users_team_path(team) %>
+      </li>
+      <li id="graph-item">
+        <%= link_to "Grafo de manipulação", graph_team_path(team) %>
+      </li>
+    </ul>
+  </div><!-- /.box-header -->
+  <div class="box-body">
+    <%= yield %>
+  </div><!-- /.box-body -->
+</div><!-- /.box -->
