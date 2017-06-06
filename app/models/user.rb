@@ -16,9 +16,11 @@ class User < ApplicationRecord
 
   has_many :exercises
   has_many :answers
-  has_many :teams_created, class_name: 'Team', foreign_key: "owner_id"
+  has_many :teams_created, class_name: :Team, foreign_key: :owner_id
   has_and_belongs_to_many :teams
   has_many :comments
+  has_many :messages_received, class_name: :MessageActivity, foreign_key: :receiver_id
+  has_many :messages_sended, class_name: :MessageActivity, foreign_key: :sender_id
 
   # Check if the user is the owner of a specific team.
   def owner?(team)

@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Message, type: :model do
+  describe "Relationships" do
+    it "has one message activity" do
+      expect(relationship_type(Message, :message_activity)).to eq(:has_one)
+    end
+  end
+
   describe "Validations" do
     it "is valid with valid attributes" do
       expect(build(:message)).to be_valid

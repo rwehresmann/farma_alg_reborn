@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe "Validations -->" do
+  describe "Validations" do
     let(:user) { build(:user) }
 
     it "is valid with valid attributes" do
@@ -65,7 +65,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "Relationships -->" do
+  describe "Relationships" do
     it "has many exercises" do
       expect(relationship_type(User, :exercises)).to eq(:has_many)
     end
@@ -76,6 +76,14 @@ RSpec.describe User, type: :model do
 
     it "has and belongs to many teams" do
       expect(relationship_type(User, :teams)).to eq(:has_and_belongs_to_many)
+    end
+
+    it "has many messages received" do
+      expect(relationship_type(User, :messages_received)).to eq(:has_many)
+    end
+
+    it "has many messages sended" do
+      expect(relationship_type(User, :messages_sended)).to eq(:has_many)
     end
   end
 
