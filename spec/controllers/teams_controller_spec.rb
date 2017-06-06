@@ -400,104 +400,39 @@ RSpec.describe TeamsController, type: :controller do
   describe 'GET #rankings' do
     context "when logged in" do
       context "when user is the owner of the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
+        it "renders the right template" do
+          user = create(:user, :teacher)
 
-            sign_in user
-            get :rankings, params: { id: create(:team, owner: user) }
+          sign_in user
+          get :rankings, params: { id: create(:team, owner: user) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/rankings"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
-
-            sign_in user
-            get :rankings, xhr: true, params: { id: create(:team, owner: user) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/rankings"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/rankings"
+          )
         end
       end
 
       context "when user is enrolled in the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user)
+        it "renders the right template" do
+          user = create(:user)
 
-            sign_in user
-            get :rankings, params: { id: create(:team, users: [user]) }
+          sign_in user
+          get :rankings, params: { id: create(:team, users: [user]) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/rankings"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user)
-
-            sign_in user
-            get :rankings, xhr: true, params: { id: create(:team, users: [user]) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/rankings"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/rankings"
+          )
         end
       end
 
       context "when user doesn't belongs to the team" do
-        context "with an html request" do
-          it "does a redirect" do
-            sign_in create(:user)
-            get :rankings, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :found,
-              content_type: "text/html",
-              redirect: root_url
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "returns status 401 (unauthorized)" do
-            sign_in create(:user)
-            get :rankings, xhr: true, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :unauthorized,
-              content_type: "text/javascript",
-              template: "shared/unauthorized"
-            )
-          end
-        end
-      end
-    end
-
-    context "when logged out" do
-      context "with an html request" do
         it "does a redirect" do
-          user = create(:user)
-
-          get :rankings, params: { id: create(:team, users: [user]) }
+          sign_in create(:user)
+          get :rankings, params: { id: create(:team) }
 
           common_expectations(
             http_status: :found,
@@ -506,19 +441,19 @@ RSpec.describe TeamsController, type: :controller do
           )
         end
       end
+    end
 
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          user = create(:user)
+    context "when logged out" do
+      it "does a redirect" do
+        user = create(:user)
 
-          get :rankings, xhr: true, params: { id: create(:team, users: [user]) }
+        get :rankings, params: { id: create(:team, users: [user]) }
 
-          common_expectations(
-            http_status: :unauthorized,
-            content_type: "text/javascript",
-            template: "shared/unauthorized"
-          )
-        end
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
       end
     end
   end
@@ -526,34 +461,17 @@ RSpec.describe TeamsController, type: :controller do
   describe 'GET #exercises' do
     context "when logged in" do
       context "when user is the owner of the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
+        it "renders the right template" do
+          user = create(:user, :teacher)
 
-            sign_in user
-            get :exercises, params: { id: create(:team, owner: user) }
+          sign_in user
+          get :exercises, params: { id: create(:team, owner: user) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/exercises"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
-
-            sign_in user
-            get :exercises, xhr: true, params: { id: create(:team, owner: user) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/exercises"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/exercises"
+          )
         end
       end
 
@@ -652,104 +570,39 @@ RSpec.describe TeamsController, type: :controller do
   describe 'GET #users' do
     context "when logged in" do
       context "when user is the owner of the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
+        it "renders the right template" do
+          user = create(:user, :teacher)
 
-            sign_in user
-            get :users, params: { id: create(:team, owner: user) }
+          sign_in user
+          get :users, params: { id: create(:team, owner: user) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/users"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
-
-            sign_in user
-            get :users, xhr: true, params: { id: create(:team, owner: user) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/users"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/users"
+          )
         end
       end
 
       context "when user is enrolled in the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user)
+        it "renders the right template" do
+          user = create(:user)
 
-            sign_in user
-            get :users, params: { id: create(:team, users: [user]) }
+          sign_in user
+          get :users, params: { id: create(:team, users: [user]) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/users"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user)
-
-            sign_in user
-            get :users, xhr: true, params: { id: create(:team, users: [user]) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/users"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/users"
+          )
         end
       end
 
       context "when user doesn't belongs to the team" do
-        context "with an html request" do
-          it "does a redirect" do
-            sign_in create(:user)
-            get :users, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :found,
-              content_type: "text/html",
-              redirect: root_url
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "returns status 401 (unauthorized)" do
-            sign_in create(:user)
-            get :users, xhr: true, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :unauthorized,
-              content_type: "text/javascript",
-              template: "shared/unauthorized"
-            )
-          end
-        end
-      end
-    end
-
-    context "when logged out" do
-      context "with an html request" do
         it "does a redirect" do
-          user = create(:user)
-
-          get :users, params: { id: create(:team, users: [user]) }
+          sign_in create(:user)
+          get :users, params: { id: create(:team) }
 
           common_expectations(
             http_status: :found,
@@ -758,19 +611,19 @@ RSpec.describe TeamsController, type: :controller do
           )
         end
       end
+    end
 
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          user = create(:user)
+    context "when logged out" do
+      it "does a redirect" do
+        user = create(:user)
 
-          get :users, xhr: true, params: { id: create(:team, users: [user]) }
+        get :users, params: { id: create(:team, users: [user]) }
 
-          common_expectations(
-            http_status: :unauthorized,
-            content_type: "text/javascript",
-            template: "shared/unauthorized"
-          )
-        end
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
       end
     end
   end
@@ -778,103 +631,25 @@ RSpec.describe TeamsController, type: :controller do
   describe 'GET #graph' do
     context "when logged in" do
       context "when user is the owner of the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
+        it "renders the right template" do
+          user = create(:user, :teacher)
 
-            sign_in user
-            get :graph, params: { id: create(:team, owner: user) }
+          sign_in user
+          get :graph, params: { id: create(:team, owner: user) }
 
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/html",
-              template: "teams/graph"
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
-
-            sign_in user
-            get :graph, xhr: true, params: { id: create(:team, owner: user) }
-
-            common_expectations(
-              http_status: :ok,
-              content_type: "text/javascript",
-              template: "teams/graph"
-            )
-          end
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "teams/graph"
+          )
         end
       end
 
       context "when user is enrolled in the team" do
-        context "with an html request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
+        it "renders the right template" do
+          user = create(:user, :teacher)
 
-            sign_in user
-            get :graph, params: { id: create(:team, users: [user]) }
-
-            common_expectations(
-              http_status: :found,
-              content_type: "text/html",
-              redirect: root_url
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "renders the right template" do
-            user = create(:user, :teacher)
-
-            sign_in user
-            get :graph, xhr: true, params: { id: create(:team, users: [user]) }
-
-            common_expectations(
-              http_status: :unauthorized,
-              content_type: "text/javascript",
-              template: "shared/unauthorized"
-            )
-          end
-        end
-      end
-
-      context "when user doesn't belongs to the team" do
-        context "with an html request" do
-          it "does a redirect" do
-            sign_in create(:user)
-            get :graph, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :found,
-              content_type: "text/html",
-              redirect: root_url
-            )
-          end
-        end
-
-        context "with an ajax request" do
-          it "returns status 401 (unauthorized)" do
-            sign_in create(:user)
-            get :graph, xhr: true, params: { id: create(:team) }
-
-            common_expectations(
-              http_status: :unauthorized,
-              content_type: "text/javascript",
-              template: "shared/unauthorized"
-            )
-          end
-        end
-      end
-    end
-
-    context "when logged out" do
-      context "with an html request" do
-        it "does a redirect" do
-          user = create(:user)
-
+          sign_in user
           get :graph, params: { id: create(:team, users: [user]) }
 
           common_expectations(
@@ -885,18 +660,31 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context "with an ajax request" do
-        it "returns status 401 (unauthorized)" do
-          user = create(:user)
-
-          get :graph, xhr: true, params: { id: create(:team, users: [user]) }
+      context "when user doesn't belongs to the team" do
+        it "does a redirect" do
+          sign_in create(:user)
+          get :graph, params: { id: create(:team) }
 
           common_expectations(
-            http_status: :unauthorized,
-            content_type: "text/javascript",
-            template: "shared/unauthorized"
+            http_status: :found,
+            content_type: "text/html",
+            redirect: root_url
           )
         end
+      end
+    end
+
+    context "when logged out" do
+      it "does a redirect" do
+        user = create(:user)
+
+        get :graph, params: { id: create(:team, users: [user]) }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: root_url
+        )
       end
     end
   end
