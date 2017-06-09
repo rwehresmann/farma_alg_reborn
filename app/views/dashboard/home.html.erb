@@ -1,1 +1,111 @@
 <%= provide(:header, "Home page") %>
+
+<% if current_user.teacher? %>
+  <div class="row">
+    <div class="col-md-6">
+
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">Últimas respostas das suas turmas</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <table class="table table-bordered">
+            <thead>
+              <th>Aluno</th>
+              <th>Questão</th>
+              <th>Tentativa</th>
+              <th>Resposta</th>
+            </thead>
+
+            <tbody>
+              <% @teams_answers.each do |answer| %>
+                <tr>
+                  <td>
+                    <%= answer.user.name %>
+                  </td>
+                  <td>
+                    <%= answer.question.title %>
+                  </td>
+                  <td>
+                    <%= answer.attempt %>
+                  </td>
+                  <td>
+                    <%= link_to answer_status_label(answer), answer %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
+
+    </div>
+    <div class="col-md-6">
+
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">Últimas recomendações automáticas para você</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          The body of the box
+        </div><!-- /.box-body -->
+        <div class="box-footer">
+          The footer of the box
+        </div><!-- box-footer -->
+      </div><!-- /.box -->
+
+    </div>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Suas últimas respostas</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-bordered">
+          <thead>
+            <th>Questão</th>
+            <th>Tentativa</th>
+            <th>Resposta</th>
+          </thead>
+
+          <tbody>
+            <% @user_answers.each do |answer| %>
+              <tr>
+                <td>
+                  <%= answer.question.title %>
+                </td>
+                <td>
+                  <%= answer.attempt %>
+                </td>
+                <td>
+                  <%= link_to answer_status_label(answer), answer %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div><!-- /.box-body -->
+    </div><!-- /.box -->
+
+  </div>
+  <div class="col-md-6">
+
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Últimas mensagens recebidas</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        The body of the box
+      </div><!-- /.box-body -->
+      <div class="box-footer">
+        The footer of the box
+      </div><!-- box-footer -->
+    </div><!-- /.box -->
+
+  </div>
+</div>
