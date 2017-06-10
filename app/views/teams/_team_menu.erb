@@ -8,11 +8,13 @@
         <%= link_to "Exercícios", exercises_team_path(team) %>
       </li>
       <li id="users-item">
-        <%= link_to "Users", users_team_path(team) %>
+        <%= link_to "Alunos matriculados", users_team_path(team) %>
       </li>
-      <li id="graph-item">
-        <%= link_to "Grafo de manipulação", graph_team_path(team) %>
-      </li>
+      <% if team.owner == current_user %>
+        <li id="graph-item">
+          <%= link_to "Grafo de manipulação", graph_team_path(team) %>
+        </li>
+      <% end %>
     </ul>
   </div><!-- /.box-header -->
   <div class="box-body">

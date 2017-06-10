@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe "teams/_nav_tabs.html.erb", type: :view do
-  let(:partial) { "teams/nav_tabs" }
+describe "teams/_team_menu.html.erb", type: :view do
+  let(:partial) { "teams/team_menu" }
   let(:user) { create(:user, :teacher) }
 
   before do
@@ -14,7 +14,7 @@ describe "teams/_nav_tabs.html.erb", type: :view do
       render partial, team: create(:team, owner: user)
 
       expect(rendered).to have_link("Rankings")
-      expect(rendered).to have_link("Listas")
+      expect(rendered).to have_link("Exercícios")
       expect(rendered).to have_link("Alunos matriculados")
       expect(rendered).to have_link("Grafo de manipulação")
     end
@@ -25,7 +25,7 @@ describe "teams/_nav_tabs.html.erb", type: :view do
       render partial, team: create(:team, users: [user])
 
       expect(rendered).to have_link("Rankings")
-      expect(rendered).to have_link("Listas")
+      expect(rendered).to have_link("Exercícios")
       expect(rendered).to have_link("Alunos matriculados")
       expect(rendered).to_not have_link("Grafo de manipulação")
     end
