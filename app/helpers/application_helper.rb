@@ -16,4 +16,9 @@ module ApplicationHelper
   def remote_paginate(collection, params= {})
     will_paginate collection, params.merge(:renderer => RemoteLinkPaginationHelper::LinkRenderer)
   end
+
+  def answer_status_label(answer)
+    return raw "<span class='badge bg-green'>Correta</span>" if answer.correct
+    raw "<span class='badge bg-red'>Incorreta</span>"
+  end
 end

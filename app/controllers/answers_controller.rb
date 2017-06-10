@@ -7,16 +7,26 @@ class AnswersController < ApplicationController
   before_action :find_answer, only: [:show]
   before_action :save_answer_url, only: [:show]
 
+  def index
+    @answers = Answer
+      .limit(10)
+      .order(created_at: :desc)
+      .paginate(page: params[:page], per_page: 50)
+  end
+
   def new
     @answer = Answer.new
     @team = Team.find(params[:team_id])
-    @correct_answer = AnswerQuery.new.user_last_correct_answer(
-      current_user, to: { team: @team, question: @question }
-    ).first
+    selected_answer = Answer.find_by(id: params[:answer_id])
+    @content = selected_answer.nil? ? "" : selected_answer.content
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
-                       vontade para realizar novas tentativas, mas a partir de
-                       agora, elas não incrementarão seu score nem surtirão
-                       qualquer efeito sobre o score desta questão." if @correct_answer
+      vontade para realizar novas tentativas, mas a partir de agora, elas não
+      incrementarão seu score nem surtirão qualquer efeito sobre o score desta
+      questão." if @question.answered_by_user?(
+        current_user,
+        team: @team,
+        only_correct: true
+      )
   end
 
   def create
@@ -56,29 +66,28 @@ class AnswersController < ApplicationController
     respond_to { |format| format.json { render json: @connections } }
   end
 
+  private
 
-    private
+  def find_answer
+    @answer = Answer.find(params[:id])
+  end
 
-    def find_answer
-      @answer = Answer.find(params[:id])
-    end
+  def correct?(results)
+    results.each { |result| return false if result[:status] == :error }
+    true
+  end
 
-    def correct?(results)
-      results.each { |result| return false if result[:status] == :error }
-      true
-    end
+  def answer_params
+    params.require(:answer).permit(:content, :team_id)
+  end
 
-    def answer_params
-      params.require(:answer).permit(:content, :team_id)
-    end
+  def find_question
+    @question = Question.find(params[:id])
+  end
 
-    def find_question
-      @question = Question.find(params[:id])
-    end
-
-    # Add answer url in sessions to be used in a redirect when an answer
-    # connection is deleted.
-    def save_answer_url
-      session[:previous_answer_url] = answer_url(@answer)
-    end
+  # Add answer url in sessions to be used in a redirect when an answer
+  # connection is deleted.
+  def save_answer_url
+    session[:previous_answer_url] = answer_url(@answer)
+  end
 end

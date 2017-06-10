@@ -4,14 +4,21 @@
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu">
       <li class="header">Menu de operações</li>
-       <% if current_user.teacher? %>
-         <li>
-           <%= link_to exercises_path do %>
-             <i class="fa fa-pencil-square-o"></i>
-             <span>Meus exercícios</span>
-           <% end %>
-         </li>
-      <% end %>
+        <% if current_user.teacher? %>
+          <li>
+            <%= link_to exercises_path do %>
+              <i class="fa fa-pencil-square-o"></i>
+              <span>Meus exercícios</span>
+            <% end %>
+          </li>
+        <% end %>
+
+       <li>
+         <%= link_to answers_path do %>
+           <i class="fa fa-check-square-o"></i>
+           <span>Minhas respostas</span>
+         <% end %>
+       </li>
 
        <li>
          <%= link_to teams_path do %>
@@ -19,13 +26,7 @@
            <span>Turmas</span>
          <% end %>
        </li>
-      <li class="treeview">
-        <a href="#"><span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
-        <ul class="treeview-menu">
-          <li><a href="#">Link in level 2</a></li>
-          <li><a href="#">Link in level 2</a></li>
-        </ul>
-      </li>
+
     </ul><!-- /.sidebar-menu -->
 
   </div><!-- /.sidebar -->

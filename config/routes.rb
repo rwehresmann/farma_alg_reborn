@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     get :connections, to: 'answers#connections'
   end
 
+  resources :answers, only: [:index]
+
   resources :exercises, shallow: true do
     resources :questions do
       member do

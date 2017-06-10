@@ -95,87 +95,87 @@ class Answer < ApplicationRecord
     if query_result then query_result.similarity else nil end
   end
 
-    private
+  private
 
-    def increase_score?
-      answered_correctly_already = question.answered_by_user?(user,
-        team: team, only_correct: true)
-      return true if correct? && !answered_correctly_already
-      false
+  def increase_score?
+    answered_correctly_already = question.answered_by_user?(user,
+      team: team, only_correct: true)
+    return true if correct? && !answered_correctly_already
+    false
+  end
+
+  def increase_score
+    score = score_to_earn
+    EarnedScore.create!(user: user, question: question, team: team, score: score)
+  end
+
+  # Save the result accoring the result of each test case,
+  # and enqueue the answer to compute similarities.
+  def save_test_cases_results
+    raise "No test case results found! Check if the question answered have at
+          least one test case associated." if @results.nil?
+
+    @results.each { |result|
+      AnswerTestCaseResult.create!(answer: self, test_case: result[:test_case],
+                                   output: result[:output], correct: result[:correct])
+    }
+
+    ComputeAnswerSimilarityJob.perform_later(self)
+  end
+
+  # According the results from each test case, check if the answer is correct.
+  def is_correct?
+    @results.each { |result| return false if result[:correct] == false }
+    true
+  end
+
+  # Based on the operation of the question answered, calculate the currently
+  # score to earn.
+  def score_to_earn
+    if question.operation == "challenge"
+      question.score
+    else
+      answers = AnswerQuery.new.team_answers(team, question: question)
+      return question.score if answers.count < LIMIT_TO_START_VARIATION
+      question_level = difficult_level(answers)
+      score_variation = SCORE_VARIATION[question_level]
+      question.score * score_variation
     end
+  end
 
-    def increase_score
-      score = score_to_earn
-      EarnedScore.create!(user: user, question: question, team: team, score: score)
-    end
+  # Difficult level formula.
+  def difficult_level(answers)
+    correct = answers.where(correct: true)
+    incorrect = answers.where(correct: false)
+    denominator = (correct.count * 0.1 + incorrect.count * 0.2)
+    normalize_difficult_level(answers.count.fdiv(denominator).ceil)
+  end
 
-    # Save the result accoring the result of each test case,
-    # and enqueue the answer to compute similarities.
-    def save_test_cases_results
-      raise "No test case results found! Check if the question answered have at
-            least one test case associated." if @results.nil?
+  # Difficult level formula returns a number in the range 5..10. The desired
+  # range is 0..5, so we normalize the result subtracting 5.
+  def normalize_difficult_level(level)
+    level - 5
+  end
 
-      @results.each { |result|
-        AnswerTestCaseResult.create!(answer: self, test_case: result[:test_case],
-                                     output: result[:output], correct: result[:correct])
+  # Check if @results is defined
+  def results_present?
+    !@results.nil?
+  end
+
+  # Build an array of hashes, where a hash contains the answers object,
+  # connection id and the similarity between both answers.
+  def answers_similarity_data(connections, threshold, field_name)
+    AnswerConnectionQuery.new(connections)
+      .connections_by_threshold(min: threshold).map { |connection|
+        { answer: connection.send(field_name), connection_id: connection.id,
+          similarity: connection.similarity }
       }
+  end
 
-      ComputeAnswerSimilarityJob.perform_later(self)
-    end
-
-    # According the results from each test case, check if the answer is correct.
-    def is_correct?
-      @results.each { |result| return false if result[:correct] == false }
-      true
-    end
-
-    # Based on the operation of the question answered, calculate the currently
-    # score to earn.
-    def score_to_earn
-      if question.operation == "challenge"
-        question.score
-      else
-        answers = AnswerQuery.new.team_answers(team, question: question)
-        return question.score if answers.count < LIMIT_TO_START_VARIATION
-        question_level = difficult_level(answers)
-        score_variation = SCORE_VARIATION[question_level]
-        question.score * score_variation
-      end
-    end
-
-    # Difficult level formula.
-    def difficult_level(answers)
-      correct = answers.where(correct: true)
-      incorrect = answers.where(correct: false)
-      denominator = (correct.count * 0.1 + incorrect.count * 0.2)
-      normalize_difficult_level(answers.count.fdiv(denominator).ceil)
-    end
-
-    # Difficult level formula returns a number in the range 5..10. The desired
-    # range is 0..5, so we normalize the result subtracting 5.
-    def normalize_difficult_level(level)
-      level - 5
-    end
-
-    # Check if @results is defined
-    def results_present?
-      !@results.nil?
-    end
-
-    # Build an array of hashes, where a hash contains the answers object,
-    # connection id and the similarity between both answers.
-    def answers_similarity_data(connections, threshold, field_name)
-      AnswerConnectionQuery.new(connections)
-        .connections_by_threshold(min: threshold).map { |connection|
-          { answer: connection.send(field_name), connection_id: connection.id,
-            similarity: connection.similarity }
-        }
-    end
-
-    # Set answer attempt number.
-    def set_attempt
-      attempts_count = AnswerQuery.new.user_answers(
-        user, to: { question: question }).count
-      self.attempt = attempts_count + 1
-    end
+  # Set answer attempt number.
+  def set_attempt
+    attempts_count = AnswerQuery.new.user_answers(
+      user, to: { question: question }).count
+    self.attempt = attempts_count + 1
+  end
 end

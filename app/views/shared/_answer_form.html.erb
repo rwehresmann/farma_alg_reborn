@@ -35,10 +35,7 @@
   var editor = ace.edit("editor_div");
   editor.setTheme("ace/theme/twilight");
   editor.getSession().setMode("ace/mode/pascal");
-
-  <% if @correct_answer %>
-    editor.insert("<%= escape_javascript(raw @correct_answer.content) %>");
-  <% end %>
+  editor.insert("<%= escape_javascript(raw @content) %>");
 
   // When click put ace editor content in form hidden textarea.
   $('input[name="commit"]').on('click', function() {

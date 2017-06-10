@@ -1,6 +1,60 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  describe "GET #index" do
+    context "when logged in" do
+      context "with and html request" do
+        it "renders index page" do
+          sign_in create(:user)
+          get :index
+
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/html",
+            template: "answers/index"
+          )
+        end
+      end
+
+      context "with an ajax request" do
+        it "renders index page" do
+          sign_in create(:user)
+          get :index, xhr: true
+
+          common_expectations(
+            http_status: :ok,
+            content_type: "text/javascript",
+            template: "answers/index"
+          )
+        end
+      end
+    end
+
+    context "when logged out" do
+      context "with and html request" do
+        it "renders index page" do
+          get :index
+
+          common_expectations(
+            http_status: 302,
+            content_type: "text/html"
+          )
+        end
+      end
+
+      context "with an ajax request" do
+        it "renders index page" do
+          get :index, xhr: true
+
+          common_expectations(
+            http_status: 401,
+            content_type: "text/javascript"
+          )
+        end
+      end
+    end
+  end
+
   describe "GET #new" do
     let(:user) { create(:user) }
     let(:question) { create(:question) }
@@ -134,5 +188,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it { expect(response).to have_http_status(:unauthorized) }
     end
+  end
+
+  def common_expectations(args = {})
+    expect(response).to have_http_status args[:http_status] if args[:http_status]
+    expect(response.content_type).to eq args[:content_type] if args[:content_type]
+    expect(response).to render_template args[:template] if args[:template]
+    expect(response).to redirect_to args[:redirect] if args[:redirect]
   end
 end
