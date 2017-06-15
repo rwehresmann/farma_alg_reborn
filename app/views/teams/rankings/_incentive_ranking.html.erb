@@ -9,6 +9,7 @@
         <tr>
           <th style="width: 10px"></th>
           <th>Aluno</th>
+          <th>Pontuação</th>
           <th>Últimas respostas</th>
         </tr>
 
@@ -20,6 +21,8 @@
           <% end %>
             <td><%= incentive_ranking_position(index, @current_user_index) %></td>
             <td><%= name_to_display(data[:user], @team) %></td>
+            <td><%= data[:score] %></td>
+
             <td>
               <div class="flex-box">
                 <% data[:answers].each do |answer| %>
