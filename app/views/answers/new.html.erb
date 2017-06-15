@@ -1,4 +1,4 @@
-<% provide(:url, answers_path(@question)) %>
+<% provide(:url, url_for(:action => 'create', :controller => 'answers')) %>
 
 <% breadcrumb :new_answer, @team, @question %>
 
