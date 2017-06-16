@@ -31,8 +31,9 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params.merge(user: current_user))
-    @answer.save unless @answer.content.empty?
-    @results = @answer.results
+    creator = AnswerCreator::Creator.new(@answer)
+    creator.create unless @answer.content.empty?
+    @results = creator.test_cases_results
 
     respond_to { |format| format.js { render 'shared/test_answer' } }
   end
