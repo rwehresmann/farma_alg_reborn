@@ -49,14 +49,15 @@ module IncentiveRanking
         }
       end
 
-      ranking.middle
-          .merge!(answers: select_answers(ranking.middle[:user]))
+      ranking.middle.merge!(answers: select_answers(ranking.middle[:user]))
 
       ranking
     end
 
     def select_answers(user)
-      Answer.by_user(user).by_team(@team).limit(@answers_number)
+      Answer.where(user: user, team: @team)
+      .limit(@answers_number)
+      .order(created_at: :desc)
     end
 
     def user_score_hash(user_score)
