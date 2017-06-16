@@ -4,6 +4,7 @@ FactoryGirl.define do
     user
     question
     team
+    attempt 1
 
     after(:build) do |answer|
       class << answer

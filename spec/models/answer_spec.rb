@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  describe "Validations -->" do
+  describe "Validations" do
     let(:answer) { build(:answer) }
 
     it "is valid with valid attributes" do
@@ -19,7 +19,7 @@ RSpec.describe Answer, type: :model do
     end
   end
 
-  describe "Relationships -->" do
+  describe "Relationships" do
     it "belongs to user" do
       expect(relationship_type(Answer, :user)).to eq(:belongs_to)
     end
@@ -43,107 +43,6 @@ RSpec.describe Answer, type: :model do
 
     it "has many comments" do
       expect(relationship_type(Answer, :comments)).to eq(:has_many)
-    end
-  end
-
-  describe "Callbacks -->" do
-    it { is_expected.to callback(:set_correct).before(:create) }
-
-    it { is_expected.to callback(:save_test_cases_results).after(:create).if(:results_present?) }
-
-    it { is_expected.to callback(:increase_score).after(:create).if(:increase_score?) }
-
-    it { is_expected.to callback(:set_attempt).before(:validation) }
-  end
-
-  describe '#set_correct' do
-    context "when correct" do
-      let(:answer) { create_or_build_right_answer(:create) }
-
-      it "sets to correct and set @results" do
-        expect(answer.correct).to be_truthy
-        expect(answer.results.empty?).to be_falsey
-      end
-    end
-
-    context "when incorrect" do
-      let(:answer) { create_or_build_wrong_answer(:create) }
-
-      it "sets to incorrect and set @results" do
-        expect(answer.correct).to be_falsey
-        expect(answer.results.empty?).to be_falsey
-      end
-    end
-  end
-
-  describe '#increase_score' do
-    let(:answer) { build(:answer) }
-
-    it { expect { answer.send(:increase_score) }.to change(EarnedScore, :count).by(1) }
-  end
-
-  describe '#save_test_cases_results' do
-    context "when there are test cases results" do
-      # It's not possible execite it individually because @results will be
-      # empty. So it's tested directly from an after_save callback.
-      subject { create_or_build_right_answer(:create) }
-
-      it { expect { subject }.to change(AnswerTestCaseResult, :count).by(1) }
-    end
-
-    context "when there are no test cases results" do
-      let(:answer) { create_or_build_right_answer(:build) }
-
-      subject { answer.send(:save_test_cases_results) }
-
-      it { expect { subject }.to  raise_error(RuntimeError) }
-    end
-  end
-
-  describe '#score_to_earn' do
-    context "when question is a challenge" do
-      let(:answer) { build(:answer, question: create(:question, :challenge)) }
-
-      it "returns the question score" do
-        received = answer.send(:score_to_earn)
-        expect(received).to eq(answer.question.score)
-      end
-    end
-
-    context "when question is a task" do
-      let(:team) { create(:team) }
-      let(:question) { create(:question) }
-      let(:answer) { build(:answer, question: question, team: team) }
-      let(:score_to_earn) { answer.send(:score_to_earn) }
-
-      context "when the limit to start variation is reached" do
-        before {
-          Answer::LIMIT_TO_START_VARIATION.times {
-            create(:answer, question: question, team: team)
-          }
-        }
-
-        it "returns the score after applied the variation" do
-          expect(score_to_earn).not_to eql(answer.question.score)
-        end
-      end
-
-      context "when the limit to start variation isn't reached" do
-        it "returns the original question score" do
-          expect(score_to_earn).to eql(answer.question.score)
-        end
-      end
-    end
-  end
-
-  describe 'set_attempt' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question) }
-    let(:answers) { create_pair(:answer, user: user, question: question) }
-
-    it "increments in one each answer attempt" do
-      expect(answers[0].attempt).to eq(1)
-      expect(answers[1].attempt).to eq(2)
     end
   end
 
@@ -241,29 +140,6 @@ RSpec.describe Answer, type: :model do
       expect(sample_record[:answer]).to eq(answer_4)
       expect(sample_record[:connection_id]).to eq(connection_3.id)
       expect(sample_record[:similarity]).to eq(connection_3.similarity)
-    end
-  end
-
-  describe '#increase_score?' do
-    context "when is the first correct answer to the question in this team" do
-      let(:answer) { build(:answer, :correct) }
-
-      it { expect(answer.send(:increase_score?)).to be_truthy }
-    end
-
-    context "when answer is incorrect" do
-      let(:answer) { build(:answer, :incorrect) }
-
-      it { expect(answer.send(:increase_score?)).to be_falsey }
-    end
-
-    context "when the questions answered in the team was already correct answered" do
-      let(:answer) { build(:answer, :correct) }
-
-      before { create(:answer, :correct, team: answer.team, user: answer.user,
-                      question: answer.question) }
-
-      it { expect(answer.send(:increase_score?)).to be_falsey }
     end
   end
 
