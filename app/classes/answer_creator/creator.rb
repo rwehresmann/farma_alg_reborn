@@ -1,7 +1,10 @@
 module AnswerCreator
   class Creator
+    attr_reader :test_cases_results
+
     def initialize(answer)
       @answer = answer
+      @test_cases_results = run_test_cases
     end
 
     def create
@@ -11,7 +14,7 @@ module AnswerCreator
 
       ActiveRecord::Base.transaction do
         @answer.save!
-        save_test_cases_results(test_cases_results)
+        save_test_cases_results
         Scorer::Changer.new(@answer).change
       end
 
@@ -20,8 +23,8 @@ module AnswerCreator
 
     private
 
-    def save_test_cases_results(test_cases_results)
-      test_cases_results.each { |result|
+    def save_test_cases_results
+      @test_cases_results.each { |result|
         AnswerTestCaseResult.create!(
           answer: @answer,
           test_case: result[:test_case],
@@ -36,7 +39,7 @@ module AnswerCreator
         @answer.user,
         to: { question: @answer.question, team: @answer.team }
       ).count
-      
+
       attempts_count + 1
     end
 
@@ -44,7 +47,8 @@ module AnswerCreator
       @answer.question.test_all(
         file_name: SecureRandom.hex,
         extension: "pas",
-        source_code: @answer.content)
+        source_code: @answer.content
+      )
     end
 
     def correct?(test_cases_results)

@@ -46,4 +46,16 @@ describe AnswerCreator::Creator do
       end
     end
   end
+
+  context "#test_cases_results" do
+    it "returns the test cases results" do
+      question = create(:question)
+      create_pair(:test_case, question: question)
+      answer = build(:answer, question: question)
+
+      creator = described_class.new(answer)
+
+      expect(creator.test_cases_results.count).to eq 2
+    end
+  end
 end
