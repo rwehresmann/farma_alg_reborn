@@ -8,9 +8,8 @@ module AnswerCreator
     end
 
     def create
-      test_cases_results = run_test_cases
       @answer.attempt = get_attempt_number
-      @answer.correct = correct?(test_cases_results)
+      @answer.correct = correct?
 
       ActiveRecord::Base.transaction do
         @answer.save!
@@ -19,6 +18,11 @@ module AnswerCreator
       end
 
       ComputeAnswerSimilarityJob.perform_later(@answer)
+    end
+
+    def correct?
+      @test_cases_results.each { |result| return false if result[:correct] == false }
+      true
     end
 
     private
@@ -49,11 +53,6 @@ module AnswerCreator
         extension: "pas",
         source_code: @answer.content
       )
-    end
-
-    def correct?(test_cases_results)
-      test_cases_results.each { |result| return false if result[:correct] == false }
-      true
     end
   end
 end
