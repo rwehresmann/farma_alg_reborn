@@ -21,12 +21,17 @@ module AnswerCreator::Scorer
     end
 
     def increase
+      score_to_earn = calculate_score_to_earn
+
       EarnedScore.create!(
         user: @user,
         question: @question,
         team: @team,
-        score: calculate_score_to_earn
+        score: score_to_earn
       )
+
+      user_score = UserScore.where(user: @user, team: @team).first
+      user_score.update_attributes!(score: user_score.score + score_to_earn)
     end
 
     private
@@ -40,7 +45,7 @@ module AnswerCreator::Scorer
       question_level = difficult_level(answers)
       score_variation = SCORE_VARIATION[question_level]
 
-      @question.score * score_variation
+      @question.score + (@question.score * score_variation)
     end
 
     # Difficult level formula.

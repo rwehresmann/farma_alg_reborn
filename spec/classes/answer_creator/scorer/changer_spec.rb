@@ -27,11 +27,21 @@ describe AnswerCreator::Scorer::Changer do
         it "updates the user score" do
           user = create(:user)
           team = create(:team)
+          create(:user_score, user: user, team: team)
           question = create(:question)
 
           answer = create(
             :answer,
             :correct,
+            user: user,
+            team: team,
+            question: question
+          )
+
+          # This answer must be ignored >>
+          create(
+            :answer,
+            :incorrect,
             user: user,
             team: team,
             question: question

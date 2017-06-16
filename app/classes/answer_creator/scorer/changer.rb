@@ -21,7 +21,8 @@ module AnswerCreator::Scorer
         .where(
           user: @answer.user,
           team: @answer.team,
-          question: @answer.question
+          question: @answer.question,
+          correct: true
         ).limit(2).count
 
       number_to_check = @answer.new_record? ? 0 : 1
