@@ -75,8 +75,9 @@ class QuestionsController < ApplicationController
 
   def test_answer
     @answer = @question.answers.build(answer_params)
-    @answer.set_correct unless @answer.content.empty?
-    @results = @answer.results
+    creator = AnswerCreator::Creator.new(@answer)
+    @answer.correct = creator.correct?
+    @results = creator.test_cases_results
 
     respond_to { |format| format.js { render 'shared/test_answer' } }
   end
