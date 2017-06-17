@@ -11,6 +11,8 @@ describe AnswerCreator::Creator do
         create_pair(:test_case, question: question)
         answer = build(:answer, question: question)
 
+        changer_call_expectation(answer)
+
         described_class.new(answer).create
 
         expect(answer.new_record?).to be_falsey
@@ -37,6 +39,8 @@ describe AnswerCreator::Creator do
         create(:answer, question: question, team: team)
         create(:answer, user: user, team: team)
 
+        changer_call_expectation(answer)
+
         described_class.new(answer).create
 
         expect(answer.new_record?).to be_falsey
@@ -57,5 +61,14 @@ describe AnswerCreator::Creator do
 
       expect(creator.test_cases_results.count).to eq 2
     end
+  end
+
+  def changer_call_expectation(answer)
+    fake_changer = AnswerCreator::Scorer::Changer.new(answer)
+    expect(AnswerCreator::Scorer::Changer).to receive(:new)
+      .with(answer)
+      .and_return fake_changer
+
+    expect(fake_changer).to receive(:change).and_call_original
   end
 end
