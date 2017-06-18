@@ -164,7 +164,9 @@ RSpec.describe AnswersController, type: :controller do
 
     context "when logged-in" do
       before do
-        sign_in create(:user)
+        user = create(:user)
+        team.enroll(user)
+        sign_in user
       end
 
       it { expect(subject).to have_http_status(:ok) }

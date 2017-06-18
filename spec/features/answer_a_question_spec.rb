@@ -2,12 +2,14 @@ require 'rails_helper'
 
 describe "Answer a question", type: :feature, js: true do
   subject(:visit_page) do
-    login_as create(:user)
-
     exercise = create(:exercise)
     question = create(:question, exercise: exercise)
     create(:test_case, :hello_world, question: question)
+    user = create(:user)
     team = create(:team, exercises: [exercise])
+    team.enroll(user)
+
+    login_as user
 
     visit new_answer_question_path(question, team)
   end
