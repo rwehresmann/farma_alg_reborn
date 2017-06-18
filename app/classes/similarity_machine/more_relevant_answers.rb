@@ -1,26 +1,26 @@
 module SimilarityMachine
-  class AnswersSimilarities
+  class MoreRelevantAnswers
     include Utils
 
     def initialize(question:, users:, team:)
       @question = question
       @users = users
       @team = team
-      @similarities = search
     end
 
-    def more_similar(limit = nil)
-      limit ? @similarities.first(limit) : @similarities
+    def get(limit = nil)
+      similarities = search_similarities
+      limit ? similarities.first(limit) : similarities
     end
 
     private
 
-    def search
+    def search_similarities
       answers = AnswerQuery.new.user_answers(
         @users,
         to: { question: @question, team: @team }
       ).to_a
-      return if answers.empty?
+      return [] if answers.empty?
 
       similarities = Hash.new(0)
       compare_and_shift_each(answers, similarities) do |answer_1, answer_2|
@@ -31,6 +31,10 @@ module SimilarityMachine
       end
 
       sort_similarities_desc(similarities)
+    end
+
+    def sort_similarities_desc(similarities)
+      similarities.sort_by { |_k, v| -v }
     end
   end
 end

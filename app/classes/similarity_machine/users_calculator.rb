@@ -21,5 +21,19 @@ module SimilarityMachine
       )
       calculator.calculate_similarity(questions)
     end
+
+    private
+
+    def common_questions_answered(users:, team:)
+      groups = []
+      compare_and_shift_each(users, groups) do |user_1, user_2|
+        users_questions = [user_1, user_2].map { |user|
+          QuestionQuery.new.questions_answered_by_user(user, team: team).to_a
+        }
+        groups << users_questions.common_arrays_values
+      end
+
+      groups.common_arrays_values
+    end
   end
 end
