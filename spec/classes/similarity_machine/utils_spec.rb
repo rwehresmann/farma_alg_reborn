@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+
 describe SimilarityMachine::Utils do
   let(:object) { Object.new.extend(described_class) }
 
