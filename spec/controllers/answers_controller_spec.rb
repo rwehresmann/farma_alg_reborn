@@ -130,6 +130,33 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe "GET #show_as_raw" do
+    context "when logged-in" do
+      it "shows the answer content as raw" do
+        sign_in create(:user)
+        get :show_as_raw, params: { id: create(:answer) }
+
+        common_expectations(
+          http_status: :ok,
+          content_type: "text/html",
+          template: "answers/show_as_raw"
+        )
+      end
+    end
+
+    context "when logged-out" do
+      it "redirects to the sign in page" do
+        get :show_as_raw, params: { id: create(:answer) }
+
+        common_expectations(
+          http_status: :found,
+          content_type: "text/html",
+          redirect: new_user_session_url
+        )
+      end
+    end
+  end
+
   describe "GET #connections" do
     let(:answer) { create(:answer) }
 

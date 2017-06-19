@@ -4,7 +4,7 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_question, only: [:new, :create]
-  before_action :find_answer, only: [:show]
+  before_action :find_answer, only: [:show, :show_as_raw]
   before_action :save_answer_url, only: [:show]
 
   def index
@@ -45,6 +45,10 @@ class AnswersController < ApplicationController
       }
       format.js { @node_html_id = params[:node_html_id] }
     end
+  end
+
+  def show_as_raw
+    render layout: false
   end
 
   def connections

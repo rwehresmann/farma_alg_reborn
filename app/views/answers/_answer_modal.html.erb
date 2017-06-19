@@ -23,15 +23,32 @@
             </tr>
             <tr>
               <td>
-                <%= link_to "Exibir mais detalhes", answer_path(@answer),
-                            method: :get, class: "btn btn-primary text-center",
-                            style: "width: 100%", target: "_blank" %>
+                <%= link_to(
+                  "Exibir mais detalhes",
+                  answer_path(@answer),
+                  method: :get,
+                  class: "btn btn-primary text-center",
+                  style: "width: 100%",
+                  target: "_blank"
+                ) %>
               </td>
             </tr>
             <tr>
               <td>
                 <button id="add-answer-<%= @answer.id %>-similar" class="btn btn-primary text-center"
                         style="width: 100%">Adicionar respostas semelhantes</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <%= link_to(
+                  "Exibir mais detalhes",
+                  answer_as_raw(@answer),
+                  method: :get,
+                  class: "btn btn-primary text-center",
+                  style: "width: 100%",
+                  target: "_blank"
+                ) %>
               </td>
             </tr>
           </tbody>
@@ -44,7 +61,7 @@
           <% @answer.test_cases_results.each do |test_case_result| %>
             <%= render partial: "shared/test_case_result", locals: { test_case_result: test_case_result } %>
           <% end %>
-        
+
 
       </div>
     </div>

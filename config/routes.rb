@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   end
 
   resources :answers, only: [:index]
+  get 'answers/:id/show_as_raw', to: 'answers#show_as_raw', as: :answer_as_raw
 
   resources :exercises, shallow: true do
     resources :questions do
