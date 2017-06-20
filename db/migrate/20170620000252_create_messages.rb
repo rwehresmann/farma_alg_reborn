@@ -3,7 +3,7 @@ class CreateMessages < ActiveRecord::Migration[5.0]
     create_table :messages do |t|
       t.string :title, null: false
       t.string :content, null: false
-      t.boolean :read, null: false, default: false
+      t.references :sender, references: :User
       t.timestamps
     end
   end
