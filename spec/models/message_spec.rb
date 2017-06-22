@@ -10,6 +10,11 @@ RSpec.describe Message, type: :model do
     expect(message).to_not be_valid
   end
 
+  it "is invalid without the receiver" do
+    message = build(:message, receiver: nil)
+    expect(message).to_not be_valid
+  end
+
   it "is invalid without title" do
     message = build(:message, title: "")
     expect(message).to_not be_valid
@@ -23,6 +28,18 @@ RSpec.describe Message, type: :model do
   describe "Relationships" do
     it { expect(relationship_type(Message, :sender)).to eq(:belongs_to) }
 
-    it { expect(relationship_type(Message, :receivers)).to eq(:has_many) }
+    it { expect(relationship_type(Message, :receiver)).to eq(:belongs_to) }
+  end
+
+  describe "#create!" do
+    it "adds at the beggining of the content sender informations" do
+      message = create(:message)
+      datetime = Time.now.strftime(Message::DATETIME_MASK)
+      first_line = message.content.each_line.first
+
+      expect(first_line).to match "#{message.sender.name}"
+      expect(first_line).to match "#{message.receiver.name}"
+      expect(first_line).to match "#{datetime}"
+    end
   end
 end
