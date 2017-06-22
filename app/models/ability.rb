@@ -31,6 +31,12 @@ class Ability
       can [:show, :destroy], AnswerConnection
     end
 
+    can :create, Message
+
+    can :read, Message do |message|
+      message.receiver == user || message.sender == user
+    end
+
     can :read, Team
 
     can :enroll, Team do |team|

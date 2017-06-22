@@ -18,6 +18,21 @@ describe "User" do
       it { should be_able_to(:create, Team) }
       it { should be_able_to(:list_questions, Team) }
       it { should be_able_to(:show, AnswerConnection) }
+      it { should be_able_to(:create, Message) }
+
+      context "when acces his messages" do
+        context "when he is the sender" do
+          let(:message) { create(:message, sender: user) }
+
+          it { should be_able_to(:read, message) }
+        end
+
+        context "when he is the receiver" do
+          let(:message) { create(:message, receiver: user) }
+
+          it { should be_able_to(:read, message) }
+        end
+      end
 
       context "when access his created objects" do
         let(:exercise) { create(:exercise, user: user) }
