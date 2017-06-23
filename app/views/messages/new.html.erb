@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <div class="box box-primary">
+
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          Destinatário(s) da mensagem:
+        </h3>
+        <br></br>
+        <%= inline_users(@receivers) %>
+      </div>
+      <% p @message %>
+      <div class="box-body">
+        <%= form_for @message do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+
+          <% @receivers.each do |user| %>
+            <%= hidden_field_tag "receiver_ids[]", user.id %>
+          <% end %>
+
+          <div class="form-group">
+            <%= f.label "Título" %>
+            <%= f.text_field :title, class: "form-control", autofocus: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label "Conteúdo" %>
+            <%= f.text_area :content, class: "form-control" %>
+          </div>
+
+          <%= f.submit "Enviar", class: "btn btn-primary pull-right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var simplemde = new SimpleMDE( { element: $('textarea')[0],
+                                   toolbar: ["preview",
+                                             "|",
+                                             "bold",
+                                             "italic",
+                                             "heading-1",
+                                             "heading-2",
+                                             "heading-3",
+                                             "link",
+                                             "image",
+                                             "table",
+                                             "code",
+                                             "quote",
+                                             "unordered-list",
+                                             "ordered-list",
+                                             "|",
+                                             "guide"]});
+</script>

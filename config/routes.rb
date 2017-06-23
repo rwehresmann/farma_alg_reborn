@@ -35,6 +35,8 @@ Rails.application.routes.draw do
 
   resources :answer_connections, only: [:show, :destroy]
 
+  resources :messages, only: [:index, :new, :create, :show]
+
   devise_for :users
   get 'dashboard/home'
   root to: 'dashboard#home'

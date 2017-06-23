@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <div class="box box-primary">
+
+      <div class="box-header with-border">
+        <h2><%= @message.title %></h3>
+      </div>
+
+      <div class="box-body">
+        <%= markdown(@message.content) %>
+      </div>
+
+      <div class="box-footer">
+        <%= link_to(
+          "Responder",
+          new_message_path(
+            receiver_ids: [@message.sender.id],
+            previous_message_id: @message.id
+          ),
+          class: "btn btn-primary pull-right"
+        ) %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -42,8 +42,8 @@
             <tr>
               <td>
                 <%= link_to(
-                  "Exibir mais detalhes",
-                  answer_as_raw(@answer),
+                  "Enviar mensagem ao aluno",
+                  new_message_path(receiver_ids: [@answer.user.id], answer_ids: [@answer.id]),
                   method: :get,
                   class: "btn btn-primary text-center",
                   style: "width: 100%",

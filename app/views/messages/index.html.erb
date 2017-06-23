@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Mensagens recebidas</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-bordered">
+          <thead>
+            <th>Título</th>
+            <th>Enviado para</th>
+            <th>Horário de envio</th>
+            <th></th>
+          </thead>
+
+          <tbody>
+            <% @messages_received.each do |message| %>
+              <tr>
+                <td>
+                  <%= message.title %>
+                </td>
+                <td>
+                  <%= message.receiver.name %>
+                </td>
+                <td>
+                  <%= message.created_at %>
+                </td>
+                <td>
+                  <%= link_to "Ver", message %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div><!-- /.box-body -->
+    </div><!-- /.box -->
+
+  </div>
+
+  <div class="col-md-6">
+
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">Mensagens enviadas</h3>
+      </div><!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-bordered">
+          <thead>
+            <th>Título</th>
+            <th>Enviado por</th>
+            <th>Horário de envio</th>
+            <th></th>
+          </thead>
+
+          <tbody>
+            <% @messages_sended.each do |message| %>
+              <tr>
+                <td>
+                  <%= message.title %>
+                </td>
+                <td>
+                  <%= message.sender.name %>
+                </td>
+                <td>
+                  <%= message.created_at %>
+                </td>
+                <td>
+                  <%= link_to "Ver", message %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div><!-- /.box-body -->
+    </div><!-- /.box -->
+
+  </div>
+</div>
