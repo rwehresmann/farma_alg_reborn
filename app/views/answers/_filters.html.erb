@@ -1,0 +1,140 @@
+<div class="box box-default">
+  <div class="box-body">
+
+    <div class="row">
+      <div class="col-md-6">
+        <label for="daterange-btn">Intervalo de tempo: </label>
+        <div class="input-group">
+          <%= text_field_tag(
+            :date_range,
+            nil,
+            class: "btn btn-default pull-right",
+            id: "daterange-btn"
+          ) %>
+        </div>
+      </div>
+
+      <div>
+        <label for="sel1">Classificação da resposta:</label>
+
+        <%= select_tag(
+          "correct",
+          "<option></option>
+          <option value='true'>Correta</option>
+          <option value='false'>Incorreta</option>"
+          .html_safe,
+          class: "form-control"
+        ) %>
+      </div>
+    </div>
+
+    <br></br>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="box box-default">
+          <div class="box-header with-border">
+            <h3 class="box-title">Disciplinas</h3>
+            <div class="box-tools pull-right">
+              <button class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div><!-- /.box-tools -->
+          </div><!-- /.box-header -->
+          <div class="box-body">
+            <table class="table table-condensed">
+              <tbody>
+                <% current_user.teams.each do |team| %>
+                  <tr>
+                    <td>
+                      <%= check_box_tag "teams[]", team.id %>
+                      <%= team.name %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      </div>
+
+      <div class="col-md-6">
+        <div class="box box-default collapsed-box">
+          <div class="box-header with-border">
+            <h3 class="box-title">Questões</h3>
+            <div class="box-tools pull-right">
+              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+            </div><!-- /.box-tools -->
+          </div><!-- /.box-header -->
+          <div class="box-body">
+
+            <ul class="list-unstyled">
+              <% current_user.teams.each do |team| %>
+                <% team.exercises.each do |exercise| %>
+                    <li>
+                      <%= check_box_tag nil, exercise.id, false, id: "exercise-#{exercise.id}" %>
+                      <%= exercise.title %>
+                      <ul id="exercise-questions-<%= exercise.id %>">
+                        <% exercise.questions.each do |question| %>
+                        <li>
+                          <%= check_box_tag "questions[]", question.id %>
+                          <%= question.title %>
+                        </li>
+                        <% end %>
+                      </ul>
+                    </li>
+                <% end %>
+              <% end %>
+            </ul>
+
+          </div><!-- /.box-body -->
+        </div>
+      </div>
+
+    </div>
+
+    <span class="input-group-btn">
+      <%= submit_tag(
+        "Buscar respostas",
+        id: "search-btn",
+        class: "form-control btn btn-flat btn-primary pull-right"
+      ) %>
+    </span>
+
+  </div>
+</div>
+
+
+<script text="text/javascript">
+  <% current_user.teams.each do |team| %>
+    <% team.exercises.each do |exercise| %>
+      $('#exercise-<%= exercise.id %>').click(function () {
+          checked = $(this).is(':checked');
+          questions = $('#exercise-questions-<%= exercise.id %> li input')
+            .prop('checked', checked);
+      });
+    <% end %>
+  <% end %>
+</script>
+
+<script text="text/javascript">
+  $('#daterange-btn').daterangepicker({
+      autoUpdateInput: false,
+      ranges: {
+            'Hoje': [moment(), moment()],
+            'Otem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+            'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          }
+  });
+
+  $('#daterange-btn').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + '_' + picker.endDate.format('YYYY-MM-DD'));
+  });
+
+  $('#daterange-btn').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+  });
+</script>

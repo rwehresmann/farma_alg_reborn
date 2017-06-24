@@ -10,7 +10,8 @@ class Answers
       "autoWidth": true
 
     $("tr[data-link]").click ->
-      window.location = $(this).data("link")
+      url = $(this).data("link")
+      window.open(url, "_blank")
 
 window.APP ?= {}
 window.APP.Answers = Answers

@@ -1,16 +1,17 @@
 <table id="answers-table" class="table table-bordered table-hover dataTable" role="grid">
   <thead>
     <tr role="row">
-      <th class="sorting" style="width: 150px" aria-sort="ascending">Turma</th>
-      <th class="sorting" aria-sort="ascending">Exercício</th>
-      <th class="sorting">Questão</th>
+      <th class="sorting" style="width: 130px" aria-sort="ascending">Turma</th>
+      <th class="sorting" style="width: 170px" aria-sort="ascending">Exercício</th>
+      <th class="sorting" style="width: 170px">Questão</th>
       <th class="sorting" style="width: 10px">Tentativa</th>
+      <th class="sorting" style="width: 10px">Horário</th>
       <th class="sorting" style="width: 10px">Resposta</th>
   </thead>
 
   <tbody>
     <% @answers.each do |answer| %>
-      <tr role="row" class="odd" data-link="<%= new_answer_question_path(answer.question, answer.team, answer_id: answer.id) %>">
+      <tr role="row" class="odd" data-link="<%= new_answer_question_path(answer.question, answer.team, answer_id: answer.id) %>" target="_blank">
         <td>
           <%= answer.team.name %>
         </td>
@@ -20,10 +21,13 @@
         <td>
           <%= answer.question.title %>
         </td>
-        <td>
+        <td class="text-center">
           <%= answer.attempt %>
         </td>
-        <td>
+        <td class="text-center">
+          <%= answer.created_at.to_formatted_s(:db)  %>
+        </td>
+        <td class="text-center">
           <%= answer_status_label(answer) %>
         </td>
       </tr>

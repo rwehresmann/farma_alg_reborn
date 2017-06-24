@@ -1,3 +1,18 @@
+<%= form_tag answers_path, method: :get, remote: true, class: "form-inline" do %>
+  <div class="input-group margin", style="width: 100%">
+    <span class="input-group-btn">
+      <a class="btn btn-default btn-flat" data-toggle="collapse" data-target="#filters">
+        <i class="fa fa-filter"></i> Filtros
+      </a>
+    </span>
+  </div>
+  <div id="filters" class="collapse">
+    <br></br>
+    <%= render "filters" %>
+  </div>
+<% end %>
+
+
 <div id="answers">
   <%= render "answers" %>
 </div>

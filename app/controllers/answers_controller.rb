@@ -8,10 +8,22 @@ class AnswersController < ApplicationController
   before_action :save_answer_url, only: [:show]
 
   def index
+    date_range = split_date_range
+
+    if params[:correct]
+      correct = params[:correct] == "true" ? true : false
+    else
+      correct = nil
+    end
+
     @answers = Answer
-      .limit(10)
+      .where(user: current_user)  
+      .by_team(params[:teams])
+      .by_question(params[:questions])
+      .between_dates(date_range[0], date_range[1])
+      .correct_status(correct)
       .order(created_at: :desc)
-      .paginate(page: params[:page], per_page: 50)
+      .paginate(page: params[:page], per_page: 30)
   end
 
   def new
@@ -94,5 +106,9 @@ class AnswersController < ApplicationController
   # connection is deleted.
   def save_answer_url
     session[:previous_answer_url] = answer_url(@answer)
+  end
+
+  def split_date_range
+    params[:date_range] ? params[:date_range].split("_") : []
   end
 end
