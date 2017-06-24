@@ -1,79 +1,37 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-offset-4 col-md-4">
+    <div class="btn-group">
+      <%= link_to(
+        "Mensagens recebidas",
+        messages_path(received: true),
+        remote: true,
+        id: "messages-received",
+        class: "btn btn-default active"
+      ) %>
 
-    <div class="box box-info">
-      <div class="box-header with-border">
-        <h3 class="box-title">Mensagens recebidas</h3>
-      </div><!-- /.box-header -->
-      <div class="box-body">
-        <table class="table table-bordered">
-          <thead>
-            <th>Título</th>
-            <th>Enviado para</th>
-            <th>Horário de envio</th>
-            <th></th>
-          </thead>
-
-          <tbody>
-            <% @messages_received.each do |message| %>
-              <tr>
-                <td>
-                  <%= message.title %>
-                </td>
-                <td>
-                  <%= message.receiver.name %>
-                </td>
-                <td>
-                  <%= message.created_at %>
-                </td>
-                <td>
-                  <%= link_to "Ver", message %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div><!-- /.box-body -->
-    </div><!-- /.box -->
-
+      <%= link_to(
+        "Mensagens enviadas",
+        messages_path(sended: true),
+        remote: true,
+        id: "messages-sended",
+        class: "btn btn-default"
+      ) %>
+    </div>
   </div>
+</div>
 
-  <div class="col-md-6">
+<br></br>
 
-    <div class="box box-info">
-      <div class="box-header with-border">
-        <h3 class="box-title">Mensagens enviadas</h3>
-      </div><!-- /.box-header -->
-      <div class="box-body">
-        <table class="table table-bordered">
-          <thead>
-            <th>Título</th>
-            <th>Enviado por</th>
-            <th>Horário de envio</th>
-            <th></th>
-          </thead>
+<div class="row">
+  <div class="col-md-offset-2 col-md-8">
+    <div class="box box-body">
+      <div id="messages">
+        <%= render "messages/index/messages" %>
+      </div>
+    </div>
 
-          <tbody>
-            <% @messages_sended.each do |message| %>
-              <tr>
-                <td>
-                  <%= message.title %>
-                </td>
-                <td>
-                  <%= message.sender.name %>
-                </td>
-                <td>
-                  <%= message.created_at %>
-                </td>
-                <td>
-                  <%= link_to "Ver", message %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div><!-- /.box-body -->
-    </div><!-- /.box -->
-
+    <div class="text-center">
+      <%= render "shared/paginate", object: @messages %>
+    </div>
   </div>
 </div>

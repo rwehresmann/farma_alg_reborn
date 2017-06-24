@@ -1,0 +1,27 @@
+<table class="table table-bordered">
+  <thead>
+    <th>Título</th>
+    <th>Enviado para</th>
+    <th>Horário de envio</th>
+    <th></th>
+  </thead>
+
+  <tbody>
+    <% @messages_received.each do |message| %>
+      <tr>
+        <td>
+          <%= message.title %>
+        </td>
+        <td>
+          <%= message.receiver.name %>
+        </td>
+        <td>
+          <%= message.created_at %>
+        </td>
+        <td>
+          <%= link_to "Ver", message %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

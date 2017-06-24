@@ -4,8 +4,13 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @messages_sended = current_user.messages_sended
-    @messages_received = current_user.messages_received
+    message_type = params[:sended] ? "messages_sended" : "messages_received"
+    @messages = current_user.send(message_type)
+      .order(created_at: :desc)
+      .paginate(
+        page: params[:page],
+        per_page: 15
+      )
   end
 
   def new

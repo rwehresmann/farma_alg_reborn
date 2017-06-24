@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+  <thead>
+    <th>Título</th>
+    <th>Enviado por</th>
+    <th>Enviado para</th>
+    <th style="width: 180px">Horário de envio</th>
+    <th style="width: 10px"></th>
+  </thead>
+
+  <tbody>
+    <% @messages.each do |message| %>
+      <tr>
+        <td>
+          <%= message.title %>
+        </td>
+        <td>
+          <%= message.sender.name %>
+        </td>
+        <td>
+          <%= message.receiver.name %>
+        </td>
+        <td>
+          <%= message.created_at %>
+        </td>
+        <td>
+          <%= link_to "Ver", message %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
