@@ -11,7 +11,7 @@ class Message < ApplicationRecord
   private
 
   def add_sender_information
-    info = "<sup>**Enviada por #{sender.name} (sender.email) para #{receiver.name} (#{receiver.email}) às #{Time.now.strftime(DATETIME_MASK)}**</sup>\n\n"
+    info = "<sup>**Enviada por #{sender.name} (#{sender.email}) para #{receiver.name} (#{receiver.email}) às #{Time.now.strftime(DATETIME_MASK)}**</sup>\n\n"
     self.content.prepend(info)
   end
 end
