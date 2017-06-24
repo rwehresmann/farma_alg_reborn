@@ -9,7 +9,7 @@
           <h3 class="box-title">Últimas respostas das suas turmas</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table class="table table-bordered">
+          <table id="teams-answer-table" class="table table-bordered table-hover dataTable">
             <thead>
               <th>Aluno</th>
               <th>Questão</th>
@@ -19,7 +19,7 @@
 
             <tbody>
               <% @teams_answers.each do |answer| %>
-                <tr>
+                <tr data-link="<%= answer_path(answer) %>" target="_blank">
                   <td>
                     <%= answer.user.name %>
                   </td>
@@ -30,7 +30,7 @@
                     <%= answer.attempt %>
                   </td>
                   <td>
-                    <%= link_to answer_status_label(answer), answer %>
+                    <%= answer_status_label(answer) %>
                   </td>
                 </tr>
               <% end %>
@@ -66,7 +66,7 @@
         <h3 class="box-title">Suas últimas respostas</h3>
       </div><!-- /.box-header -->
       <div class="box-body">
-        <table class="table table-bordered">
+        <table id="user-answers-table" class="table table-bordered table-hover dataTable">
           <thead>
             <th>Questão</th>
             <th>Tentativa</th>
@@ -74,6 +74,22 @@
           </thead>
 
           <tbody>
+            <% @user_answers.each do |answer| %>
+              <tr data-link="<%= new_answer_question_path(answer.question, answer.team, answer_id: answer.id) %>" target="_blank">
+                <td>
+                  <%= answer.user.name %>
+                </td>
+                <td>
+                  <%= answer.question.title %>
+                </td>
+                <td>
+                  <%= answer.attempt %>
+                </td>
+                <td>
+                  <%= answer_status_label(answer) %>
+                </td>
+              </tr>
+            <% end %>
           </tbody>
         </table>
       </div><!-- /.box-body -->
@@ -87,11 +103,36 @@
         <h3 class="box-title">Últimas mensagens recebidas</h3>
       </div><!-- /.box-header -->
       <div class="box-body">
-        The body of the box
+
+        <table id="user-answers-table" class="table table-bordered table-hover dataTable">
+          <thead>
+            <th>Título</th>
+            <th>Enviada por</th>
+            <th>Enviada para</th>
+            <th>Horário de envio</th>
+          </thead>
+
+          <tbody>
+            <% @user_last_messages.each do |message| %>
+              <tr data-link="<%= message_path(message) %>" target="_blank">
+                <td>
+                  <%= message.title %>
+                </td>
+                <td>
+                  <%= message.sender.name %>
+                </td>
+                <td>
+                  <%= message.receiver.name %>
+                </td>
+                <td>
+                  <%= message.created_at %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
       </div><!-- /.box-body -->
-      <div class="box-footer">
-        The footer of the box
-      </div><!-- box-footer -->
     </div><!-- /.box -->
 
   </div>
