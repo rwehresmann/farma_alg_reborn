@@ -1,15 +1,14 @@
-<table class="table table-bordered">
+<table id="messagess-table" class="table table-bordered table-hover dataTable">
   <thead>
     <th>Título</th>
     <th>Enviado por</th>
     <th>Enviado para</th>
     <th style="width: 180px">Horário de envio</th>
-    <th style="width: 10px"></th>
   </thead>
 
   <tbody>
     <% @messages.each do |message| %>
-      <tr>
+      <tr data-link="<%= message_path(message) %>" target="_blank">
         <td>
           <%= message.title %>
         </td>
@@ -21,9 +20,6 @@
         </td>
         <td>
           <%= message.created_at %>
-        </td>
-        <td>
-          <%= link_to "Ver", message %>
         </td>
       </tr>
     <% end %>

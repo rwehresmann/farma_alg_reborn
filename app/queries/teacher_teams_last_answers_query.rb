@@ -1,5 +1,5 @@
 class TeacherTeamsLastAnswersQuery
-  NUMBER_OF_ANSWERS = 10
+  NUMBER_OF_ANSWERS = 5
 
   def initialize(teacher:)
     @teacher = teacher
