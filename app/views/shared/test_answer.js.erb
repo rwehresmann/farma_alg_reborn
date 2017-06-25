@@ -15,10 +15,10 @@ function placeTestCasesResults() {
 
     <% if result[:correct] %>
       div.attr('class', 'alert alert-success text-left');
-      div.append("<i class='icon fa fa-check'> <%= result[:title] %></i>");
+      div.append("<i class='icon fa fa-check'> <%= result[:test_case].title %></i>");
     <% else %>
       div.attr('class', 'alert alert-danger text-left');
-      div.append("<i class='icon fa fa-close'> <%= result[:title] %></i>");
+      div.append("<i class='icon fa fa-close'> <%= result[:test_case].title %></i>");
     <% end %>
 
     $('#test-results').append(div);
