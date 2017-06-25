@@ -54,15 +54,16 @@ class TeamsController < ApplicationController
 
   def rankings
     @team = Team.find(params[:id])
+    records_limit = @team.owner?(current_user) ? nil : 5
 
-    records = UserScoreQuery.new.ranking(team: @team, limit: 5)
+    records = UserScoreQuery.new.ranking(team: @team, limit: records_limit)
     @general_ranking = format_ranking(records)
     @general_base_score = @general_ranking.first[:score] unless records.empty?
 
     @weekly_ranking = EarnedScore.ranking(
       team: @team,
       starting_from: current_week_date,
-      limit: 5
+      limit: records_limit
     )
     @weekly_base_score = @weekly_ranking.first[:score] unless @weekly_ranking.empty?
 
