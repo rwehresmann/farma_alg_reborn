@@ -14,7 +14,11 @@ module AnswerCreator
       ActiveRecord::Base.transaction do
         @answer.save!
         save_test_cases_results
-        Scorer::Changer.new(@answer).change
+        Scorer::Increaser.new(
+          user: @answer.user,
+          team: @answer.team,
+          question: @answer.question
+        ).increase
       end
 
       ComputeAnswerSimilarityJob.perform_later(@answer)

@@ -37,10 +37,9 @@ module AnswerCreator::Scorer
     private
 
     def calculate_score_to_earn
-      return @question.score if  @question.operation == "challenge"
-
       answers = AnswerQuery.new.team_answers(@team, question: @question)
-      return @question.score if answers.count < LIMIT_TO_START_VARIATION
+
+      return @question.score if @question.operation == "challenge" || answers.count < LIMIT_TO_START_VARIATION
 
       question_level = difficult_level(answers)
       score_variation = SCORE_VARIATION[question_level]
@@ -52,7 +51,7 @@ module AnswerCreator::Scorer
     def difficult_level(answers)
       correct = answers.where(correct: true)
       incorrect = answers.where(correct: false)
-      denominator = (correct.count * 0.1 + incorrect.count * 0.2)
+      denominator = (correct.count * 0.2 + incorrect.count * 0.1)
       normalize_difficult_level(answers.count.fdiv(denominator).ceil)
     end
 

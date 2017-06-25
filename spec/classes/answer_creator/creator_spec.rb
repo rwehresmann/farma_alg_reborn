@@ -10,8 +10,9 @@ describe AnswerCreator::Creator do
         question = create(:question)
         create_pair(:test_case, question: question)
         answer = build(:answer, question: question)
+        create(:user_score, user: answer.user, team: answer.team)
 
-        changer_call_expectation(answer)
+        increaser_call_expectation(answer)
 
         described_class.new(answer).create
 
@@ -33,13 +34,14 @@ describe AnswerCreator::Creator do
         create_pair(:test_case, question: question)
         create(:answer, question: question, user: user, team: team)
         answer = build(:answer, question: question, user: user, team: team)
+        create(:user_score, user: answer.user, team: answer.team)
 
         # These answers must be ignored >>
         create(:answer, question: question, user: user)
         create(:answer, question: question, team: team)
         create(:answer, user: user, team: team)
 
-        changer_call_expectation(answer)
+        increaser_call_expectation(answer)
 
         described_class.new(answer).create
 
@@ -63,12 +65,20 @@ describe AnswerCreator::Creator do
     end
   end
 
-  def changer_call_expectation(answer)
-    fake_changer = AnswerCreator::Scorer::Changer.new(answer)
-    expect(AnswerCreator::Scorer::Changer).to receive(:new)
-      .with(answer)
-      .and_return fake_changer
+  def increaser_call_expectation(answer)
+    fake_increaser = AnswerCreator::Scorer::Increaser.new(
+      user: answer.user,
+      team: answer.team,
+      question: answer.question
+    )
+    expect(AnswerCreator::Scorer::Increaser).to receive(:new)
+      .with(
+        user: answer.user,
+        team: answer.team,
+        question: answer.question
+      )
+      .and_return fake_increaser
 
-    expect(fake_changer).to receive(:change).and_call_original
+    expect(fake_increaser).to receive(:increase).and_call_original
   end
 end

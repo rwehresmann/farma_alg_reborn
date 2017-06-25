@@ -19,7 +19,8 @@ describe AnswerCreator::Scorer::Increaser do
         ).first
 
         expect(earned_score).to_not be_nil
-        expect(user_score.reload.score).to_not eq 0
+        expect(earned_score.score).to eq question.score
+        expect(user_score.reload.score).to eq question.score
       end
     end
 
@@ -42,6 +43,7 @@ describe AnswerCreator::Scorer::Increaser do
           question: question
         ).first
 
+        expect(earned_score.score).to_not be_nil
         expect(earned_score.score).to_not eq question.score
         expect(user_score.reload.score).to_not eq 0
       end
@@ -64,8 +66,8 @@ describe AnswerCreator::Scorer::Increaser do
         score: question.score
       ).first
 
-      expect(earned_score).to_not be_nil
-      expect(user_score.reload.score).to_not eq 0
+      expect(earned_score.score).to eq question.score
+      expect(user_score.reload.score).to eq question.score
     end
   end
 end
