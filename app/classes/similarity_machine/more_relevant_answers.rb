@@ -8,9 +8,11 @@ module SimilarityMachine
       @team = team
     end
 
-    def get(limit = nil)
+    def get
       similarities = search_similarities
-      limit ? similarities.first(limit) : similarities
+      similarities.select { |answers_similarity|
+        answers_similarity[:similarity] >= Figaro.env.similarity_threshold.to_f
+      }
     end
 
     private
@@ -22,19 +24,28 @@ module SimilarityMachine
       ).to_a
       return [] if answers.empty?
 
-      similarities = Hash.new(0)
+      similarities = {}
       compare_and_shift_each(answers, similarities) do |answer_1, answer_2|
         similarity = answer_1.similarity_with(answer_2)
         [answer_1, answer_2].each { |answer|
-          similarities[answer] += similarity
-        } unless similarity.nil?
+          unless similarity.nil?
+            if similarities[answer]
+              similarities[answer] << similarity
+            else
+              similarities[answer] = [similarity]
+            end
+          end
+        }
       end
 
-      sort_similarities_desc(similarities)
-    end
+      answers_similarity = answers.each.inject([]) { |array, answer|
+        array << {
+          answer: answer,
+          similarity: similarities[answer].avg
+        } if similarities[answer]
+      }
 
-    def sort_similarities_desc(similarities)
-      similarities.sort_by { |_k, v| -v }
+      answers_similarity
     end
   end
 end
