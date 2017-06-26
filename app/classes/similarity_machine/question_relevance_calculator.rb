@@ -24,7 +24,7 @@ module SimilarityMachine
           similarities << similarity unless similarity.nil?
         end
       end
-
+      
       similarities
     end
 

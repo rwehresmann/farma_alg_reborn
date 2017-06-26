@@ -130,8 +130,10 @@ ActiveRecord::Schema.define(version: 20170620000252) do
 
   create_table "recommendations", force: :cascade do |t|
     t.integer  "team_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "question_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["question_id"], name: "index_recommendations_on_question_id", using: :btree
     t.index ["team_id"], name: "index_recommendations_on_team_id", using: :btree
   end
 
