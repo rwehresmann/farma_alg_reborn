@@ -26,7 +26,7 @@ class CodeRunner
     case extension
       when "pas"
         command = "./#{PATH_TO_SAVE}#{file_name}"
-        `#{to_exec(command, options[:params])}`
+        `#{to_exec(command, options[:inputs])}`
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end

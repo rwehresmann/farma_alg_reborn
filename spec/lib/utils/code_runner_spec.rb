@@ -11,12 +11,12 @@ describe CodeRunner do
                                            extension: "pas", source_code: source_code) }
 
         context "of one param" do
-          subject { code_runner.run(params: [1]) }
+          subject { code_runner.run(inputs: [1]) }
           it { expect(subject).to match("There are two parameters required. You provided 1") }
         end
 
         context "of more than one param" do
-          subject { code_runner.run(params: [1, 2]) }
+          subject { code_runner.run(inputs: [1, 2]) }
 
           it { expect(subject).to match("1 + 2 = 3\n") }
         end
