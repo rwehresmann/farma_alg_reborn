@@ -157,7 +157,7 @@ ActiveRecord::Schema.define(version: 20170620000252) do
   create_table "test_cases", force: :cascade do |t|
     t.string   "title",       null: false
     t.string   "description"
-    t.string   "input"
+    t.string   "inputs"
     t.string   "output",      null: false
     t.integer  "question_id"
     t.datetime "created_at",  null: false
