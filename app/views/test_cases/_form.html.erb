@@ -20,9 +20,20 @@
             <%= f.text_area :description, class: "form-control" %>
           </div>
 
-          <div class="form-group">
-            <%= f.label "Input" %>
-            <%= f.text_area :input, class: "form-control" %>
+          <%= f.label "Inputs" %>
+          <a id="add-input" class="btn">
+            <i class="fa fa-plus"></i> Novo
+          </a>
+
+          <div id="inputs-container">
+            <% @test_case.inputs.each_with_index do |input, index| %>
+              <div class="form-group">
+                <%= text_area_tag "test_case[inputs][]", input, class: "form-control" %>
+                <a class="btn pull-right remove-input">
+                  <i class="fa fa-times"></i>
+                </a>
+              </div>
+            <% end %>
           </div>
 
           <div class="form-group">

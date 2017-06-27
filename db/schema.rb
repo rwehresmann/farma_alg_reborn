@@ -155,13 +155,13 @@ ActiveRecord::Schema.define(version: 20170620000252) do
   end
 
   create_table "test_cases", force: :cascade do |t|
-    t.string   "title",       null: false
+    t.string   "title",                    null: false
     t.string   "description"
-    t.string   "inputs"
-    t.string   "output",      null: false
+    t.text     "inputs",      default: [],              array: true
+    t.text     "output",                   null: false
     t.integer  "question_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.index ["question_id"], name: "index_test_cases_on_question_id", using: :btree
   end
 

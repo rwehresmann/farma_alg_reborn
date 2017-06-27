@@ -14,8 +14,11 @@
       </div>
     </div>
     <div class="box-body">
-      <b style="display: block">Input:</b>
-      <div style="display: block"><%= test_case.input %></div>
+      <b style="display: block">Inputs:</b>
+      <% test_case.inputs.each_with_index do |input, index| %>
+        <div style="display: block"><b><%= "#{index + 1}º" %></b> <%= j(input) %></div>
+        <p></p>
+      <% end %>
       <p></p>
       <b>Output esperado:</b>
       <div style="display: block"><%= test_case.output %></div>

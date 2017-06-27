@@ -12,7 +12,6 @@ describe "Create a test case", type: :feature do
     subject do
       fill_in "test_case_title", with: test_case.title
       fill_in "test_case_description", with: test_case.description
-      fill_in "test_case_input", with: test_case.input
       fill_in "test_case_output", with: test_case.output
       click_on "Criar"
     end
