@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Recommendator do
   describe "#search_and_create_recommendations" do
     context "when there are recommendations to be created" do
-      it do
+      xit do
         exercise = create(:exercise)
         questions = create_list(:question, 6, exercise: exercise)
         users = create_pair(:user)

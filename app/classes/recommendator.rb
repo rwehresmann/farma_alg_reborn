@@ -4,6 +4,7 @@ class Recommendator
   end
 
   def search_and_create_recommendations
+=begin
     users_graph = SimilarityMachine::UsersGraphGenerator.new(@team).generate
     relevant_questions = get_relevant_questions(users_graph)
     users = get_users_from_graph(users_graph)
@@ -31,6 +32,7 @@ class Recommendator
       recommendation.users << users
       recommendation.save!
     end
+=end
   end
 
   private
