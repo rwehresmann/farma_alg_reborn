@@ -12,7 +12,7 @@ class TestCase < ApplicationRecord
   def test(file_name:, extension:, source_code:, not_compile: false)
     code_runner = CodeRunner.new(file_name: file_name, extension: extension,
                                  source_code: source_code)
-    result = code_runner.run(insputs: inputs, not_compile: not_compile)
+    result = code_runner.run(inputs: inputs, not_compile: not_compile)
     output = self.output.gsub("\r", "")
 
     { output: result, correct: result == output  }
