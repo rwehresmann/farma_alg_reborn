@@ -52,11 +52,11 @@ module AnswerCreator
     end
 
     def run_test_cases
-      @answer.question.test_all(
+      AnswerTester.new(
+        answer: @answer,
         file_name: SecureRandom.hex,
-        extension: "pas",
-        source_code: @answer.content
-      )
+        extension: "pas"
+      ).test
     end
   end
 end

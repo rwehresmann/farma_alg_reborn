@@ -13,20 +13,6 @@ class Question < ApplicationRecord
   has_many :question_dependencies, foreign_key: :question_1_id
   has_many :dependencies, through: :question_dependencies, source: :question_2
 
-  # Test the source code with the specified input of each test case and check
-  # its output.
-  def test_all(file_name:, extension:, source_code:, not_compile: false)
-    code_runner = CodeRunner.new(file_name: file_name, extension: extension,
-                                 source_code: source_code)
-    code_runner.compile unless not_compile
-
-    self.test_cases.each.inject([]) do |results, test_case|
-      test_result = test_case.test(file_name: file_name, extension: extension,
-                                   source_code: source_code, not_compile: true)
-      results << { test_case: test_case, correct: test_result[:correct],
-                   output: test_result[:output] }
-    end
-  end
 
   # Check what is the dependency operator between two questions.
   def dependency_with(question)

@@ -75,22 +75,6 @@ RSpec.describe Question, type: :model do
     end
   end
 
-  describe '#test_all' do
-    let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
-    subject(:results) do
-      question = create(:question, test_cases_count: 2 )
-      question.test_all(file_name: SecureRandom.hex, extension: "pas", source_code: source_code)
-    end
-
-    it "returns an array of results, containing hashes whit the test case object, correct flag and output" do
-      expect(results.class).to eq(Array)
-      expect(results.count).to eq(2)
-      expect(results.first[:test_case]).to_not be_nil
-      expect(results.first[:correct]).to_not be_nil
-      expect(results.first[:output]).to_not be_nil
-    end
-  end
-
   describe "#dependency_with" do
     let(:exercise) { create(:exercise) }
     let(:questions) { create_pair(:question, exercise: exercise) }
@@ -124,7 +108,7 @@ RSpec.describe Question, type: :model do
           # Answers who should be ignored.
           create(:answer, :incorrect, user: user, team: team, question: question)
           create(:answer, :correct, user: user, team: team)
-          create(:answer, :correct, user: user, question: question) 
+          create(:answer, :correct, user: user, question: question)
         end
 
         it { expect(subject).to be_falsey }

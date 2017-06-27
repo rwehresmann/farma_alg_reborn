@@ -7,14 +7,12 @@ class TestCase < ApplicationRecord
 
   serialize :input, Array
 
-  # Test a the compiled source code whit the test case (when 'compiled: false',
-  # the source code must have been compiled already).
-  def test(file_name:, extension:, source_code:, not_compile: false)
-    code_runner = CodeRunner.new(file_name: file_name, extension: extension,
-                                 source_code: source_code)
-    result = code_runner.run(inputs: inputs, not_compile: not_compile)
-    output = self.output.gsub("\r", "")
+  before_save :remove_returns_from_output
+  before_update :remove_returns_from_output
 
-    { output: result, correct: result == output  }
+  private
+
+  def remove_returns_from_output
+    self.output.gsub!("\r","")
   end
 end

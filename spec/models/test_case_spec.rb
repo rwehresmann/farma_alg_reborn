@@ -24,18 +24,4 @@ RSpec.describe TestCase, type: :model do
       expect(relationship_type(TestCase, :question)).to eq(:belongs_to)
     end
   end
-
-  describe '#test' do
-    let(:source_code) { File.open("spec/support/files/hello_world.pas").read }
-    subject(:result) do
-      test_case = create(:test_case)
-      test_case.test(file_name: SecureRandom.hex, extension: "pas",
-                     source_code: source_code)
-    end
-
-    it "return an correct flag and output" do
-      expect(result[:correct]).to_not be_nil
-      expect(result[:output]).to_not be_nil
-    end
-  end
 end
