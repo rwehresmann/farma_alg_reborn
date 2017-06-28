@@ -1,17 +1,26 @@
 <div class="row">
   <div class="col-md-6">
 
-    <%= render layout: 'shared/structures/box_default',
-               locals: { box_title: "Informações principais" } do %>
+    <%= render(
+      layout: 'shared/structures/box_default',
+      locals: { box_title: "Informações principais" }
+    ) do %>
 
-        <%= render partial: 'shared/answer_info', locals: { answer: @answer } %>
+      <%= render partial: 'shared/answer_info', locals: { answer: @answer } %>
 
-        <br></br>
+      <br></br>
 
-        <button id="show-answer" class="btn btn-primary pull-right">
-          Visualizar resposta
-        </button>
+      <%= link_to(
+        "Enviar mensagem ao aluno",
+        new_message_path(receiver_ids: [@answer.user.id], answer_ids: [@answer.id]),
+        method: :get,
+        class: "btn btn-primary text-center pull-left",
+        target: "_blank"
+      ) %>
 
+      <button id="show-answer" class="btn btn-primary pull-right">
+        Visualizar resposta
+      </button>
     <% end %>
 
   </div><!-- /.col-md-6 -->
