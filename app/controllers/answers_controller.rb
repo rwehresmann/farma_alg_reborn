@@ -17,7 +17,7 @@ class AnswersController < ApplicationController
     end
 
     @answers = Answer
-      .where(user: current_user)  
+      .where(user: current_user)
       .by_team(params[:teams])
       .by_question(params[:questions])
       .between_dates(date_range[0], date_range[1])
@@ -29,8 +29,25 @@ class AnswersController < ApplicationController
   def new
     @answer = Answer.new
     @team = Team.find(params[:team_id])
+
     selected_answer = Answer.find_by(id: params[:answer_id])
-    @content = selected_answer.nil? ? "" : selected_answer.content
+    @content =  ""
+    @results = []
+
+    if selected_answer
+      @content = selected_answer.content
+
+      results = AnswerTestCaseResult.where(answer: selected_answer)
+      @results = []
+      results.each { |result|
+        @results << {
+          test_case: result.test_case,
+          correct: selected_answer.correct,
+          output: result.output
+        }
+      }
+    end
+
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
       vontade para realizar novas tentativas, mas a partir de agora, elas não
       incrementarão seu score nem surtirão qualquer efeito sobre o score desta

@@ -5,7 +5,19 @@
 <div class="col-md-6" style="border-right: 1px solid black">
   <%= render "shared/answer_form" %>
   <br></br>
-  <div id="test-results"></div>
+  <div id="test-results">
+    <% @results.each do |result| %>
+      <% if result[:correct] %>
+        <div class="alert alert-success text-left">
+          <i class='icon fa fa-check'> <%= result[:test_case].title %></i>
+        </div>
+      <% else %>
+        <div class="alert alert-danger text-left">
+          <i class='icon fa fa-close'> <%= result[:test_case].title %></i>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 </div>
 
 <div class="col-md-6">
