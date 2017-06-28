@@ -16,12 +16,15 @@ function placeTestCasesResults() {
     <% if result[:correct] %>
       div.attr('class', 'alert alert-success text-left');
       div.append("<i class='icon fa fa-check'> <%= result[:test_case].title %></i>");
+      div.append("<a href='#output' data-toggle='collapse' data-target='#output-<%= result[:test_case].id %>' class='pull-right'>Output</a>")
     <% else %>
       div.attr('class', 'alert alert-danger text-left');
       div.append("<i class='icon fa fa-close'> <%= result[:test_case].title %></i>");
+      div.append("<a href='#output' data-toggle='collapse' data-target='#output-<%= result[:test_case].id %>' class='pull-right'>Output</a>")
     <% end %>
 
     $('#test-results').append(div);
+    $('#test-results').append("<div id='output-<%= result[:test_case].id %>' class='collapse' style='background: white; border-radius: 5px; margin-bottom: 20px; padding: 5px 5px 5px 5px'><%= j(result[:output]) %></div>");
   <% end %>
 }
 
