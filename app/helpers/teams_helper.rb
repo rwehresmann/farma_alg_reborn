@@ -53,4 +53,19 @@ module TeamsHelper
     return user.name if current_user.owner?(team) || current_user == user
     user.anonymous_id
   end
+
+  def incentive_ranking_feedback
+    user_score = UserScore.where(user: current_user, team: @team).first
+    positions_balance =
+      user_score.start_position_on_day.nil? || user_score.position.nil? ? 0 :
+      user_score.start_position_on_day - user_score.position
+
+    if positions_balance > 0
+      raw "<div class='pull-right' style='color: green'>Você avançou #{positions_balance} no dia de hoje</div>"
+    elsif positions_balance == 0
+      raw "<div class='pull-right' style='color: green'>Você não avançou mas também não perdeu nenhuma posição no dia de hoje</div>"
+    else
+      raw "<div class='pull-right' style='color: red'>Você perdeu #{positions_balance + (positions_balance * 2)} no dia de hoje</div>"
+    end
+  end
 end
