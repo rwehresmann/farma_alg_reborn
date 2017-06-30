@@ -14,7 +14,8 @@ module AnswerCreator
       ActiveRecord::Base.transaction do
         @answer.save!
         save_test_cases_results
-        Scorer::Increaser.new(
+
+        ScoreIncreaser.new(
           user: @answer.user,
           team: @answer.team,
           question: @answer.question

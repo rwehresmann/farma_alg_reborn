@@ -4,7 +4,8 @@ class CreateUserScores < ActiveRecord::Migration[5.0]
       t.references :user
       t.references :team
       t.integer :score, null: false, default: 0
-      t.datetime :computed
+      t.integer :position
+      t.integer :start_position_on_day
       t.timestamps
     end
   end

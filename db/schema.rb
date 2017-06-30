@@ -180,10 +180,11 @@ ActiveRecord::Schema.define(version: 20170620000252) do
   create_table "user_scores", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "team_id"
-    t.integer  "score",      default: 0, null: false
-    t.datetime "computed"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "score",                 default: 0, null: false
+    t.integer  "position"
+    t.integer  "start_position_on_day"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.index ["team_id"], name: "index_user_scores_on_team_id", using: :btree
     t.index ["user_id"], name: "index_user_scores_on_user_id", using: :btree
   end

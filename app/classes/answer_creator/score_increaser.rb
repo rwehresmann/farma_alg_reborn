@@ -1,5 +1,5 @@
-module AnswerCreator::Scorer
-  class Increaser
+module AnswerCreator
+  class ScoreIncreaser
     # The key is the difficult level, and the value is the percentage
     # of variation.
     SCORE_VARIATION = {
@@ -32,6 +32,7 @@ module AnswerCreator::Scorer
 
       user_score = UserScore.where(user: @user, team: @team).first
       user_score.update_attributes!(score: user_score.score + score_to_earn)
+      AnswerCreator::RankingUpdater.new(@team).update_position
     end
 
     private

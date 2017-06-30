@@ -66,12 +66,12 @@ describe AnswerCreator::Creator do
   end
 
   def increaser_call_expectation(answer)
-    fake_increaser = AnswerCreator::Scorer::Increaser.new(
+    fake_increaser = AnswerCreator::ScoreIncreaser.new(
       user: answer.user,
       team: answer.team,
       question: answer.question
     )
-    expect(AnswerCreator::Scorer::Increaser).to receive(:new)
+    expect(AnswerCreator::ScoreIncreaser).to receive(:new)
       .with(
         user: answer.user,
         team: answer.team,
