@@ -24,7 +24,7 @@ class Recommendator
     }
   end
 
-  def get_simmilar_answers(question)
+  def get_similar_answers(question)
     answers = Answer.where(question: question, team: @team)
     connections = AnswersConnectionsQuery.new(answers).call
     connections.select { |connection|
@@ -33,7 +33,7 @@ class Recommendator
   end
 
   def add_answers_connections_in_graph(question, graph = Graph.new)
-    connections = get_simmilar_answers(question)
+    connections = get_similar_answers(question)
 
     connections.each { |connection|
       graph.add_edge(connection.answer_1, connection.answer_2)
