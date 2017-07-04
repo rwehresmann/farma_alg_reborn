@@ -1,37 +1,31 @@
 require 'rails_helper'
 
 describe Recommendator do
-  describe "#search_and_create_recommendations" do
-    context "when there are recommendations to be created" do
-      xit do
+  context "when there are recommendations to be created" do
+    context "when recommendation doesn't exists already" do
+      it "creates it" do
         exercise = create(:exercise)
-        questions = create_list(:question, 6, exercise: exercise)
-        users = create_pair(:user)
-        team = create(:team, exercises: [exercise], users: users)
-
-        answers = []
-        questions.each { |question|
-          users.each { |user|
-            answers << create(
-              :answer,
-              team: team,
-              user: user,
-              question: question
-            )
-          }
-        }
+        question = create(:question, exercise: exercise)
+        team = create(:team, exercises: [exercise])
+        answers = create_list(:answer, 8, team: team, question: question)
 
         create(
-          :user_connection,
-          user_1: users[0],
-          user_2: users[1],
-          team: team,
+          :answer_connection,
+          answer_1: answers[0],
+          answer_2: answers[1],
           similarity: Figaro.env.similarity_threshold.to_f
         )
 
         create(
           :answer_connection,
-          answer_1: answers[2],
+          answer_1: answers[0],
+          answer_2: answers[2],
+          similarity: Figaro.env.similarity_threshold.to_f
+        )
+
+        create(
+          :answer_connection,
+          answer_1: answers[0],
           answer_2: answers[3],
           similarity: Figaro.env.similarity_threshold.to_f + 1
         )
@@ -40,7 +34,7 @@ describe Recommendator do
           :answer_connection,
           answer_1: answers[4],
           answer_2: answers[5],
-          similarity: Figaro.env.similarity_threshold.to_f - 1
+          similarity: Figaro.env.similarity_threshold.to_f + 1
         )
 
         create(
@@ -51,11 +45,53 @@ describe Recommendator do
         )
 
         described_class.new(team).search_and_create_recommendations
+
+        expect(Recommendation.count).to eq 2
+        expect(Recommendation.first.answers.count).to eq 4
+        expect(Recommendation.first.answers).to include(*answers.first(4).map(&:id))
+        expect(Recommendation.second.answers.count).to eq 2
+        expect(Recommendation.second.answers).to include(*answers[4..5].map(&:id))
       end
     end
 
-    context "when there aren't recommendations to be created" do
+    context "when recommendations already exists" do
+      it "doesn't creates it" do
+        exercise = create(:exercise)
+        question = create(:question, exercise: exercise)
+        team = create(:team, exercises: [exercise])
+        answers = create_pair(:answer, team: team, question: question)
 
+        create(
+          :recommendation,
+          team: team,
+          question: question,
+          answers: answers.map(&:id)
+        )
+
+        create(
+          :answer_connection,
+          answer_1: answers[0],
+          answer_2: answers[1],
+          similarity: Figaro.env.similarity_threshold.to_f
+        )
+
+        expect {
+          described_class.new(team).search_and_create_recommendations
+        }.to_not change(Recommendation, :count)
+      end
+    end
+  end
+
+  context "when there aren't recomendations to be created" do
+    it "doesn't create any recommendation" do
+      exercise = create(:exercise)
+      question = create(:question, exercise: exercise)
+      team = create(:team, exercises: [exercise])
+      answers = create_pair(:answer, team: team, question: question)
+
+      expect {
+        described_class.new(team).search_and_create_recommendations
+      }.to_not change(Recommendation, :count)
     end
   end
 end

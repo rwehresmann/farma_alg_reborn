@@ -1,5 +1,3 @@
-require 'utils/graph'
-
 class Recommendator
   def initialize(team)
     @team = team
@@ -10,9 +8,10 @@ class Recommendator
       graph = add_answers_connections_in_graph(question)
       connected_components = graph.connected_components
 
-      connected_components.each { |answers|
-        create_recommendation(question, answers.map(&:id))
-      }
+      connected_components.each do |connected_component|
+        users = get_users_from_connected_component
+        create_recommendation(question, users, answers)
+      end
     end
   end
 
@@ -20,7 +19,7 @@ class Recommendator
 
   def get_team_questions
     @team.exercises.each.inject([]) { |questions, exercise|
-      exercise.questions.each { |question| questions << question }
+      exercise.questions.map { |question| questions << question }
     }
   end
 
@@ -36,26 +35,22 @@ class Recommendator
     connections = get_simmilar_answers(question)
 
     connections.each { |connection|
-      graph.add_edge(connection.answer_1, connection.answer_2)
+      graph.add_edge(connection[:answer_1], connection[:answer_2])
     }
 
     graph
   end
 
-  def create_recommendation(question, answers_ids)
+  def get_users_from_connected_component(connected_component)
+    connected_component.map(&:user)
+  end
+
+  def create_recommendation(question, users, answers)
     Recommendation.create!(
       team: @team,
       question: question,
-      answers: answers_ids
-    ) unless recommendation_already_exists?(question, answers_ids)
-  end
-
-  def recommendation_already_exists?(question, answers_ids)
-    recommendations = Recommendation.where(question: question, team: @team)
-    recommendations.each { |recommendation|
-      return true if recommendation.answers.sort == answers_ids.sort
-    }
-
-    false
+      users: users,
+      answers: answers
+    )
   end
 end
