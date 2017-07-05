@@ -83,6 +83,12 @@ User.all.each do |user|
           FactoryGirl.create(:answer_test_case_result, answer: answer, test_case: test_case,
                                   output: "test", correct: correct)
         end
+
+        Recommendation.create!(
+          team: team,
+          question: question,
+          answers: Answer.first(50).sample(2).map(&:id)
+        )
       end
     end
   end

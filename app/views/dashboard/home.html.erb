@@ -9,7 +9,7 @@
           <h3 class="box-title">Últimas respostas das suas turmas</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-          <table id="teams-answer-table" class="table table-bordered table-hover dataTable">
+          <table id="teams-answer-table" class="table table-bordered table-hover">
             <thead>
               <th>Aluno</th>
               <th>Questão</th>
@@ -47,11 +47,34 @@
           <h3 class="box-title">Últimas recomendações automáticas para você</h3>
         </div><!-- /.box-header -->
         <div class="box-body">
-          The body of the box
+          <table id="teams-answer-table" class="table table-bordered table-hover">
+            <thead>
+              <th>Turma</th>
+              <th>Questão</th>
+              <th>Respostas</th>
+              <th>Data de recebimento</th>
+            </thead>
+
+            <tbody>
+              <% @last_recommendations.each do |recommendation| %>
+                <tr data-link="#" target="_blank">
+                  <td>
+                    <%= recommendation.team.name %>
+                  </td>
+                  <td>
+                    <%= recommendation.question.title %>
+                  </td>
+                  <td>
+                    <%= recommendation.answers.count %>
+                  </td>
+                  <td>
+                    <%= recommendation.created_at %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         </div><!-- /.box-body -->
-        <div class="box-footer">
-          The footer of the box
-        </div><!-- box-footer -->
       </div><!-- /.box -->
 
     </div>

@@ -47,7 +47,7 @@ class AnswersController < ApplicationController
         }
       }
     end
-    p @results
+
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
       vontade para realizar novas tentativas, mas a partir de agora, elas não
       incrementarão seu score nem surtirão qualquer efeito sobre o score desta

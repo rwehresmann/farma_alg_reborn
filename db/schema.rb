@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702131839) do
+ActiveRecord::Schema.define(version: 20170620000252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,13 +49,6 @@ ActiveRecord::Schema.define(version: 20170702131839) do
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
     t.index ["team_id"], name: "index_answers_on_team_id", using: :btree
     t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
-  end
-
-  create_table "answers_recommendations", force: :cascade do |t|
-    t.integer "answer_id"
-    t.integer "recommendation_id"
-    t.index ["answer_id"], name: "index_answers_recommendations_on_answer_id", using: :btree
-    t.index ["recommendation_id"], name: "index_answers_recommendations_on_recommendation_id", using: :btree
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
