@@ -15,8 +15,6 @@ RSpec.describe Recommendation, type: :model do
   describe "Relationships" do
     it { expect(relationship_type(Recommendation, :team)).to eq(:belongs_to) }
 
-    it { expect(relationship_type(Recommendation, :users)).to eq(:has_many) }
-
-    it { expect(relationship_type(Recommendation, :answers)).to eq(:has_many) }
+    it { expect(relationship_type(Recommendation, :question)).to eq(:belongs_to) }
   end
 end
