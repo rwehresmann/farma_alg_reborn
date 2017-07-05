@@ -1,0 +1,31 @@
+<table id="recommendations-table" class="table table-bordered table-hover">
+  <thead>
+    <th style="width: 170px">Turma</th>
+    <th>Exercício</th>
+    <th>Questão</th>
+    <th style="width: 5px">Respostas</th>
+    <th style="width: 170px">Data de recebimento</th>
+  </thead>
+
+  <tbody>
+    <% @recommendations.each do |recommendation| %>
+      <tr data-link="<%= recommendation_path(recommendation) %>" target="_blank">
+        <td>
+          <%= recommendation.team.name %>
+        </td>
+        <td>
+          <%= recommendation.question.exercise.title %>
+        </td>
+        <td>
+          <%= recommendation.question.title %>
+        </td>
+        <td class="text-center">
+          <%= recommendation.answers.count %>
+        </td>
+        <td>
+          <%= recommendation.created_at %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -57,7 +57,7 @@
 
             <tbody>
               <% @last_recommendations.each do |recommendation| %>
-                <tr data-link="#" target="_blank">
+                <tr data-link="<%= recommendation_path(recommendation) %>" target="_blank">
                   <td>
                     <%= recommendation.team.name %>
                   </td>

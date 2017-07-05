@@ -39,6 +39,7 @@ describe "User" do
         let(:question) { create(:question, exercise: exercise) }
         let(:test_case) { create(:test_case, question: question) }
         let(:team) { create(:team, owner: user) }
+        let(:recommendation) { create(:recommendation, team: team) }
 
         it { should be_able_to(:destroy, exercise) }
         it { should be_able_to(:update, exercise) }
@@ -48,6 +49,7 @@ describe "User" do
 
         it { should be_able_to(:destroy, test_case) }
         it { should be_able_to(:update, test_case) }
+        it { should be_able_to(:read, recommendation) }
 
         it { should be_able_to(:destroy, team) }
         it { should be_able_to(:answers, team) }
@@ -65,7 +67,7 @@ describe "User" do
         let(:question) { create(:question) }
         let(:test_case) { create(:test_case) }
         let(:team) { create(:team) }
-        let(:proibited_abilities) { [:update, :destroy] }
+        let(:recommendation) { create(:recommendation) }
 
         it { should_not be_able_to(:update, exercise) }
         it { should_not be_able_to(:destroy, exercise) }
@@ -85,6 +87,7 @@ describe "User" do
         it { should_not be_able_to(:rankings, team) }
         it { should_not be_able_to(:graph, team) }
         it { should_not be_able_to(:add_or_remove_exercise, team) }
+        it { should_not be_able_to(:read, recommendation) }
 
         context "when is enrolled in a team" do
           before { team.enroll(user) }

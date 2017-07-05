@@ -1,0 +1,5 @@
+<%= render 'shared/add_controller_js' %>
+
+$('#recommendations').empty();
+$('#recommendations').html('<%= j(render "recommendations/index/recommendations") %>');
+$('#pagination').html('<%= j(render "shared/paginate", object: @recommendations) %>')

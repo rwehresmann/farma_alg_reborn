@@ -37,6 +37,8 @@ Rails.application.routes.draw do
 
   resources :messages, only: [:index, :new, :create, :show]
 
+  resources :recommendations, only: [:index, :show]
+
   devise_for :users
   get 'dashboard/home'
   root to: 'dashboard#home'

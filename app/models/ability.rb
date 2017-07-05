@@ -29,6 +29,10 @@ class Ability
       end
 
       can [:show, :destroy], AnswerConnection
+
+      can :read, Recommendation do |recommendation|
+        recommendation.team.owner == user
+      end
     end
 
     can :create, Message
