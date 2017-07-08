@@ -76,6 +76,7 @@ GEM
     coffee_routes (1.1.1)
       actionpack (>= 3.2)
     concurrent-ruby (1.0.5)
+    daemons (1.2.4)
     database_cleaner (1.6.1)
     delayed_job (4.1.2)
       activesupport (>= 3.0, < 5.1)
@@ -276,6 +277,7 @@ DEPENDENCIES
   coderay (~> 1.1)
   coffee-rails (~> 4.2)
   coffee_routes
+  daemons
   database_cleaner (~> 1.0)
   delayed_job_active_record (~> 4.1)
   devise (~> 4.2)
@@ -308,4 +310,4 @@ DEPENDENCIES
   will_paginate (~> 3.1.0)
 
 BUNDLED WITH
-   1.14.6
+   1.15.0

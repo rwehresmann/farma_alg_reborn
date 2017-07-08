@@ -35,6 +35,7 @@ gem 'moss_ruby', git: 'https://github.com/rwehresmann/moss_ruby.git'
 # To compare text.
 gem 'amatch'
 gem 'delayed_job_active_record', '~> 4.1'
+gem 'daemons'
 gem 'whenever'
 gem 'cancancan', '~> 1.15'
 gem 'searchkick', '~> 2.1'
