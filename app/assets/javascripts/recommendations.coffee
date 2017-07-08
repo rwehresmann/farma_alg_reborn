@@ -1,6 +1,6 @@
 class Recommendations
   index: ->
-    $("tr[data-link]").click ->
+    $(document).on 'click', "tr[data-link]", ->
       url = $(this).data("link")
       window.open(url, "_blank")
 
