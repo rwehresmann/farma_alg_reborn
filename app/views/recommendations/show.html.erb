@@ -1,0 +1,82 @@
+<% provide(:url, url_for(:action => 'create', :controller => 'answers')) %>
+
+<div class="row">
+  <div class="col-md-6">
+
+    <%= render(
+      layout: 'shared/structures/box_default',
+      locals: { box_title: "Informações principais" }
+    ) do %>
+
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td><b>Turma</b></td>
+            <td><%= @recommendation.team.name %></td>
+          </tr>
+          <tr>
+            <td><b>Exercício</b></td>
+            <td><%= @recommendation.question.exercise.title %></td>
+          </tr>
+          <tr>
+            <td><b>Questão</b></td>
+            <td><%= @recommendation.question.title %></td>
+          </tr>
+          <tr>
+            <td><b>Alunos das respostas</b></td>
+            <td>
+              <ul>
+                <% @answers.each do |answer| %>
+                  <li><%= answer.user.name %></li>
+                <% end %>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <small>
+        Enviada em <b><%= @recommendation.created_at.strftime("%d/%m/%Y às %H:%M:%S") %></b>
+      </small>
+
+      <br></br>
+
+      <%= link_to(
+        "Enviar mensagens aos alunos",
+        new_message_path(
+          receiver_ids: ids_from_recommendation_users,
+          answer_ids: @recommendation.answers
+        ),
+        method: :get,
+        class: "btn btn-primary text-center pull-right",
+        target: "_blank"
+      ) %>
+    <% end %>
+
+  </div><!-- /.col-md-6 -->
+
+  <div class="col-md-6">
+
+    <%= render(
+      layout: 'shared/structures/box_default',
+      locals: { box_title: "Respostas relacionadas" }
+    ) do %>
+
+      <table class="table table-bordered">
+        <% @answers.each do |answer| %>
+          <tr>
+            <td>
+              <%= "#{answer.user.name} @#{answer.question.title}##{answer.attempt}"%>
+            </td>
+            <td>
+              <%= link_to "Visualizar resposta", answer_as_raw_url(answer), target: "_blank", class: "btn btn-block btn-primary btn-xs" %>
+              <%= link_to "Detalhes resposta", answer, target: "_blank", class: "btn btn-block btn-success btn-xs" %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+
+    <% end %>
+  </div>
+
+</div>

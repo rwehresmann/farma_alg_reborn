@@ -4,8 +4,9 @@ class RecommendationsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @recommendations = Recommendation.all
-      .order(created_at: :desc)
+    @recommendations = TeacherTeamsLastRecommendationsQuery
+      .new(current_user)
+      .call
       .paginate(
         page: params[:page],
         per_page: 15
@@ -14,5 +15,6 @@ class RecommendationsController < ApplicationController
 
   def show
     @recommendation = Recommendation.find(params[:id])
+    @answers = Answer.find(@recommendation.answers)
   end
 end
