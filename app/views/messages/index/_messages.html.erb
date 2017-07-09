@@ -1,4 +1,4 @@
-<table id="messagess-table" class="table table-bordered table-hover dataTable">
+<table id="messagess-table" class="table table-bordered table-hover">
   <thead>
     <th>Título</th>
     <th>Enviado por</th>
@@ -8,7 +8,7 @@
 
   <tbody>
     <% @messages.each do |message| %>
-      <tr data-link="<%= message_path(message) %>" target="_blank">
+      <tr data-link="<%= message_path(message) %>">
         <td>
           <%= message.title %>
         </td>

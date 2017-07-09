@@ -1,14 +1,5 @@
 class Messages
   index: ->
-    $("#answers-table").DataTable
-      "paging": false,
-      "lengthChange": true,
-      "searching": false,
-      "retrieve": true,
-      "ordering": true,
-      "info": false,
-      "autoWidth": true
-
     $('#messages-received').click =>
       $('#messages-sended').removeClass('active')
       $(this).addClass('active')
