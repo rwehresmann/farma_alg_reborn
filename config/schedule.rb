@@ -1,5 +1,7 @@
+ENV.each { |k, v| env(k, v) }
+
 set :output, 'log/whenever.log'
 
-every 2.hours do
-  runner "ComputeUserSimilarityJob.perform_later"
+every 1.minute do
+  rake "recommendate_answers"
 end
