@@ -14,7 +14,6 @@ class Recommendator
         create_recommendation(question, answers.map(&:id))
       }
     end
-    p @team
   end
 
   private
