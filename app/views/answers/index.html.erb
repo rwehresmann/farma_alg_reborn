@@ -1,20 +1,25 @@
-<%= form_tag answers_path, method: :get, remote: true, class: "form-inline" do %>
-  <div class="input-group margin", style="width: 100%">
-    <span class="input-group-btn">
-      <a class="btn btn-default btn-flat" data-toggle="collapse" data-target="#filters">
-        <i class="fa fa-filter"></i> Filtros
-      </a>
-    </span>
-  </div>
-  <div id="filters" class="collapse">
-    <br></br>
-    <%= render "filters" %>
-  </div>
-<% end %>
+<div class="row">
+  <div class="col-md-offset-1 col-md-10">
+    <%= form_tag answers_path, method: :get, remote: true, class: "form-inline" do %>
+      <div class="input-group margin", style="width: 100%">
+        <span class="input-group-btn">
+          <a class="btn btn-default btn-flat" data-toggle="collapse" data-target="#filters">
+            <i class="fa fa-filter"></i> Filtros
+          </a>
+        </span>
+      </div>
+      <div id="filters" class="collapse">
+        <br></br>
+        <%= render "filters" %>
+      </div>
+    <% end %>
+    
+    <div class="box box-body">
+      <div id="answers">
+        <%= render "answers" %>
+      </div>
 
-
-<div id="answers">
-  <%= render "answers" %>
+      <%= render "shared/paginate", object: @answers %>
+    </div>
+  </div>
 </div>
-
-<%= render "shared/paginate", object: @answers %>
