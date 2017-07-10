@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   scope :answers, as: :answers do
     get :connections, to: 'answers#connections'
+    post :log, to: 'answers#log'
   end
 
   resources :answers, only: [:index]

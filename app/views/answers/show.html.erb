@@ -87,5 +87,11 @@
       $(div).html("<%= escape_javascript(render partial: 'answer_content_modal', locals: { answer: @answer }) %>");
       $('body').append(div);
     });
+
+    $.ajax({
+      type: "POST",
+      url: "<%= answers_log_path %>",
+      dataType: "script"
+    });
   });
 </script>

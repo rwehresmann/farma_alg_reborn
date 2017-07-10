@@ -46,6 +46,8 @@ class AnswersController < ApplicationController
           output: result.output
         }
       }
+
+      Log.create!(operation: Log::ANSW_SHOW, user: current_user)
     end
 
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
@@ -68,6 +70,8 @@ class AnswersController < ApplicationController
   end
 
   def show
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
+
     respond_to do |format|
       format.html {
         @similar_answers = @answer.similar_answers(threshold: 10)
@@ -77,6 +81,7 @@ class AnswersController < ApplicationController
   end
 
   def show_as_raw
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
     render layout: false
   end
 
@@ -98,6 +103,10 @@ class AnswersController < ApplicationController
     end
 
     respond_to { |format| format.json { render json: @connections } }
+  end
+
+  def log
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
   end
 
   private
