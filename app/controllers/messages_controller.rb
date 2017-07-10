@@ -42,6 +42,7 @@ class MessagesController < ApplicationController
         title: @message.title
       ).send
 
+      Log.create!(operation: Log::MSG_SEND, user: current_user)
       flash[:success] = "Mensagem enviada ao(s) destinatário(s)!"
       redirect_to messages_url
     end

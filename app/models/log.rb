@@ -10,5 +10,5 @@ class Log < ApplicationRecord
 
   belongs_to :user
 
-  validates_presence_of :type
+  validates_presence_of :operation
 end
