@@ -9,7 +9,6 @@
         <br></br>
         <%= inline_users(@receivers) %>
       </div>
-      <% p @message %>
       <div class="box-body">
         <%= form_for @message do |f| %>
           <%= render 'shared/error_messages', object: f.object %>
@@ -17,6 +16,8 @@
           <% @receivers.each do |user| %>
             <%= hidden_field_tag "receiver_ids[]", user.id %>
           <% end %>
+
+          <%= hidden_field_tag "log", @log %>
 
           <div class="form-group">
             <%= f.label "Título" %>

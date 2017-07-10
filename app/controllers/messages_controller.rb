@@ -22,6 +22,7 @@ class MessagesController < ApplicationController
       @message.title = previous_message.title
     end
     @receivers = build_receivers_array
+    @log = params[:log]
   end
 
   def create
@@ -43,6 +44,8 @@ class MessagesController < ApplicationController
       ).send
 
       Log.create!(operation: Log::MSG_SEND, user: current_user)
+      Log.create!(operation: params[:log], user: current_user) unless params[:log].blank? || params[:log].nil?
+
       flash[:success] = "Mensagem enviada ao(s) destinatário(s)!"
       redirect_to messages_url
     end

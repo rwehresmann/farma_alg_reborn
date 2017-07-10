@@ -45,7 +45,8 @@
         "Enviar mensagens aos alunos",
         new_message_path(
           receiver_ids: ids_from_recommendation_users,
-          answer_ids: @recommendation.answers
+          answer_ids: @recommendation.answers,
+          log: Log::RECOM_SEND
         ),
         method: :get,
         class: "btn btn-primary text-center pull-right",
