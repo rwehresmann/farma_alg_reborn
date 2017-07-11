@@ -4,7 +4,7 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_question, only: [:new, :create]
-  before_action :find_answer, only: [:show, :show_as_raw]
+  before_action :find_answer, only: [:show, :show_as_raw, :log]
   before_action :save_answer_url, only: [:show]
 
   def index
@@ -35,6 +35,12 @@ class AnswersController < ApplicationController
     @results = []
 
     if selected_answer
+      Log.create!(
+        operation: Log::ANSW_SHOW,
+        user: current_user,
+        question: selected_answer.question
+      )
+
       @content = selected_answer.content
 
       results = AnswerTestCaseResult.where(answer: selected_answer)
@@ -46,8 +52,6 @@ class AnswersController < ApplicationController
           output: result.output
         }
       }
-
-      Log.create!(operation: Log::ANSW_SHOW, user: current_user)
     end
 
     flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
@@ -70,18 +74,20 @@ class AnswersController < ApplicationController
   end
 
   def show
-    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user, question: @answer.question)
 
     respond_to do |format|
       format.html {
-        @similar_answers = @answer.similar_answers(threshold: 10)
+        @similar_answers = @answer.similar_answers(
+          threshold: Figaro.env.similarity_threshold.to_f
+        )
       }
       format.js { @node_html_id = params[:node_html_id] }
     end
   end
 
   def show_as_raw
-    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user, question: @answer.question)
     render layout: false
   end
 
@@ -106,7 +112,7 @@ class AnswersController < ApplicationController
   end
 
   def log
-    Log.create!(operation: Log::ANSW_SHOW, user: current_user)
+    Log.create!(operation: Log::ANSW_SHOW, user: current_user, question: @answer.question)
   end
 
   private

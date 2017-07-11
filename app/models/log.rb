@@ -8,6 +8,7 @@ class Log < ApplicationRecord
   ANS_SEND    = "answ_send"
 
   belongs_to :user
+  belongs_to :question, optional: true
 
   validates_presence_of :operation
 end
