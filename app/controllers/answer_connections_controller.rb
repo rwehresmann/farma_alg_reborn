@@ -14,6 +14,8 @@ class AnswerConnectionsController < ApplicationController
   def destroy
     @connection.destroy
 
+    Log.create!(operation: Log::EDGE_REJECT, user: current_user)
+
     respond_to do |format|
       format.js
       format.html do
