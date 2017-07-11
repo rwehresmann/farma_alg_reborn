@@ -140,6 +140,8 @@ class TeamsController < ApplicationController
                  array << answer_object_to_graph(answer)
               }
 
+    Log.create!(operation: Log::ANSW_SEARCH, user: current_user)
+
     respond_to { |format|
       format.js { render "teams/graph/answers" }
     }
