@@ -16,7 +16,9 @@ class MessagesController < ApplicationController
   def new
     @message = Message.new
     @message.content = links_to_markdown
+    @question = Answer.find(params[:answer_ids].first).question
     previous_message = Message.find_by(id: params[:previous_message_id])
+
     if previous_message
       @message.content += markdown_quote_message(previous_message)
       @message.title = previous_message.title
@@ -28,6 +30,7 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
     @receivers = build_receivers_array
+    @question = Question.find(params[:question_id])
 
     if @message.title.empty? || @message.content.empty?
       flash[:danger] = "Por favor forneça um titúlo e conteúdo para mensagem!"
@@ -44,7 +47,7 @@ class MessagesController < ApplicationController
       ).send
 
       Log.create!(operation: Log::MSG_SEND, user: current_user)
-      Log.create!(operation: params[:log], user: current_user) unless params[:log].blank? || params[:log].nil?
+      Log.create!(operation: params[:log], user: current_user, question: @question) unless params[:log].blank? || params[:log].nil?
 
       flash[:success] = "Mensagem enviada ao(s) destinatário(s)!"
       redirect_to messages_url

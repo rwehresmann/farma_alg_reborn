@@ -21,6 +21,8 @@
 
           <%= hidden_field_tag "log", @log %>
 
+          <%= hidden_field_tag "question_id", @question.id %>
+
           <div class="form-group">
             <%= f.label "Título" %>
             <%= f.text_field :title, class: "form-control", autofocus: true %>
