@@ -23,7 +23,7 @@ class AnswersController < ApplicationController
       .between_dates(date_range[0], date_range[1])
       .correct_status(correct)
       .order(created_at: :desc)
-      .paginate(page: params[:page], per_page: 30)
+      .paginate(page: params[:page], per_page: 15)
   end
 
   def new

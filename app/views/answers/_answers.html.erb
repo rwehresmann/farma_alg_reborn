@@ -11,7 +11,7 @@
 
   <tbody>
     <% @answers.each do |answer| %>
-      <tr role="row" class="odd" data-link="<%= new_answer_question_path(answer.question, answer.team, answer_id: answer.id) %>" target="_blank">
+      <tr role="row" class="odd" data-link="<%= new_answer_question_path(answer.question, answer.team, answer_id: answer.id) %>" >
         <td>
           <%= answer.team.name %>
         </td>
