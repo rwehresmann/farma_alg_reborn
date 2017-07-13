@@ -70,7 +70,7 @@ crumb :teams do
 end
 
 crumb :team do |team|
-  link team.name, team
+  link team.name, exercises_team_path(team)
   parent :teams
 end
 
