@@ -10,7 +10,7 @@ class AnswersController < ApplicationController
   def index
     date_range = split_date_range
 
-    if params[:correct]
+    unless params[:correct].blank?
       correct = params[:correct] == "true" ? true : false
     else
       correct = nil
