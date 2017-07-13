@@ -1,3 +1,5 @@
+<%= provide(:header, "Turma '#{@team.name}'") %>
+
 <%= render 'teams/team_menu', team: @team do %>
   <%= render 'teams/users/users' %>
 <% end %>

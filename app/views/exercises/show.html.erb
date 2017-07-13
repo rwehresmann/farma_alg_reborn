@@ -1,3 +1,5 @@
+<%= provide(:header, "Exercício '#{@exercise.title}'") %>
+
 <% breadcrumb :exercise, @exercise %>
 
 <%= link_to "Deletar", @exercise, method: :delete,

@@ -1,3 +1,5 @@
+<%= provide(:header, "Casos de teste da questão '#{@question.title}'") %>
+
 <% breadcrumb :test_cases, @question %>
 
 <%= link_to "Criar novo caso de teste", new_question_test_case_path(@question),

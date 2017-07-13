@@ -1,3 +1,5 @@
+<%= provide(:header, "Questões do exercício '#{@exercise.title}'") %>
+
 <% breadcrumb :questions, @exercise %>
 
 <%= link_to "Criar nova questão", new_exercise_question_path(@exercise),

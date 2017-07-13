@@ -1,3 +1,5 @@
+<%= provide(:header, "Responder questão '#{@question.title}'") %>
+
 <% provide(:url, url_for(:action => 'create', :controller => 'answers')) %>
 
 <% breadcrumb :new_answer, @team, @question %>

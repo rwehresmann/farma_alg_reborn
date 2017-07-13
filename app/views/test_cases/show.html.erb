@@ -1,3 +1,5 @@
+<%= provide(:header, "Caso de teste '#{@test_case.title}'") %>
+
 <% breadcrumb :test_case, @test_case %>
 
 <%= link_to "Deletar", @test_case, method: :delete,

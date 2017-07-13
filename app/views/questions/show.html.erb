@@ -1,3 +1,5 @@
+<%= provide(:header, "Questão '#{@question.title}'") %>
+
 <% breadcrumb :question, @question %>
 
 <%= link_to '#', class: "btn btn-primary pull-right test-open",
