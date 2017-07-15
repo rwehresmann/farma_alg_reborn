@@ -2,10 +2,70 @@
 
 <% breadcrumb :questions, @exercise %>
 
-<%= link_to "Criar nova questão", new_exercise_question_path(@exercise),
-                                  class: "btn btn-primary pull-right" %>
+<%= link_to(
+  "Criar nova questão",
+  new_exercise_question_path(@exercise),
+  class: "btn btn-primary pull-right"
+) %>
+
+<button type="button" data-toggle= "collapse" data-target= "#mapping" class="btn btn-primary pull-right" style="margin-right: 10px">
+  Exibir mapeamento de dependências
+</button>
+
 <br></br>
 <br></br>
+
+<div id="mapping" class="collapse">
+  <div class="box box-default">
+    <div class="box-body">
+      <table class="table table-bordered">
+        <thead>
+          <th>Questão</th>
+          <th>Dependências AND (todas devem ser respondidas)</th>
+          <th>Depedências OR (ao menos uma delas deve ser respondida)</th>
+        </thead>
+
+        <tbody>
+          <% @exercise.questions.each do |question| %>
+            <tr>
+              <td>
+                <%= link_to question.title, question %>
+              </td>
+              <td>
+                <ul>
+                  <%
+                    QuestionDependencyQuery
+                      .new(question.question_dependencies)
+                      .dependencies_by_operator("AND").map(&:question_2)
+                      .each do |dependency|
+                  %>
+                        <li>
+                          <%= link_to dependency.title, dependency %>
+                        </li>
+                     <% end %>
+                </ul>
+              </td>
+
+              <td>
+                <ul>
+                  <% QuestionDependencyQuery
+                     .new(question.question_dependencies)
+                     .dependencies_by_operator("OR").map(&:question_2)
+                     .each do |dependency|
+                  %>
+                        <li>
+                          <%= link_to dependency.title, dependency %>
+                        </li>
+                     <% end %>
+                </ul>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <% @questions.each do |question| %>
   <div class="box box-solid box-default">
