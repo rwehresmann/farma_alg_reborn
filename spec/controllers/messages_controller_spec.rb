@@ -31,6 +31,7 @@ RSpec.describe MessagesController, type: :controller do
   describe "GET #new" do
     subject {
       get :new, params: {
+        answer_ids: [create(:answer).id],
         receiver_ids: [create(:user).id],
         previous_message_id: create(:answer).id
       }
@@ -72,6 +73,7 @@ RSpec.describe MessagesController, type: :controller do
           expect {
             post :create, {
               params: {
+                question_id: create(:question).id,
                 receiver_ids: [create(:user)],
                 message: attributes_for(:message, title: "")
               }
@@ -94,6 +96,7 @@ RSpec.describe MessagesController, type: :controller do
           expect {
             post :create, {
               params: {
+                question_id: create(:question).id,
                 receiver_ids: [create(:user)],
                 message: attributes_for(:message, content: "")
               }
@@ -116,6 +119,7 @@ RSpec.describe MessagesController, type: :controller do
           expect {
             post :create, {
               params: {
+                question_id: create(:question).id,
                 message: attributes_for(:message)
               }
             }
@@ -137,6 +141,7 @@ RSpec.describe MessagesController, type: :controller do
           expect {
             post :create, {
               params: {
+                question_id: create(:question).id,
                 receiver_ids: [create(:user)],
                 message: attributes_for(:message)
               }
