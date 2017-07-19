@@ -11,7 +11,9 @@ So FARMA-ALG-REBORN it is a tool to automatically save and analise these outputs
 
 Originally, [FARMA-ALG](https://github.com/alexkutzke/farma_alg) was developed by [Alex Kutzke](https://github.com/alexkutzke) in the Federal University of Paraná. FARMA-ALG-REBORN is a new implementation of the tool. This implementation intend to bring back the original features of the tool with upgrades, plus a module of gamification. 
 
-The implementation is in course and constanttly updated in this repository.
+The implementation is in course and constantly updated in this repository. 
+
+**Please note:** Deadlines issues made me ignore some good practices in code to have a finished version of the tool to be tested. This is a result of a search project, and should be evaluated for its purpose and functionality. A lot of code refactor can be done, and future steps of this work (after evaluate its practical result) include this. 
 
 ## Dependencies
 
