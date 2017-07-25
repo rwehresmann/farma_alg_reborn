@@ -13,7 +13,9 @@ Originally, [FARMA-ALG](https://github.com/alexkutzke/farma_alg) was developed b
 
 The implementation is in course and constantly updated in this repository. 
 
-**Please note:** Deadlines issues made me ignore some good practices in code to have a finished version of the tool to be tested. This is a result of a search project, and should be evaluated for its purpose and functionality. A lot of code refactor can be done, and future steps of this work (after evaluate its practical result) include this. 
+**Please note:** 
+
+> Deadlines issues allied to project scope changes made me ignore some good practices in code to have a finished version of the tool to be tested. This is a result of a search project, and should be evaluated for its purpose and functionality. A lot of code refactor can be done, and future steps of this work (after evaluate its practical result) include this. 
 
 ## Dependencies
 
