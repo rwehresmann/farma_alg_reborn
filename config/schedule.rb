@@ -9,3 +9,7 @@ end
 every :day, at: "12pm" do
   rake "update_initial_ranking_day"
 end
+
+every 1.minute do
+  runner "puts 'CALLED!'"
+end
