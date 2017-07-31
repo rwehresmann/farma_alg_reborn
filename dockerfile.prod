@@ -20,6 +20,11 @@ ENV RACK_ENV production
 
 COPY . $APP
 
+RUN bundle exec whenever --update-crontab
+RUN service cron start
+
+RUN bundle exec bin/delayed_job start
+
 # Precompile Rails assets. We set a dummy secret key
 RUN bundle exec rake SECRET_KEY_BASE=farma_alg_reborn  assets:precompile
 
