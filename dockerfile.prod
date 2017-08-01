@@ -24,7 +24,3 @@ COPY . $APP
 RUN bundle exec rake SECRET_KEY_BASE=farma_alg_reborn  assets:precompile
 
 COPY Gemfile Gemfile.lock $APP/
-
-RUN bundle exec whenever --update-crontab
-
-CMD bundle exec bin/delayed_job start && service cron start
