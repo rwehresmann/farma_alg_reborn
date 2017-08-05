@@ -8,7 +8,7 @@
     <% exercise.questions.each_with_index do |question, index| %>
       <tr>
         <td><%= index %>.</td>
-        <td><%= link_to_if(dependency_checker.able_to_answer?(question), question.title, new_answer_question_url(question, team)) %></td>
+        <td><%= link_to_if(dependency_checker.able_to_answer?(question), question.title, new_answer_question_path(question, team)) %></td>
         <td>
           <%= raw question_status(question, team) %>
         </td>
