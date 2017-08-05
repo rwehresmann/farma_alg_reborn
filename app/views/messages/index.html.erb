@@ -6,7 +6,6 @@
       <%= link_to(
         "Mensagens recebidas",
         messages_path(received: true),
-        remote: true,
         id: "messages-received",
         class: "btn btn-default active"
       ) %>
@@ -14,7 +13,6 @@
       <%= link_to(
         "Mensagens enviadas",
         messages_path(sended: true),
-        remote: true,
         id: "messages-sended",
         class: "btn btn-default"
       ) %>

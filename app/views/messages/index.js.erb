@@ -1,5 +1,0 @@
-<%= render 'shared/add_controller_js' %>
-
-$('#messages').empty();
-$('#messages').html('<%= j(render "messages/index/messages") %>');
-$('#pagination').html('<%= j(render "shared/paginate", object: @messages) %>')
