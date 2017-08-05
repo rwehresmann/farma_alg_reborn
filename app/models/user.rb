@@ -14,11 +14,11 @@ class User < ApplicationRecord
   validates_inclusion_of :teacher, in: [true, false]
   validates_inclusion_of :admin, in: [true, false]
 
-  has_many :exercises
-  has_many :answers
-  has_many :teams_created, class_name: :Team, foreign_key: :owner_id
+  has_many :exercises, dependent: :destroy
+  has_many :answers, dependent: :destroy
+  has_many :teams_created, class_name: :Team, foreign_key: :owner_id, dependent: :destroy
   has_and_belongs_to_many :teams
-  has_many :comments
+  has_many :comments, dependent: :destroy
   has_many :messages_received, class_name: :Message, foreign_key: :receiver_id
   has_many :messages_sended, class_name: :Message, foreign_key: :sender_id
 
