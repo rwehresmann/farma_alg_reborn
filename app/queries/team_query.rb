@@ -4,6 +4,6 @@ class TeamQuery
   end
 
   def active_teams
-    Team.where(active: true)
+    Team.where(active: true).order(created_at: :desc)
   end
 end
