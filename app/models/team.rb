@@ -3,8 +3,8 @@ class Team < ApplicationRecord
   has_secure_password
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id"
-  has_many :answers
-  has_many :recommendations
+  has_many :answers, dependent: :destroy
+  has_many :recommendations, dependent: :destroy
   has_and_belongs_to_many :users
   has_and_belongs_to_many :exercises
 

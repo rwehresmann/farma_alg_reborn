@@ -11,13 +11,12 @@ class Answer < ApplicationRecord
   # The relationship from AnswerConnection is symmetrical, and so we need
   # to check both foreign keys (answer_1 and answer_2) to discover if the
   # connection is made or not.
-  has_many :answer_connections_1, class_name: "AnswerConnection", foreign_key: :answer_1_id
-  has_many :answer_connections_2, class_name: "AnswerConnection", foreign_key: :answer_2_id
+  has_many :answer_connections_1, class_name: "AnswerConnection", foreign_key: :answer_1_id, dependent: :destroy
+  has_many :answer_connections_2, class_name: "AnswerConnection", foreign_key: :answer_2_id, dependent: :destroy
 
-  has_many :test_cases_results, class_name: "AnswerTestCaseResult"
+  has_many :test_cases_results, class_name: "AnswerTestCaseResult", dependent: :destroy
   has_many :test_cases, through: :test_cases_results
-  has_many :comments
-
+  
   scope :by_user, -> (user) do
     return unless user.present?
     where(user: user)

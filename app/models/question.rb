@@ -8,9 +8,9 @@ class Question < ApplicationRecord
   validates_inclusion_of :operation, in: ["challenge", "task"]
 
   belongs_to :exercise
-  has_many :test_cases
-  has_many :answers
-  has_many :question_dependencies, foreign_key: :question_1_id
+  has_many :test_cases, dependent: :destroy
+  has_many :answers, dependent: :destroy
+  has_many :question_dependencies, foreign_key: :question_1_id, dependent: :destroy
   has_many :dependencies, through: :question_dependencies, source: :question_2
 
 
