@@ -21,7 +21,9 @@
 
           <%= hidden_field_tag "log", @log %>
 
-          <%= hidden_field_tag "question_id", @question.id %>
+          <% if @question %>
+            <%= hidden_field_tag "question_id", @question.id %>
+          <% end %>
 
           <div class="form-group">
             <%= f.label "Título" %>

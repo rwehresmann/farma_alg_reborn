@@ -16,7 +16,7 @@ class MessagesController < ApplicationController
   def new
     @message = Message.new
     @message.content = links_to_markdown
-    @question = Answer.find(params[:answer_ids].first).question
+    @question = Answer.find_by(id: params[:answer_ids].first).question if params[:answer_ids]
     previous_message = Message.find_by(id: params[:previous_message_id])
 
     if previous_message
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
     @receivers = build_receivers_array
-    @question = Question.find(params[:question_id])
+    @question = Question.find_by(id: params[:question_id])
 
     if @message.title.empty? || @message.content.empty?
       flash[:danger] = "Por favor forneça um titúlo e conteúdo para mensagem!"
