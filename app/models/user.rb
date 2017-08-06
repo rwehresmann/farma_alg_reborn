@@ -18,7 +18,6 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :teams_created, class_name: :Team, foreign_key: :owner_id, dependent: :destroy
   has_and_belongs_to_many :teams
-  has_many :comments, dependent: :destroy
   has_many :messages_received, class_name: :Message, foreign_key: :receiver_id
   has_many :messages_sended, class_name: :Message, foreign_key: :sender_id
 
