@@ -21,6 +21,14 @@
             <%= f.number_field :score, min: 1, class: "form-control" %>
           </div>
 
+          <div class="form-group">
+            <%= f.radio_button :operation, "task", checked: true, class: "radio-inline" %>
+            <%= f.label "Tarefa" %>
+
+            <%= f.radio_button :operation, "challenge", class: "radio-inline" %>
+            <%= f.label "Desafio" %>
+          </div>
+
           <div class="box-body">
             <a style="cursor: pointer" data-toggle="collapse" data-target="#and-dependencies">
               <i class="fa fa-plus-square"></i> Dependências
