@@ -74,7 +74,7 @@ class MessagesController < ApplicationController
     answer_ids = params[:answer_ids]
     answer_ids.nil? ? [] : answer_ids.each_with_index do |answer_id, index|
       answer = Answer.find(answer_id)
-      content += "[Link para resposta #{index + 1}](#{answer_as_raw_url(answer)})\n\n"
+      content += "[Link para resposta #{index + 1}](#{answer_as_raw_path(answer)})\n\n"
     end
 
     content
