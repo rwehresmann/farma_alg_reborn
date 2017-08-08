@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+=begin
 describe "Enroll in a team", type: :feature, js: true do
   let!(:team) { create(:team) }
 
@@ -32,3 +32,4 @@ describe "Enroll in a team", type: :feature, js: true do
     end
   end
 end
+=end
