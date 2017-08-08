@@ -6,9 +6,9 @@
 
   <div class="box-footer">
     <% if team.enrolled?(current_user) || current_user == team.owner %>
-      <% if can? :unenroll, team %>
-        <%= link_to "Cancelar matrícula", unenroll_team_path(team), method: :post %>
-      <% end %>
+      <% # if can? :unenroll, team %>
+        <% #link_to "Cancelar matrícula", unenroll_team_path(team), method: :post %>
+      <% # end %>
 
       <div class="pull-right">
         <%= link_to "Ver", rankings_team_path(team) %>
@@ -21,12 +21,12 @@
           <% end %>
       </div>
 
-    <% else %>
+    <% # else %>
 
-      <%= form_tag enroll_team_path(team), remote: true, class: "form-inline", id: "enroll-form" do %>
-        <%= password_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
-        <%= submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
-      <% end %>
+      <% #form_tag enroll_team_path(team), remote: true, class: "form-inline", id: "enroll-form" do %>
+        <% # password_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
+        <% # submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
+      <% # end %>
 
     <% end %>
 
