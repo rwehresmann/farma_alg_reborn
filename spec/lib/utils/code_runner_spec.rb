@@ -10,16 +10,9 @@ describe CodeRunner do
         let(:code_runner) { CodeRunner.new(file_name: SecureRandom.hex,
                                            extension: "pas", source_code: source_code) }
 
-        context "of one param" do
-          subject { code_runner.run(inputs: [1]) }
-          it { expect(subject).to match("There are two parameters required. You provided 1") }
-        end
+        subject { code_runner.run(inputs: [4, 3]) }
 
-        context "of more than one param" do
-          subject { code_runner.run(inputs: [1, 2]) }
-
-          it { expect(subject).to match("1 + 2 = 3\n") }
-        end
+        it { expect(subject).to match("7\n") }
       end
 
       context "when source code is right" do

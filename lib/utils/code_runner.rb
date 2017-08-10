@@ -1,3 +1,5 @@
+require 'open3'
+
 class CodeRunner
   PATH_TO_SAVE = "tmp/"
   COMPILER_OUTPUT_END_FILE_NAME = "_compiler_output"
@@ -26,7 +28,7 @@ class CodeRunner
     case extension
       when "pas"
         command = "./#{PATH_TO_SAVE}#{file_name}"
-        `#{to_exec(command, options[:inputs])}`
+        to_exec(command, options[:inputs])
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -47,8 +49,13 @@ class CodeRunner
 
     # Join command to be executed with the informed params, if there are params.
     def to_exec(command, params)
-      params.each { |param| command.concat(" #{param}") } if params
-      command
+      stdin, stdout = Open3.popen2(command)
+      params.each { |param| stdin.puts(param) } if params
+      output = stdout.read
+      stdin.close
+      stdout.close
+
+      output
     end
 
     # If file with the compiler log is created, that points that the source code
