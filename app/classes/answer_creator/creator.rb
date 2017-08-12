@@ -11,18 +11,22 @@ module AnswerCreator
       @answer.attempt = get_attempt_number
       @answer.correct = correct?
 
+      correct_answered_previously = already_correct_answered?
+
       ActiveRecord::Base.transaction do
         @answer.save!
         save_test_cases_results
 
-        ScoreIncreaser.new(
-          user: @answer.user,
-          team: @answer.team,
-          question: @answer.question
-        ).increase
+        if correct? && !correct_answered_previously
+          ScoreIncreaser.new(
+            user: @answer.user,
+            team: @answer.team,
+            question: @answer.question
+          ).increase
+        end
       end
 
-      ComputeAnswerSimilarityJob.perform_later(@answer)
+      ComputeAnswerSimilarityJob.perform_later(@answer) if !correct_answered_previously
     end
 
     def correct?
@@ -31,6 +35,18 @@ module AnswerCreator
     end
 
     private
+
+    def already_correct_answered?
+      correct_answer = Answer
+        .where(
+          user: @answer.user,
+          team: @answer.team,
+          question: @answer.question,
+          correct: true
+        ).limit(1)
+
+      !correct_answer.empty?
+    end
 
     def save_test_cases_results
       @test_cases_results.each { |result|
