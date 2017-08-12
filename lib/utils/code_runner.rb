@@ -1,9 +1,9 @@
 require 'open3'
 
 class CodeRunner
-  PATH_TO_SAVE = "tmp/"
+  PATH_TO_SAVE = "tmp/#{SecureRandom.hex}"
   COMPILER_OUTPUT_END_FILE_NAME = "_compiler_output"
-  COMPILED_LANGUAGES = ["pas"]
+  COMPILED_LANGUAGES = ["pas", "java"]
 
   attr_accessor :file_name, :extension, :source_code
 
@@ -29,6 +29,12 @@ class CodeRunner
       when "pas"
         command = "./#{PATH_TO_SAVE}#{file_name}"
         to_exec(command, options[:inputs])
+      when "java"
+        inputs = options[:inputs]
+        command = "java #{PATH_TO_SAVE}#{file_name}"
+        inputs.each { |param| command.concat(" #{param}") } if inputs
+
+        command
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -38,10 +44,12 @@ class CodeRunner
     save_source_code
 
     case @extension
-      when "pas"
-        `fpc #{@file_path} -Fe#{@compiler_log_path}`
-      else
-        raise "CodeRunner doesn't support '.#{extension}' files."
+    when "pas"
+      `fpc #{@file_path} -Fe#{@compiler_log_path}`
+    when "java"
+      `javac #{@file_path}`
+    else
+      raise "CodeRunner doesn't support '.#{extension}' files."
     end
   end
 
