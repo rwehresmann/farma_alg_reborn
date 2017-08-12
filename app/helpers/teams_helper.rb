@@ -59,7 +59,6 @@ module TeamsHelper
     positions_balance =
       user_score.start_position_on_day.nil? || user_score.position.nil? ? 0 :
       user_score.start_position_on_day - user_score.position
-      byebug
 
     if positions_balance == 1
       raw "<div class='pull-right' style='color: green'>Você avançou #{positions_balance} posição no dia de hoje</div>"
@@ -69,7 +68,7 @@ module TeamsHelper
       raw "<div class='pull-right' style='color: green'>Você não avançou mas também não perdeu nenhuma posição no dia de hoje</div>"
     else
       lost_positions = positions_balance.abs
-      
+
       if lost_positions > 1
         raw "<div class='pull-right' style='color: red'>Você perdeu #{lost_positions} posições no dia de hoje</div>"
       else
