@@ -49,13 +49,24 @@ class CodeRunner
 
     # Join command to be executed with the informed params, if there are params.
     def to_exec(command, params)
-      stdin, stdout = Open3.popen2(command)
-      params.each { |param| stdin.puts(param) } if params
-      output = stdout.read
-      stdin.close
-      stdout.close
+      Open3.popen3(command) do |stdin, stdout, stderr, w|
+        begin
+          Timeout.timeout(10) do
+            params.each { |param| stdin.puts(param) } if params
+            output = stdout.read
+            error = stderr.read
+            stdin.close
+            stdout.close
+            stderr.close
 
-      output
+            error == "" ? output : error
+          end
+        rescue Timeout::Error
+          # here you know that the process took longer than 10 seconds
+          Process.kill("KILL", w.pid)
+          "Erro de timeout. Possívelmente, seu código entrou num loop infinito."
+        end
+      end
     end
 
     # If file with the compiler log is created, that points that the source code
