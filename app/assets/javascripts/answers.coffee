@@ -4,8 +4,10 @@ class Answers
       url = $(this).data("link")
       window.open(url, "_blank")
   new: ->
-    new_height = $('.content-wrapper').height() + $('#test-results').height() +
-      $('#error_explanation').height()
+    new_height = $('.content-wrapper').height() +
+      $('#test-results').height() +
+      $('#error_explanation').height() +
+      100
     $('.content-wrapper').height(new_height)
 
     $("a").preventDefault
