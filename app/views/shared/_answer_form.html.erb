@@ -34,7 +34,7 @@
 
   var editor = ace.edit("editor_div");
   editor.setTheme("ace/theme/twilight");
-  editor.getSession().setMode("ace/mode/pascal");
+  editor.getSession().setMode("ace/mode/java");
   editor.insert("<%= escape_javascript(raw @content) %>");
 
   // When click put ace editor content in form hidden textarea.

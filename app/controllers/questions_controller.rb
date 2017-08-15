@@ -103,7 +103,8 @@ class QuestionsController < ApplicationController
           :description,
           :exercise_id,
           :operation,
-          :score
+          :score,
+          :main_class_name
         )
     end
 

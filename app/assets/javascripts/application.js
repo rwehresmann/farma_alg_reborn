@@ -22,7 +22,7 @@
 //= require simplemde/dist/simplemde.min
 //= require ace-builds/src-min/ace
 //= require ace-builds/src-min/theme-twilight
-//= require ace-builds/src-min/mode-pascal
+//= require ace-builds/src-min/mode-java
 //= require vivagraphjs/dist/vivagraph
 //= require js-routes
 //= require coffee_routes

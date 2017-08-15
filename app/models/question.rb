@@ -4,7 +4,7 @@ class Question < ApplicationRecord
   before_destroy :destroy_dependencies
   before_create :normalize_operation
 
-  validates_presence_of :title, :description, :score
+  validates_presence_of :title, :description, :score, :main_class_name
   validates_inclusion_of :operation, in: ["challenge", "task"]
 
   belongs_to :exercise
@@ -12,7 +12,6 @@ class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :question_dependencies, foreign_key: :question_1_id, dependent: :destroy
   has_many :dependencies, through: :question_dependencies, source: :question_2
-
 
   # Check what is the dependency operator between two questions.
   def dependency_with(question)

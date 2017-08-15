@@ -1,7 +1,6 @@
 require 'open3'
 
 class CodeRunner
-  PATH_TO_SAVE = "tmp/#{SecureRandom.hex}"
   COMPILER_OUTPUT_END_FILE_NAME = "_compiler_output"
   COMPILED_LANGUAGES = ["pas", "java"]
 
@@ -11,10 +10,11 @@ class CodeRunner
   # @compiler_log_path = the same that @file_path, but instead the source code,
   #                      is the compiler log that is saved.
   def initialize(args = {})
+    @path_to_save = "tmp/#{SecureRandom.hex}/"
     @file_name = args[:file_name]
     @extension = args[:extension]
-    @file_path = "#{PATH_TO_SAVE}#{file_name}.#{extension}"
-    @compiler_log_path = "#{PATH_TO_SAVE}#{file_name}#{COMPILER_OUTPUT_END_FILE_NAME}.txt"
+    @file_path = "#{@path_to_save}#{file_name}.#{extension}"
+    @compiler_log_path = "#{@path_to_save}#{file_name}#{COMPILER_OUTPUT_END_FILE_NAME}.txt"
     @source_code = args[:source_code]
   end
 
@@ -27,14 +27,11 @@ class CodeRunner
 
     case extension
       when "pas"
-        command = "./#{PATH_TO_SAVE}#{file_name}"
+        command = "./#{@path_to_save}#{file_name}"
         to_exec(command, options[:inputs])
       when "java"
-        inputs = options[:inputs]
-        command = "java #{PATH_TO_SAVE}#{file_name}"
-        inputs.each { |param| command.concat(" #{param}") } if inputs
-
-        command
+        command = "cd #{@path_to_save} && java #{file_name}"
+        to_exec(command, options[:inputs])
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -47,7 +44,7 @@ class CodeRunner
     when "pas"
       `fpc #{@file_path} -Fe#{@compiler_log_path}`
     when "java"
-      `javac #{@file_path}`
+      `javac #{@file_path} 2> #{@compiler_log_path}`
     else
       raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -57,13 +54,24 @@ class CodeRunner
 
     # Join command to be executed with the informed params, if there are params.
     def to_exec(command, params)
-      stdin, stdout = Open3.popen2(command)
-      params.each { |param| stdin.puts(param) } if params
-      output = stdout.read
-      stdin.close
-      stdout.close
+      Open3.popen3(command) do |stdin, stdout, stderr, w|
+        begin
+          Timeout.timeout(10) do
+            params.each { |param| stdin.puts(param) } if params
+            output = stdout.read
+            error = stderr.read
+            stdin.close
+            stdout.close
+            stderr.close
 
-      output
+            error == "" ? output : error
+          end
+        rescue Timeout::Error
+          # here you know that the process took longer than 10 seconds
+          Process.kill("KILL", w.pid)
+          "Erro de timeout. Possívelmente, seu código entrou num loop infinito."
+        end
+      end
     end
 
     # If file with the compiler log is created, that points that the source code
@@ -83,6 +91,7 @@ class CodeRunner
     end
 
     def save_source_code
+      Dir.mkdir("#{@path_to_save}")
       File.open(@file_path, 'w') { |f| f.write(source_code) }
     end
 

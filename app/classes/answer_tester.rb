@@ -13,7 +13,7 @@ class AnswerTester
     )
 
     code_runner.compile
-
+    
     @answer.question.test_cases.each.inject([]) do |results, test_case|
       result = code_runner.run(inputs: test_case.inputs, not_compile: true)
 

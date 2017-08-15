@@ -16,6 +16,11 @@
             <%= f.text_area :description, class: "form-control" %>
           </div>
 
+          <div class="form-group">
+            <%= f.label "Nome da classe principal" %>
+            <%= f.text_field :main_class_name, class: "form-control" %>
+          </div>
+
           <div class="form-group" style="width: 20%">
             <%= f.label "Pontuação" %>
             <%= f.number_field :score, min: 1, class: "form-control" %>
