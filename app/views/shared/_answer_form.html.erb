@@ -10,9 +10,11 @@
     <div id="editor_div"></div>
   </div>
 
-  <div class="submit">
-    <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
-  </div>
+  <% if @submitable %>
+    <div class="submit">
+      <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
+    </div>
+  <% end %>
 <% end %>
 
 

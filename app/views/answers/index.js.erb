@@ -1,5 +1,3 @@
 $('#answers').empty();
 $('#answers').html('<%= j(render "answers/answers") %>');
 $('#pagination').html('<%= j(render "shared/paginate", object: @answers) %>')
-
-<%= render 'shared/add_controller_js' %>

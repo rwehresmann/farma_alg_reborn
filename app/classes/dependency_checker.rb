@@ -3,7 +3,7 @@ class DependencyChecker
     @exercise = exercise
     @user = user
     @team = team
-    raise "Please check the arguments! It seems they're not related." unless args_are_related?
+    #raise "Please check the arguments! It seems they're not related." unless args_are_related?
     @questions = questions_blocked_and_unblocked
   end
 

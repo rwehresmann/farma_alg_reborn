@@ -54,14 +54,22 @@ class AnswersController < ApplicationController
       }
     end
 
-    flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
-      vontade para realizar novas tentativas, mas a partir de agora, elas não
-      incrementarão seu score nem surtirão qualquer efeito sobre o score desta
-      questão." if @question.answered_by_user?(
-        current_user,
-        team: @team,
-        only_correct: true
-      )
+    if !@team || @team.exercises.include?(@question.exercise)
+      @submitable = true
+
+      flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a
+        vontade para realizar novas tentativas, mas a partir de agora, elas não
+        incrementarão seu score nem surtirão qualquer efeito sobre o score desta
+        questão." if @question.answered_by_user?(
+          current_user,
+          team: @team,
+          only_correct: true
+        )
+    else
+      @submitable = false
+
+      flash.now[:info] = "O exercício dessa questão não esta mais disponível para ser respondido."
+    end
   end
 
   def create

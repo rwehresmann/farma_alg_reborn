@@ -1,33 +1,6 @@
 require 'rails_helper'
 
 describe DependencyChecker do
-  describe '#initialize' do
-    context "when the informed args are not related" do
-      subject {
-        described_class.new(
-          team: build(:team),
-          user: build(:user),
-          exercise: build(:exercise)
-        )
-      }
-
-      it { expect { subject }.to raise_error(RuntimeError) }
-    end
-
-    context "when the informed args are related" do
-      it "doesn't raises an error" do
-        args = related_args
-
-        expect {
-          described_class.new(
-            user: args[:user],
-            exercise: args[:exercise],
-            team: args[:team])
-        }.to_not raise_error
-      end
-    end
-  end
-
   describe '#able_to_answer?' do
     context "when question doesn't belongs to the specified exercise" do
       subject {

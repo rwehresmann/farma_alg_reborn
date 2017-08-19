@@ -34,6 +34,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @submitable = true
   end
 
   def edit
