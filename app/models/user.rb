@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :messages_received, class_name: :Message, foreign_key: :receiver_id
   has_many :messages_sended, class_name: :Message, foreign_key: :sender_id
+  has_many :user_scores, dependent: :destroy
 
   # Check if the user is the owner of a specific team.
   def owner?(team)

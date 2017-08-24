@@ -14,9 +14,9 @@
         </tr>
 
         <% ranking.each_with_index do |data, index| %>
-          <% if data[:user] && data[:user] == current_user %>
+          <% if data[:user] == current_user %>
             <tr class="user-row">
-          <% elsif data[:user] %>
+          <% else %>
             <tr>
           <% end %>
             <td><%= position(index) %></td>
