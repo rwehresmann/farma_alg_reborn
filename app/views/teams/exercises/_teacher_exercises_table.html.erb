@@ -9,7 +9,7 @@
     <% @team.exercises.each_with_index do |exercise, index| %>
       <tr id="team-exercise-<%= exercise.id %>">
         <td><%= index %>.</td>
-        <td><%= link_to exercise.title, exercises_url(exercise) %></td>
+        <td><%= link_to exercise.title, exercises_path(exercise) %></td>
         <td>
           <%= link_to(
             add_or_remove_exercise_team_path(@team, exercise, operation: :remove),

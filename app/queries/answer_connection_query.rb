@@ -18,7 +18,10 @@ class AnswerConnectionQuery
     raise ArgumentError, "Invalid connection type. Please, use :with or :between instead." unless valid_type?(type)
     operator = type == :with ? "OR" : "AND"
     @relation.where(
-      "answer_1_id IN (?) #{operator} answer_2_id IN (?)", answers, answers)
+      "(answer_1_id IN (?) #{operator} answer_2_id IN (?)) AND similarity >= ?",
+      answers,
+      answers,
+      Figaro.env.similarity_threshold.to_f)
   end
 
   private
