@@ -9,40 +9,7 @@
   <br></br>
   <div id="test-results">
     <% @results.each do |result| %>
-      <% if result[:correct] %>
-        <div class="alert alert-success text-left">
-          <i class='icon fa fa-check'> <%= result[:test_case].title %></i>
-          <a
-            href="#output"
-            data-toggle="collapse"
-            data-target="#output-<%= result[:test_case].id %>"
-            class="pull-right"
-          >
-            Output
-          </a>
-        </div>
-      <% else %>
-        <div class="alert alert-danger text-left">
-          <i class='icon fa fa-close'> <%= result[:test_case].title %></i>
-          <a
-            href="#output"
-            data-toggle="collapse"
-            data-target="#output-<%= result[:test_case].id %>"
-            class="pull-right"
-          >
-            Output
-          </a>
-        </div>
-      <% end %>
-
-      <div
-        id="output-<%= result[:test_case].id %>"
-        class="collapse"
-        style="background: white; border-radius: 5px; margin-bottom: 20px; padding: 5px 5px 5px 5px"
-      >
-        <%= result[:output] %>
-      </div>
-
+      <%= render 'answers/test_case_result', correct: result[:correct], test_case: result[:test_case], output: result[:output] %>
     <% end %>
   </div>
 </div>

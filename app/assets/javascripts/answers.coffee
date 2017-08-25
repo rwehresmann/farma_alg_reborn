@@ -7,7 +7,7 @@ class Answers
     new_height = $('.content-wrapper').height() +
       $('#test-results').height() +
       $('#error_explanation').height() +
-      100
+      500
     $('.content-wrapper').height(new_height)
 
     $("a").preventDefault

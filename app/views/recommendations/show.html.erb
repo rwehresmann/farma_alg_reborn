@@ -72,7 +72,7 @@
               <%= "#{answer.user.name} @#{answer.question.title}##{answer.attempt}"%>
             </td>
             <td>
-              <%= link_to "Visualizar resposta", answer_as_raw_url(answer), target: "_blank", class: "btn btn-block btn-primary btn-xs" %>
+              <%= link_to "Visualizar resposta", answer_as_raw_path(answer), target: "_blank", class: "btn btn-block btn-primary btn-xs" %>
               <%= link_to "Detalhes resposta", answer, target: "_blank", class: "btn btn-block btn-success btn-xs" %>
             </td>
           </tr>

@@ -1,0 +1,31 @@
+<% if correct %>
+  <div class="alert alert-success text-left">
+    <i class="icon fa fa-check"> <%= test_case.title %></i>
+    <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>' class='pull-right'>Output</a>
+  </div>
+<% else %>
+  <div class="alert alert-danger text-left">
+    <i class="icon fa fa-close"> <%= test_case.title %></i>
+    <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>' class='pull-right'>Output</a>
+  </div>
+<% end %>
+
+<div id="output-<%= test_case.id %>"
+  class="collapse" style= "border-radius: 5px; margin-bottom: 20px; padding: 5px 5px 5px 5px">
+  <table class="diff">
+    <tbody>
+      <% output.each_line.with_index do |line, index| %>
+        <tr>
+          <th><%= index + 1 %></th>
+          <td class="replace"><%= line %></td>
+        </tr>
+        <% if index == (output.lines.count - 1) && line[-1..-1] == "\n" %>
+          <tr>
+            <th><%= index + 2 %></th>
+            <td class="replace"></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
