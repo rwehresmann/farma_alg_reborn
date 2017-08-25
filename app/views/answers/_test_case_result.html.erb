@@ -1,17 +1,60 @@
 <% if correct %>
   <div class="alert alert-success text-left">
     <i class="icon fa fa-check"> <%= test_case.title %></i>
-    <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>' class='pull-right'>Output</a>
+    <div class="pull-right" style="display: block">
+      <a href='#input' style="padding: 0 10px" data-toggle='collapse' data-target='#input-<%= test_case.id %>'>Input fornecido</a>
+      <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>'>Output recebido</a>
+    </div>
   </div>
 <% else %>
   <div class="alert alert-danger text-left">
     <i class="icon fa fa-close"> <%= test_case.title %></i>
-    <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>' class='pull-right'>Output</a>
+    <div class="pull-right" style="display: block">
+      <a href='#input' style="padding: 0 10px" data-toggle='collapse' data-target='#input-<%= test_case.id %>'>Input fornecido</a>
+      <a href='#output' data-toggle='collapse' data-target='#output-<%= test_case.id %>'>Output recebido</a>
+    </div>
   </div>
 <% end %>
 
+<div id="input-<%= test_case.id %>"
+  class="collapse" style= "border-radius: 5px; margin-bottom: 20px; padding: 5px 5px 5px 5px">
+  <div style="margin-bottom: 5px;">
+    <b>Inputs:</b>
+  </div>
+
+  <% if test_case.inputs.count > 0 %>
+    <% test_case.inputs.each do |input| %>
+      <table class="diff" style="margin-bottom: 10px">
+        <tbody>
+          <% input.each_line.with_index do |line, index| %>
+            <tr>
+              <th><%= index + 1 %></th>
+              <td class="replace"><%= line %></td>
+            </tr>
+            <% if index == (output.lines.count - 1) && line[-1..-1] == "\n" %>
+              <tr>
+                <th><%= index + 2 %></th>
+                <td class="replace"></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  <% else %>
+    <div style="background: white; border-radius: 5px; padding: 10px">
+      Nenhum input foi fornecido neste caso de teste.
+    </div>
+  <% end %>
+</div>
+
+
 <div id="output-<%= test_case.id %>"
   class="collapse" style= "border-radius: 5px; margin-bottom: 20px; padding: 5px 5px 5px 5px">
+  <div style="margin-bottom: 5px;">
+    <b>Output:</b>
+  </div>
+
   <table class="diff">
     <tbody>
       <% output.each_line.with_index do |line, index| %>
