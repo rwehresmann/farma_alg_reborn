@@ -26,7 +26,7 @@ module AnswerCreator
         end
       end
 
-      ComputeAnswerSimilarityJob.perform_later(@answer) if !correct_answered_previously
+      #ComputeAnswerSimilarityJob.perform_later(@answer) if !correct_answered_previously
     end
 
     def correct?
