@@ -76,4 +76,12 @@ module TeamsHelper
       end
     end
   end
+
+  def question_score_title(question)
+    if question.operation == "task"
+      "variável"
+    else
+      "fixo"
+    end
+  end
 end

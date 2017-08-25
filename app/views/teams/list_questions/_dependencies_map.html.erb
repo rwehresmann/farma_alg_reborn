@@ -9,13 +9,16 @@
     <% @exercise.questions.each do |question| %>
       <tr>
         <td>
-          <%=
-              link_to_if(
-                dependency_checker.able_to_answer?(question),
-                question.title,
-                new_answer_question_url(question, @team)
-              )
-          %>
+          <div style="display: block;">
+            <%=
+                link_to_if(
+                  dependency_checker.able_to_answer?(question),
+                  question.title,
+                  new_answer_question_url(question, @team)
+                )
+            %>
+            <div style="margin-top: 10px">Valor: <%= question.score %> (<%= question_score_title(question) %>)</div>
+          </div>
         </td>
         <td>
           <ul>
@@ -46,7 +49,15 @@
                   question: question,
                   operator: "OR"
                 ).each do |dependency| %>
-                  <li><%= dependency.title %></li>
+                <li>
+                  <%=
+                      link_to_if(
+                        dependency_checker.able_to_answer?(dependency),
+                        dependency.title,
+                        new_answer_question_url(dependency, team)
+                      )
+                  %>
+                </li>
                <% end %>
           </ul>
         </td>
