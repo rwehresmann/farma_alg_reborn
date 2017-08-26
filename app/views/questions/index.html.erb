@@ -29,7 +29,10 @@
           <% @exercise.questions.each do |question| %>
             <tr>
               <td>
-                <%= link_to question.title, question %>
+                <div style="display: block;">
+                  <%= link_to question.title, question %>
+                  <div style="margin-top: 10px">Valor: <%= question.score %> (<%= question_score_title(question) %>)</div>
+                </div>
               </td>
               <td>
                 <ul>
