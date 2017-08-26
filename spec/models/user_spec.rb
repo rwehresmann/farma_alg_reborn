@@ -29,6 +29,11 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
+    it "is invalid with empty lang_extension" do
+      user.lang_extension = ""
+      expect(user).to_not be_valid
+    end
+
     it "is valid with valid email addresses" do
       valid_addresses = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org
                        first.last@foo.jp alice+bob@baz.cn]

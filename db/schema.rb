@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710115937) do
+ActiveRecord::Schema.define(version: 20170826132925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,14 +38,15 @@ ActiveRecord::Schema.define(version: 20170710115937) do
   end
 
   create_table "answers", force: :cascade do |t|
-    t.string   "content",                     null: false
-    t.boolean  "correct",     default: false, null: false
-    t.integer  "attempt",                     null: false
+    t.string   "content",                        null: false
+    t.boolean  "correct",        default: false, null: false
+    t.integer  "attempt",                        null: false
     t.integer  "user_id"
     t.integer  "question_id"
     t.integer  "team_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "lang_extension", default: "pas", null: false
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
     t.index ["team_id"], name: "index_answers_on_team_id", using: :btree
     t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
