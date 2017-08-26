@@ -1,14 +1,13 @@
 class AnswerTester
-  def initialize(answer:, file_name:, extension:)
+  def initialize(answer:, file_name:)
     @answer = answer
-    @extension = extension
     @file_name = file_name
   end
 
   def test
     code_runner = CodeRunner.new(
       file_name: @file_name,
-      extension: @extension,
+      extension: @answer.lang_extension,
       source_code: @answer.content
     )
 
