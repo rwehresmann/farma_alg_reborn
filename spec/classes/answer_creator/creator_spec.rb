@@ -66,7 +66,7 @@ describe AnswerCreator::Creator do
         expect(answer.new_record?).to be_falsey
         expect(answer.attempt).to eq 2
         expect(AnswerTestCaseResult.count).to eq answer_test_case_result_count + 1
-        #expect(enqueued_jobs.size).to eq jobs_count + 1
+        expect(enqueued_jobs.size).to eq jobs_count + 1
       end
     end
   end
