@@ -71,8 +71,7 @@ module AnswerCreator
     def run_test_cases
       AnswerTester.new(
         answer: @answer,
-        file_name: SecureRandom.hex,
-        extension: "pas"
+        file_name: SecureRandom.hex
       ).test
     end
   end
