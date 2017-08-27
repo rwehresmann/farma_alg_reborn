@@ -3,7 +3,7 @@ require 'open3'
 class CodeRunner
   PATH_TO_SAVE = "tmp/"
   COMPILER_OUTPUT_END_FILE_NAME = "_compiler_output"
-  COMPILED_LANGUAGES = ["pas"]
+  COMPILED_LANGUAGES = ["pas", "c"]
 
   attr_accessor :file_name, :extension, :source_code
 
@@ -26,9 +26,9 @@ class CodeRunner
     end
 
     case extension
-      when "pas"
-        command = "./#{PATH_TO_SAVE}#{file_name}"
-        to_exec(command, options[:inputs])
+    when "pas", "c"
+        command = "./#{PATH_TO_SAVE}#{@file_name}"
+        execute_program(command, options[:inputs])
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -40,6 +40,8 @@ class CodeRunner
     case @extension
       when "pas"
         `fpc #{@file_path} -Fe#{@compiler_log_path}`
+      when "c"
+        `gcc #{@file_path} -o #{PATH_TO_SAVE}#{@file_name} 2> #{@compiler_log_path}`
       else
         raise "CodeRunner doesn't support '.#{extension}' files."
     end
@@ -48,22 +50,32 @@ class CodeRunner
     private
 
     # Join command to be executed with the informed params, if there are params.
-    def to_exec(command, params)
-      Open3.popen3(command) do |stdin, stdout, stderr, w|
+    def execute_program(command, params)
+      result = ""
+
+      Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
         begin
           Timeout.timeout(10) do
             params.each { |param| stdin.puts(param) } if params
             output = stdout.read
             error = stderr.read
+
             stdin.close
             stdout.close
             stderr.close
 
-            error == "" ? output : error
+            result = error == "" ? output : error
+          end
+
+          if result.strip.empty?
+            return "[Seu código fonte não imprimiu nenhuma saída]" if @extension == "pas"
+            "Seu código fonte não imprimiu nenhuma saída. Os principais motivos disso poder ser: (1) nenhuma saída foi especificada no código fonte (2) ou ele está gerando um erro de segmentação (Segmentation fault)" if @extension == "c"
+          else
+            result
           end
         rescue Timeout::Error
           # here you know that the process took longer than 10 seconds
-          Process.kill("KILL", w.pid)
+          Process.kill("KILL", wait_thr.pid)
           "Erro de timeout. Possívelmente, seu código entrou num loop infinito."
         end
       end

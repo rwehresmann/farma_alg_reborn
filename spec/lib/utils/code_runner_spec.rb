@@ -66,5 +66,42 @@ describe CodeRunner do
         end
       end
     end
+
+    context "when try to run C file" do
+      context "when source code is right" do
+        it "returns the expected output" do
+          source_code = IO.read("spec/support/files/sum_two_numbers.c")
+          output = run_c_source_code(source_code)
+
+          expect(output).to eq("3")
+        end
+
+        context "but causes segmentation fault" do
+          it "returns the bash output" do
+            source_code = IO.read("spec/support/files/sum_two_numbers_segmentation_fault.c")
+            output = run_c_source_code(source_code)
+
+            expect(output).to match(/Segmentation fault/)
+          end
+        end
+      end
+
+      context "when source code is wrong" do
+        it "returns the compiler output" do
+          source_code = IO.read("spec/support/files/c_compilation_error.c")
+          output = run_c_source_code(source_code)
+
+          expect(output).to match(/(?i)error/)
+        end
+      end
+    end
   end
+end
+
+def run_c_source_code(source_code)
+  described_class.new(
+    file_name: SecureRandom.hex,
+    extension: "c",
+    source_code: source_code
+  ).run(inputs: [1, 2])
 end
