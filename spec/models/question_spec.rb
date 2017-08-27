@@ -28,8 +28,23 @@ RSpec.describe Question, type: :model do
       expect(question).to_not be_valid
     end
 
+    it "is invalid with empty answer_language_allowed" do
+      question.answer_language_allowed = ""
+      expect(question).to_not be_valid
+    end
+
     it "is valid when operation is 'challenge'" do
       question.operation = "challenge"
+      expect(question).to be_valid
+    end
+
+    it "is valid when allowed language is 'pascal'" do
+      question.answer_language_allowed = "pascal"
+      expect(question).to be_valid
+    end
+
+    it "is valid when allowed language is 'c'" do
+      question.answer_language_allowed = "c"
       expect(question).to be_valid
     end
 

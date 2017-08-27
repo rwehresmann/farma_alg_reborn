@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170826132925) do
+ActiveRecord::Schema.define(version: 20170827035429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,13 +129,14 @@ ActiveRecord::Schema.define(version: 20170826132925) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.string   "title",                        null: false
-    t.string   "description",                  null: false
-    t.string   "operation",   default: "task", null: false
-    t.float    "score",                        null: false
+    t.string   "title",                                      null: false
+    t.string   "description",                                null: false
+    t.string   "operation",               default: "task",   null: false
+    t.float    "score",                                      null: false
     t.integer  "exercise_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.string   "answer_language_allowed", default: "pascal", null: false
     t.index ["exercise_id"], name: "index_questions_on_exercise_id", using: :btree
   end
 

@@ -6,13 +6,13 @@ class Question < ApplicationRecord
 
   validates_presence_of :title, :description, :score
   validates_inclusion_of :operation, in: ["challenge", "task"]
+  validates_inclusion_of :answer_language_allowed, in: ["pascal", "c"]
 
   belongs_to :exercise
   has_many :test_cases, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :question_dependencies, foreign_key: :question_1_id, dependent: :destroy
   has_many :dependencies, through: :question_dependencies, source: :question_2
-
 
   # Check what is the dependency operator between two questions.
   def dependency_with(question)
