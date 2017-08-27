@@ -10,6 +10,10 @@
     <div id="editor_div"></div>
   </div>
 
+  <div class="form-group">
+    Linguagem permitida: <b style="color: blue"><%= @question.answer_language_allowed.capitalize %></b>
+  </div>
+
   <% if @submitable %>
     <div class="submit">
       <%= f.submit "Submeter resposta", class: "btn btn-primary btn-xs pull-right" %>
@@ -36,7 +40,13 @@
 
   var editor = ace.edit("editor_div");
   editor.setTheme("ace/theme/twilight");
-  editor.getSession().setMode("ace/mode/pascal");
+
+  <% if @answer.lang_extension == "pas" %>
+    editor.getSession().setMode("ace/mode/pascal");
+  <% elsif @answer.lang_extension == "c" %>
+    editor.getSession().setMode("ace/mode/c_cpp");
+  <% end %>
+
   editor.insert("<%= escape_javascript(raw @content) %>");
 
   // When click put ace editor content in form hidden textarea.

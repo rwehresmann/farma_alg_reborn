@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
   include AnswerObjectToGraph
+  include AnswerLanguageExtension
   include ApplicationHelper
 
   before_action :authenticate_user!
@@ -28,6 +29,7 @@ class AnswersController < ApplicationController
 
   def new
     @answer = Answer.new
+    @answer.lang_extension = answer_language_extension(@question)
     @team = Team.find(params[:team_id])
 
     selected_answer = Answer.find_by(id: params[:answer_id])
@@ -74,6 +76,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params.merge(user: current_user))
+    @answer.lang_extension = answer_language_extension(@question)
     creator = AnswerCreator::Creator.new(@answer)
     creator.create unless @answer.content.empty?
     @results = creator.test_cases_results
@@ -83,6 +86,7 @@ class AnswersController < ApplicationController
 
   def show
     Log.create!(operation: Log::ANSW_SHOW, user: current_user, question: @answer.question)
+    @question = @answer.question
 
     respond_to do |format|
       format.html {

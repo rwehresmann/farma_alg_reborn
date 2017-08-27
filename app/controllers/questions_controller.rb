@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   load_and_authorize_resource
 
+  include AnswerLanguageExtension
+
   before_action :authenticate_user!
   before_action :find_question, only: [:show, :edit, :update, :destroy]
   before_action :find_exercise, only: [:index, :new, :create]
@@ -34,6 +36,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @answer.lang_extension = answer_language_extension(@question)
     @submitable = true
   end
 
@@ -76,6 +79,7 @@ class QuestionsController < ApplicationController
 
   def test_answer
     @answer = @question.answers.build(answer_params)
+    @answer.lang_extension = answer_language_extension(@question)
     creator = AnswerCreator::Creator.new(@answer)
     @answer.correct = creator.correct?
     @results = creator.test_cases_results
@@ -104,7 +108,8 @@ class QuestionsController < ApplicationController
           :description,
           :exercise_id,
           :operation,
-          :score
+          :score,
+          :answer_language_allowed
         )
     end
 

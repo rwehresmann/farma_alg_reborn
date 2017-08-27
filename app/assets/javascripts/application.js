@@ -23,6 +23,7 @@
 //= require ace-builds/src-min/ace
 //= require ace-builds/src-min/theme-twilight
 //= require ace-builds/src-min/mode-pascal
+//= require ace-builds/src-min/mode-c_cpp
 //= require vivagraphjs/dist/vivagraph
 //= require js-routes
 //= require coffee_routes
