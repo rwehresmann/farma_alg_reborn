@@ -4,4 +4,8 @@ module QuestionsHelper
     return "#{count} casos de testes cadastrados" if count >= 0
     "#{count} caso de teste cadastrado"
   end
+
+  def supported_languages
+    ["pascal", "c"]
+  end
 end
