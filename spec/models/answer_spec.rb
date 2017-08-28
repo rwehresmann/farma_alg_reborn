@@ -17,6 +17,11 @@ RSpec.describe Answer, type: :model do
       answer.correct = ""
       expect(answer).to_not be_valid
     end
+
+    it "is invalid with empty lang_extension" do
+      answer.lang_extension = ""
+      expect(answer).to_not be_valid
+    end
   end
 
   describe "Relationships" do

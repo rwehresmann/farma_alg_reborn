@@ -1,7 +1,7 @@
 class Answer < ApplicationRecord
   searchkick
 
-  validates_presence_of :content, :attempt
+  validates_presence_of :content, :attempt, :lang_extension
   validates_inclusion_of :correct, in: [true, false]
 
   belongs_to :user
@@ -16,7 +16,7 @@ class Answer < ApplicationRecord
 
   has_many :test_cases_results, class_name: "AnswerTestCaseResult", dependent: :destroy
   has_many :test_cases, through: :test_cases_results
-  
+
   scope :by_user, -> (user) do
     return unless user.present?
     where(user: user)
