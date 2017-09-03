@@ -55,7 +55,7 @@ class Ability
       team.enrolled?(user)
     end
 
-    can [:rankings, :exercises, :users], Team do |team|
+    can [:rankings, :exercises, :users, :stats], Team do |team|
       team.enrolled?(user) || user.owner?(team)
     end
   end

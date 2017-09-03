@@ -97,6 +97,34 @@ class TeamsController < ApplicationController
     render 'graph'
   end
 
+  def stats
+    @team = Team.find(params[:id])
+    @answers_data = []
+    
+    @team.users.each do |user|
+      row = { user: user, exercises: [] }
+      
+      @team.exercises.each do |exercise|
+        exercise_info = { exercise: exercise }
+        total_questions_right_answered = 0
+        
+        exercise.questions.each do |question|
+          total_questions_right_answered += 1 unless Answer.where(user: user, team: @team, question: question, correct: true).limit(1).empty?
+        end
+        
+        exercise_info.merge!({total_questions_right_answered: total_questions_right_answered})
+        row[:exercises] << exercise_info
+      end
+       
+      @answers_data << row
+    end
+    
+    #{
+    #  user: x,
+    #  exercises: { exercise: exercise, total_questions_right_answered: x }
+    #}
+  end
+
   def enroll
     @team = Team.find(params[:id])
 

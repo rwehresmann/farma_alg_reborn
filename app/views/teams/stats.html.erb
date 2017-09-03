@@ -1,0 +1,24 @@
+<%= provide(:header, "Turma '#{@team.name}'") %>
+
+<%= render 'teams/team_menu', team: @team do %>
+  <table class="table table-bordered">
+    <thead>
+      <th>Aluno</th>
+      
+      <% @team.exercises.each do |exercise| %>
+        <th><%= exercise.title %> (<%= exercise.questions.count %> questões)</th>
+      <% end %>
+    </thead>
+    <tbody>
+      <% @answers_data.each do |data| %>
+        <tr>
+          <td><%= data[:user].name %></td>
+          
+          <% data[:exercises].each do |exercise_info| %>
+            <td class="text-center"><%= exercise_info[:total_questions_right_answered] %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

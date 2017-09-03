@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       get :exercises
       get :users
       get :graph
+      get :stats
       post :enroll
       post :unenroll
       get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'

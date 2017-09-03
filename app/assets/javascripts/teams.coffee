@@ -8,6 +8,10 @@ class Teams
       $('#all-teams').removeClass('active')
       $(this).addClass('active')
 
+  stats: ->
+    $('li.active').removeClass('active')
+    $('#stats-item').addClass('active')
+
   rankings: ->
     $('li.active').removeClass('active')
     $('#rankings-item').addClass('active')
