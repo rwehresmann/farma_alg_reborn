@@ -1,7 +1,0 @@
-$('#exercises-table').html(
-  '<%= j(render "teams/exercises/teacher_exercises_table", team: @team) %>'
-);
-
-$('#add-exercise-<%= @exercise.id %>').html(
-  '<%= j(render "teams/exercises/add_exercise", exercise: @exercise) %>'
-);

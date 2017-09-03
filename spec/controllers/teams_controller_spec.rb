@@ -917,40 +917,6 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  # TODO: Break this action in two and rewrite the tests.
-  describe 'POST #add_or_remove_exercise' do
-    let(:user) { create(:user, :teacher) }
-    let(:team) { create(:team, owner: user) }
-    let(:exercise) { create(:exercise) }
-
-    context "when adding" do
-      before do
-        sign_in user
-        post :add_or_remove_exercise, xhr: true,
-             params: { id: team, exercise_id: exercise, operation: :add }
-      end
-
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.content_type).to eq("text/javascript") }
-      it { expect(response).to render_template("teams/add_or_remove_exercise") }
-      it { expect(team.exercises.count).to eq(1) }
-    end
-
-    context "when removing" do
-      before do
-        sign_in user
-        team.add_exercise(exercise)
-        post :add_or_remove_exercise, xhr: true,
-             params: { id: team, exercise_id: exercise, operation: :remove }
-      end
-
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(response.content_type).to eq("text/javascript") }
-      it { expect(response).to render_template("teams/add_or_remove_exercise") }
-      it { expect(team.exercises.count).to eq(0) }
-    end
-  end
-
   def common_expectations(args = {})
     expect(response).to have_http_status args[:http_status] if args[:http_status]
     expect(response.content_type).to eq args[:content_type] if args[:content_type]

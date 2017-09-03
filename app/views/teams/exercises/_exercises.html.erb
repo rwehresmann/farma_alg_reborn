@@ -10,7 +10,7 @@
 
     <div id="exercises-table">
       <% if current_user.owner?(@team) %>
-        <%= render 'teams/exercises/teacher_exercises_table' %>
+        <%= render 'teams/exercises/teacher_exercises_table', team_exercises: @team_exercises %>
       <% else %>
         <%= render 'teams/exercises/student_exercises_table', team: @team %>
       <% end %>

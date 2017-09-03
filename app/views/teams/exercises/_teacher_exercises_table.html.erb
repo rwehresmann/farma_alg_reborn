@@ -3,18 +3,22 @@
     <tr>
       <th style="width: 10px">#</th>
       <th>Exercício</th>
+      <th class="text-center">Ativo</th>
       <th style="width: 50px"></th>
     </tr>
 
-    <% @team.exercises.each_with_index do |exercise, index| %>
-      <tr id="team-exercise-<%= exercise.id %>">
+    <% team_exercises.each_with_index do |team_exercise, index| %>
+      <tr id="team-exercise-<%= team_exercise.id %>">
         <td><%= index %>.</td>
-        <td><%= link_to exercise.title, exercises_path(exercise) %></td>
+        <td><%= link_to team_exercise.exercise.title, exercises_path(team_exercise.exercise) %></td>
+        <td style="text-align: center">
+          <%= check_box_tag '', 1, team_exercise.active, class: "update-status", "data-team-exercise-id": team_exercise.id %>
+        </td>
         <td>
           <%= link_to(
-            add_or_remove_exercise_team_path(@team, exercise, operation: :remove),
-            method: :post,
-            id: "remove-exercise-#{exercise.id}",
+            team_exercise,
+            method: :delete,
+            id: "remove-exercise-#{team_exercise.id}",
             title: "Remover exercício",
             remote: true,
             data: { confirm: "Tem certeza que deseja remover esse exercício da disciplina?" }

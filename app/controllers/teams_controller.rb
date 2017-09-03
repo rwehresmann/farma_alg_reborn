@@ -80,7 +80,7 @@ class TeamsController < ApplicationController
   end
 
   def exercises
-    @team = Team.find(params[:id])
+    @team_exercises = Team.find(params[:id]).team_exercises
 
     render 'exercises'
   end
@@ -145,15 +145,6 @@ class TeamsController < ApplicationController
     respond_to { |format|
       format.js { render "teams/graph/answers" }
     }
-  end
-
-  def add_or_remove_exercise
-    @team = Team.find(params[:id])
-    @exercise = Exercise.find(params[:exercise_id])
-
-    @team.send("#{params[:operation]}_exercise", @exercise)
-
-    respond_to { |format| format.js }
   end
 
   private

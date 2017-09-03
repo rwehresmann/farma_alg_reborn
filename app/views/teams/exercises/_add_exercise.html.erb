@@ -1,9 +1,9 @@
-<% if @team.have_exercise?(exercise) %>
+<% if team.have_exercise?(exercise) %>
    <span class="label label-success">Adicionado</span>
 <% else %>
   <%= link_to(
     "Adicionar",
-    add_or_remove_exercise_team_path(@team, exercise, operation: :add),
+    team_exercises_path(team_exercise: { exercise_id: exercise.id, team_id: team.id }),
     method: :post,
     class: "btn btn-block btn-primary btn-xs",
     remote: true

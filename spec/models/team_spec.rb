@@ -38,10 +38,6 @@ RSpec.describe Team, type: :model do
     it "has and belongs to many users" do
       expect(relationship_type(Team, :users)).to eq(:has_and_belongs_to_many)
     end
-
-    it "has and belongs to many exercises" do
-      expect(relationship_type(Team, :exercises)).to eq(:has_and_belongs_to_many)
-    end
   end
 
   describe '#enrolled?' do

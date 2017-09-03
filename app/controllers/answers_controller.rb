@@ -56,7 +56,9 @@ class AnswersController < ApplicationController
       }
     end
 
-    if !@team || @team.exercises.include?(@question.exercise)
+    team_exercise = TeamExercise.find_by(team_id: @team.id, exercise_id: @question.exercise_id)
+
+    if !@team || (team_exercise && team_exercise.active)
       @submitable = true
 
       flash.now[:info] = "Você já respondeu corretamenta esta questão. Sinta-se a

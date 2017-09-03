@@ -25,7 +25,7 @@
                 <td><%= index %>.</td>
                 <td><%= exercise.title %></td>
                 <td id="add-exercise-<%= exercise.id %>">
-                  <%= render 'teams/exercises/add_exercise', exercise: exercise %>
+                  <%= render 'teams/exercises/add_exercise', exercise: exercise, team: @team %>
                 </td>
               </tr>
             <% end %>

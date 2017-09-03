@@ -30,6 +30,10 @@ class Ability
 
       can [:show, :destroy], AnswerConnection
 
+      can [:create, :destroy, :update], TeamExercise do |team_exercise|
+        team_exercise.team.owner == user
+      end
+
       can :read, Recommendation do |recommendation|
         recommendation.team.owner == user
       end

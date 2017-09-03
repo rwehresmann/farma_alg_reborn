@@ -19,6 +19,12 @@ class Teams
     $(document).on 'click', '#add-exercise', ->
       showModal("exercises", false, createModal);
 
+    $(document).on 'click', '.update-status', ->
+      team_exercise_id = $(this).data("team-exercise-id")
+      $.ajax CoffeeRoutes.path('team_exercise', { id: team_exercise_id }),
+        type: 'PATCH',
+        dataType: 'script'
+      
     createModal("exercises");
 
   users: ->

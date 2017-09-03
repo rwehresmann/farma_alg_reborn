@@ -3,7 +3,8 @@ class Exercise < ApplicationRecord
 
   belongs_to :user
   has_many :questions, dependent: :destroy
-  has_and_belongs_to_many :teams
+  has_many :team_exercises, dependent: :destroy
+  has_many :exercises, through: :team_exercises
 
   # Return user progress according the number of questions answered correctly.
   def user_progress(user, team)

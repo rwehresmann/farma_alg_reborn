@@ -7,7 +7,9 @@ class Team < ApplicationRecord
   has_many :user_scores, dependent: :destroy
   has_many :recommendations, dependent: :destroy
   has_and_belongs_to_many :users
-  has_and_belongs_to_many :exercises
+  
+  has_many :team_exercises, dependent: :destroy
+  has_many :exercises, through: :team_exercises
 
   validates_presence_of :name, :password, if: :password_digest_changed?
   validates_inclusion_of :active, in: [true, false]

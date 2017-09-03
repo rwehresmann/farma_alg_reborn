@@ -28,7 +28,6 @@ Rails.application.routes.draw do
       get :graph
       post :enroll
       post :unenroll
-      post 'add_or_remove_exercise/:exercise_id', to: 'teams#add_or_remove_exercise', as: :add_or_remove_exercise
       get 'list_questions/:exercise_id', to: 'teams#list_questions', as: 'list_exercise_questions'
       get :answers
     end
@@ -39,6 +38,8 @@ Rails.application.routes.draw do
   resources :messages, only: [:index, :new, :create, :show]
 
   resources :recommendations, only: [:index, :show]
+
+  resources :team_exercises, only: [:create, :update, :destroy]
 
   devise_for :users
   get 'dashboard/home'
