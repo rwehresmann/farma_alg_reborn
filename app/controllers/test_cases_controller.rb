@@ -59,7 +59,9 @@ class TestCasesController < ApplicationController
     private
 
     def test_case_params
-      params.require(:test_case).permit(:title, :description, { inputs: [] }, :output, :question_id)
+      received_params = params.require(:test_case).permit(:title, :description, { inputs: [] }, :output, :question_id)
+      received_params[:inputs] = received_params[:inputs].reject { |elm| elm.strip.empty? } if received_params[:inputs]
+      received_params
     end
 
     def find_test_case
