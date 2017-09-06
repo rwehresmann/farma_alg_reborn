@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170902163741) do
+ActiveRecord::Schema.define(version: 20170903220345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20170902163741) do
     t.string   "lang_extension", default: "pas", null: false
     t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
     t.index ["team_id"], name: "index_answers_on_team_id", using: :btree
+    t.index ["user_id", "team_id", "question_id"], name: "correct_answer_index", where: "(correct IS FALSE)", using: :btree
     t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
   end
 

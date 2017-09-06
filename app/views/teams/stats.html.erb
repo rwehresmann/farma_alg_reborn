@@ -1,4 +1,5 @@
 <%= provide(:header, "Turma '#{@team.name}'") %>
+<%= provide(:description, "Cada coluna representa a quantidade de questões respondidas corretamente pelo aluno no exercício") %>
 
 <%= render 'teams/team_menu', team: @team do %>
   <table class="table table-bordered">

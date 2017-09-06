@@ -109,7 +109,8 @@ class TeamsController < ApplicationController
         total_questions_right_answered = 0
         
         exercise.questions.each do |question|
-          total_questions_right_answered += 1 unless Answer.where(user: user, team: @team, question: question, correct: true).limit(1).empty?
+          correct_answer =  Answer.select(1).where(user: user, team: @team, question: question, correct: true).limit(1)
+          total_questions_right_answered += 1 unless correct_answer.to_a.empty?
         end
         
         exercise_info.merge!({total_questions_right_answered: total_questions_right_answered})
