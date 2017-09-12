@@ -163,7 +163,6 @@ class TeamsController < ApplicationController
     answers = Answer.by_team(params[:id]).by_user(params[:users])
                     .by_question(params[:questions])
                     .between_dates(date_range[0], date_range[1])
-                    .by_key_words(params[:key_words])
 
     @answers = answers.each.inject([]) { |array, answer|
                  array << answer_object_to_graph(answer)

@@ -1,6 +1,4 @@
 class Answer < ApplicationRecord
-  searchkick
-
   validates_presence_of :content, :attempt, :lang_extension
   validates_inclusion_of :correct, in: [true, false]
 
