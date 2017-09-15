@@ -18,15 +18,23 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:name])
   end
 
-  def after_sign_in_path_for(resource)
-    root_path
+  def after_update_path_for(resource)
+    root_path + "/"
   end
 
-  def authenticate_user!
+  def after_sign_in_path_for(resource)
+    root_path + "/"
+  end
+
+  def after_sign_out_path_for(resource)
+    root_path + "/"
+  end
+
+  def authenticate_user!(resource = {})
     if user_signed_in?
-      super
+      super(resource)
     else
-      redirect_to new_user_session_path	
+      redirect_to new_user_session_path
     end
   end
 end

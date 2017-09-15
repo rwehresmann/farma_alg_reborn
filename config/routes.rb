@@ -43,7 +43,8 @@ Rails.application.routes.draw do
 
 	  resources :team_exercises, only: [:create, :update, :destroy]
 
-	  devise_for :users
+		devise_for :users, :controllers => { :registrations => :registrations }
+
 	  get 'dashboard/home'
 	  root to: 'dashboard#home'
 	end
