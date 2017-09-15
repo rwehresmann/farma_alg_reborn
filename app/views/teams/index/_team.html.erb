@@ -23,10 +23,10 @@
 
     <% else %>
 
-      <% #form_tag enroll_team_path(team), remote: true, class: "form-inline", id: "enroll-form" do %>
-        <%  #password_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
-        <% #submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
-      <% #end %>
+      <%= form_tag enroll_team_path(team), remote: true, class: "form-inline", id: "enroll-form" do %>
+        <%= password_field_tag :password, nil, class: "form-control", placeholder: "Senha de matrícula" %>
+        <%= submit_tag 'Matricular-se', class: "btn btn-info btn-flat" %>
+      <% end %>
 
     <% end %>
 
