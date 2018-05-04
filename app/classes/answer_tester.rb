@@ -18,7 +18,7 @@ class AnswerTester
 
       results << {
         test_case: test_case,
-        correct: result == test_case.output,
+        correct: result.gsub(/\s+/, '') == test_case.output.gsub(/\s+/, ''),
         output: result.gsub("\r", "")
       }
     end
